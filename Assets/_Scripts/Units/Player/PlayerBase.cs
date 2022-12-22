@@ -91,7 +91,7 @@ namespace rene_roid_player
 
             // Ground and Ceiling
             _groundHitCount = Physics2D.CapsuleCastNonAlloc(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _groundHits, _grounderDistance, ~_playerLayer);
-            _ceilingHitCount = Physics2D.CapsuleCastNonAlloc(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _ceilingHits, _grounderDistance, ~_playerLayer);
+            _ceilingHitCount = Physics2D.CapsuleCastNonAlloc(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _ceilingHits, _grounderDistance, ~_playerLayer);
 
             // Walls and Ladders
             var bounds = GetWallDetectionBounds();
