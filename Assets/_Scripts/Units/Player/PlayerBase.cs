@@ -8,9 +8,10 @@ namespace rene_roid_player
         [SerializeField] private PlayerBaseStats _baseStats;
 
         #region Internal Variables
-        [HideInInspector] private Rigidbody2D _rb;
+        [Header("Internal Variables")]
         [SerializeField] private CapsuleCollider2D _col;
         [SerializeField] private LayerMask _playerLayer; // Layer mask for the player
+        [HideInInspector] private Rigidbody2D _rb;
         private bool _cachedTriggerSetting; // Used to cache the trigger setting of the collider
 
         private PlayerInput _input;
@@ -53,11 +54,12 @@ namespace rene_roid_player
                 _jumpToConsume = true;
                 _frameJumpWasPressed = _fixedFrame;
             }
+
+            GatherSkillInput();
         }
 
         #region Player Stats
-        private PlayerBaseStats _maxStats;
-
+        [Header("Player Stats")]
         [SerializeField] private int _level = 1;
 
         [SerializeField] private float _currentHealth;
@@ -65,6 +67,9 @@ namespace rene_roid_player
         [SerializeField] private float _currentDamage;
         [SerializeField] private float _currentArmor;
         [SerializeField] private float _currentMovementSpeed;
+
+        private PlayerBaseStats _maxStats;
+
 
         private void AwakePlayerStats()
         {
@@ -152,7 +157,7 @@ namespace rene_roid_player
                 //Die();
             }
         }
-        
+
 
         public float DealDamage(float percentage, float proc)
         {
@@ -171,7 +176,123 @@ namespace rene_roid_player
         #endregion
         #endregion
 
+        #region Player Skills
+        [Header("Player Skills")]
+        public float BasicAttackCooldown = 0.5f;
+        public float Skill1Cooldown = 1;
+        public float Skill2Cooldown = 2;
+        public float UltimateCooldown = 5;
+
+        private float _basicAttackTimer;
+        private float _skill1Timer;
+        private float _skill2Timer;
+        private float _ultimateTimer;
+
+        private bool _basicAttackReady = true;
+        private bool _skill1Ready = true;
+        private bool _skill2Ready = true;
+        private bool _ultimateReady = true;
+
+
+        private void GatherSkillInput()
+        {
+            if ((_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld) && _basicAttackReady)
+            {
+                BasicAttack();
+            }
+
+            if ((_frameInput.SpecialAttack1Down || _frameInput.SpecialAttack1Held) && _skill1Ready)
+            {
+                Skill1();
+            }
+
+            if ((_frameInput.SpecialAttack2Down || _frameInput.SpecialAttack2Held) && _skill2Ready)
+            {
+                Skill2();
+            }
+
+            if ((_frameInput.UltimateDown || _frameInput.UltimateHeld) && _ultimateReady)
+            {
+                Ultimate();
+            }
+
+            SkillCooldowns();
+        }
+
+        protected void SkillCooldowns()
+        {
+            // If _basic attack not ready count until timer is over cooldown
+            if (!_basicAttackReady)
+            {
+                _basicAttackTimer += Time.deltaTime;
+                if (_basicAttackTimer >= BasicAttackCooldown)
+                {
+                    _basicAttackReady = true;
+                    _basicAttackTimer = 0;
+                }
+            }
+
+            // If _skill1 not ready count until timer is over cooldown
+            if (!_skill1Ready)
+            {
+                _skill1Timer += Time.deltaTime;
+                if (_skill1Timer >= Skill1Cooldown)
+                {
+                    _skill1Ready = true;
+                    _skill1Timer = 0;
+                }
+            }
+
+            // If _skill2 not ready count until timer is over cooldown
+            if (!_skill2Ready)
+            {
+                _skill2Timer += Time.deltaTime;
+                if (_skill2Timer >= Skill2Cooldown)
+                {
+                    _skill2Ready = true;
+                    _skill2Timer = 0;
+                }
+            }
+
+            // If _ultimate attack not ready count until timer is over cooldown
+            if (!_ultimateReady)
+            {
+                _ultimateTimer += Time.deltaTime;
+                if (_ultimateTimer >= UltimateCooldown)
+                {
+                    _ultimateReady = true;
+                    _ultimateTimer = 0;
+                }
+            }
+        }
+
+        public void BasicAttack()
+        {
+            print("Basic attack!");
+            _basicAttackReady = false;
+        }
+
+        public void Skill1()
+        {
+            print("Skill 1!");
+            _skill1Ready = false;
+        }
+
+        public void Skill2()
+        {
+            print("Skill 2!");
+            _skill2Ready = false;
+        }
+
+        public void Ultimate()
+        {
+            print("ULTIMATE!");
+            _ultimateReady = false;
+        }
+        #endregion
+
         #region Movement
+        [Header("Movement")]
         private Vector2 _speed;
         private Vector2 _currentExternalVelocity;
 
@@ -298,6 +419,7 @@ namespace rene_roid_player
         }
 
         #endregion
+        
         #region Ladders
         private Vector2 _ladderSnapVel; // TODO: determine if we need to reset this when leaving a ladder, or use a different kind of Lerp/MoveTowards
         private int _frameLeftLadder = int.MinValue;
@@ -411,7 +533,7 @@ namespace rene_roid_player
                     _speed.x = 0;
 
                 var inputX = _frameInput.Move.x * (_onLadder ? _ladderShimmySpeedMultiplier : 1);
-                _speed.x = Mathf.MoveTowards(_speed.x, inputX * _baseStats.MovementSpeed, _currentWallJumpMoveMultiplier * _acceleration * Time.fixedDeltaTime);
+                _speed.x = Mathf.MoveTowards(_speed.x, inputX * _currentMovementSpeed, _currentWallJumpMoveMultiplier * _acceleration * Time.fixedDeltaTime);
             }
         }
         #endregion
@@ -491,7 +613,7 @@ namespace rene_roid_player
         [SerializeField] private LayerMask _wallLayerMask; // Layer mask for climbable walls are on
         private bool _requireInputPush = false; // If true, the player must push against the wall to climb it
 
-        private float _wallClimbSpeed = 7; // Speed at which the player climbs walls -------------- NEEDS TO BE HALF OF PLAYER SPEED
+        private float _wallClimbSpeed => _currentMovementSpeed / 2; // Speed at which the player climbs walls -------------- NEEDS TO BE HALF OF PLAYER SPEED
         private float _wallFallAcceleration = 8; // Acceleration applied to the player when falling off a wall
         private float _maxWallFallSpeed = 16; // Max speed the player can fall off a wall at
         private Vector2 _wallJumpPower = new Vector2(30, 25); // Power applied to the player when jumping off a wall
