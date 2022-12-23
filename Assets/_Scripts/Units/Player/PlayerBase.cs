@@ -100,6 +100,8 @@ namespace rene_roid_player
             _maxStats.Damage += _maxStats.DamagePerLevel;
             _maxStats.Armor += _maxStats.ArmorPerLevel;
             _maxStats.MovementSpeed += _maxStats.MovementSpeedPerLevel;
+
+            SetPlayerStats();
         }
 
         #region Health
@@ -108,21 +110,6 @@ namespace rene_roid_player
             // Heal the player every second
             if (_currentHealth >= _maxStats.Health) return;
             HealAmmount(_currentHealthRegen * Time.deltaTime);
-        }
-
-        public void TakeDamage(float damage)
-        {
-            if (_currentArmor > 0)
-            {
-                damage *= 100 / (100 + _currentArmor);
-            }
-
-            _currentHealth -= damage;
-            
-            if (_currentHealth <= 0)
-            {
-                //Die();
-            }
         }
 
         /// <summary>
@@ -149,13 +136,37 @@ namespace rene_roid_player
         #region Damage
         private float _specialMultiplier = 1;
         private float _flatDmgBonus = 0;
-        private float _percentageDmgBonus;
+        private float _percentageDmgBonus = 1;
+
+        public void TakeDamage(float damage)
+        {
+            if (_currentArmor > 0)
+            {
+                damage *= 100 / (100 + _currentArmor);
+            }
+
+            _currentHealth -= damage;
+
+            if (_currentHealth <= 0)
+            {
+                //Die();
+            }
+        }
+        
+
         public float DealDamage(float percentage, float proc)
         {
-            float basedmg = percentage * (_maxStats.Damage * _level);
+            float basedmg = percentage * _maxStats.Damage;
             float damage = ((basedmg * _specialMultiplier) + _flatDmgBonus) * _percentageDmgBonus;
 
+            print(damage);
+
             return damage;
+        }
+
+        public void KILLME(float dmg)
+        {
+            TakeDamage(DealDamage(dmg, 1));
         }
         #endregion
         #endregion
