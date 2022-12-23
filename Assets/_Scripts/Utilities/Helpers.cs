@@ -93,8 +93,28 @@ namespace rene_roid
             return result;
         }
 
+
         /// <summary>
-        /// Same as before but the other way arround
+        /// Convert a number in a range to the percentage of the number in that range
+        /// Ex: min = 10, max = 20, actual = 15, result = 50%
+        /// </summary>
+        /// <param name="actualVar"></param>
+        /// <param name="minVar"></param>
+        /// <param name="maxVar"></param>
+        /// <param name="ceroToOne"> if you want the result to be true: 0-1 / false: 0-100</param>
+        /// <returns></returns>
+        public static float FromRangeToPercentage(float actualVar, float minVar, float maxVar, bool ceroToOne) // Converting a number from a range to the percentage of that number in the range
+        {
+            float result;
+            actualVar = Mathf.Clamp(actualVar, minVar, maxVar); // Making sure number doesnt go above or below range to avoid negative or + 100%
+            result = ((actualVar - minVar) / (maxVar - minVar)) * (ceroToOne ? 1 : 100); // From 0-1 to 0-100
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// Get the percentage value of a number in a range
         /// </summary>
         /// <param name="percentage"></param>
         /// <param name="minVar"></param>
@@ -109,6 +129,7 @@ namespace rene_roid
             return result;
         }
 
+        
         /// <summary>
         /// Transform from range to range
         /// </summary>
