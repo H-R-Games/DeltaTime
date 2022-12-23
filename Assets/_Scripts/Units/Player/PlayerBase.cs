@@ -22,6 +22,8 @@ namespace rene_roid_player
         {
             _rb = GetComponent<Rigidbody2D>();
             _input = GetComponent<PlayerInput>();
+
+            AwakePlayerStats();
         }
 
         public virtual void Start()
@@ -29,9 +31,12 @@ namespace rene_roid_player
 
         }
 
+
         public virtual void Update()
         {
             GatherInput();
+
+            UpdatePlayerStats();
         }
 
         public virtual void FixedUpdate()
@@ -49,6 +54,122 @@ namespace rene_roid_player
                 _frameJumpWasPressed = _fixedFrame;
             }
         }
+
+        #region Player Stats
+        private PlayerBaseStats _maxStats;
+
+        [SerializeField] private int _level = 1;
+
+        [SerializeField] private float _currentHealth;
+        [SerializeField] private float _currentHealthRegen;
+        [SerializeField] private float _currentDamage;
+        [SerializeField] private float _currentArmor;
+        [SerializeField] private float _currentMovementSpeed;
+
+        private void AwakePlayerStats()
+        {
+            _maxStats = Instantiate(_baseStats);
+
+            SetPlayerStats();
+        }
+
+        private void UpdatePlayerStats()
+        {
+            ConstantHealing();
+        }
+
+        private void SetPlayerStats()
+        {
+            _currentHealth = _maxStats.Health;
+            _currentHealthRegen = _maxStats.HealthRegen;
+            _currentDamage = _maxStats.Damage;
+            _currentArmor = _maxStats.Armor;
+            _currentMovementSpeed = _maxStats.MovementSpeed;
+        }
+
+        public void LevelUp()
+        {
+            _level++;
+            LevelUpPlayerStats();
+        }
+
+        private void LevelUpPlayerStats()
+        {
+            _maxStats.Health += _maxStats.HealthPerLevel;
+            _maxStats.HealthRegen += _maxStats.HealthRegenPerLevel;
+            _maxStats.Damage += _maxStats.DamagePerLevel;
+            _maxStats.Armor += _maxStats.ArmorPerLevel;
+            _maxStats.MovementSpeed += _maxStats.MovementSpeedPerLevel;
+
+            SetPlayerStats();
+        }
+
+        #region Health
+        private void ConstantHealing()
+        {
+            // Heal the player every second
+            if (_currentHealth >= _maxStats.Health) return;
+            HealAmmount(_currentHealthRegen * Time.deltaTime);
+        }
+
+        /// <summary>
+        /// Heals the player by a ammount
+        /// </summary>
+        /// <param name="ammount"></param>
+        public void HealAmmount(float ammount)
+        {
+            _currentHealth += ammount;
+            _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxStats.Health);
+        }
+
+        /// <summary>
+        /// Heals the player by a percentage of their max health
+        /// </summary>
+        /// <param name="percentage">The percentage of max health to heal (0-1)</param>
+        public void HealPercentage(float percentage)
+        {
+            _currentHealth += _maxStats.Health * percentage;
+            _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxStats.Health);
+        }
+        #endregion
+
+        #region Damage
+        private float _specialMultiplier = 1;
+        private float _flatDmgBonus = 0;
+        private float _percentageDmgBonus = 1;
+
+        public void TakeDamage(float damage)
+        {
+            if (_currentArmor > 0)
+            {
+                damage *= 100 / (100 + _currentArmor);
+            }
+
+            _currentHealth -= damage;
+
+            if (_currentHealth <= 0)
+            {
+                //Die();
+            }
+        }
+        
+
+        public float DealDamage(float percentage, float proc)
+        {
+            float basedmg = percentage * _maxStats.Damage;
+            float damage = ((basedmg * _specialMultiplier) + _flatDmgBonus) * _percentageDmgBonus;
+
+            print(damage);
+
+            return damage;
+        }
+
+        public void KILLME(float dmg)
+        {
+            TakeDamage(DealDamage(dmg, 1));
+        }
+        #endregion
+        #endregion
 
         #region Movement
         private Vector2 _speed;
@@ -95,7 +216,7 @@ namespace rene_roid_player
 
             // Walls and Ladders
             var bounds = GetWallDetectionBounds();
-            _wallHitCount = Physics2D.OverlapBoxNonAlloc(bounds.center, bounds.size, 0, _wallHits,  _wallLayerMask);
+            _wallHitCount = Physics2D.OverlapBoxNonAlloc(bounds.center, bounds.size, 0, _wallHits, _wallLayerMask);
 
             Physics2D.queriesHitTriggers = true; // Ladders are set to Trigger
             _ladderHitCount = Physics2D.OverlapBoxNonAlloc(bounds.center, bounds.size, 0, _ladderHits, _ladderLayerMask);
@@ -156,8 +277,9 @@ namespace rene_roid_player
 
             if (!_isOnWall && ShouldStickWall()) SetOnWall(true);
             else if (_isOnWall && !ShouldStickWall()) SetOnWall(false);
-            
-            bool ShouldStickWall() {
+
+            bool ShouldStickWall()
+            {
                 if (_wallDir == 0 || _grounded) return false;
                 return _requireInputPush ? Mathf.Sign(_frameInput.Move.x) == _wallDir : true;
             }
@@ -190,7 +312,7 @@ namespace rene_roid_player
             if (!_allowLadders) return;
 
             if (!_onLadder && CanEnterLadder && MountLadderInputReached) ToggleClimbingLadder(true);
-            else if (_onLadder && (_ladderHitCount == 0 || DismountLadderInputReached )) ToggleClimbingLadder(false);
+            else if (_onLadder && (_ladderHitCount == 0 || DismountLadderInputReached)) ToggleClimbingLadder(false);
 
             // Snap to center of ladder
             if (_onLadder && _frameInput.Move.x == 0 && _snapToLadders && _hasControl)
