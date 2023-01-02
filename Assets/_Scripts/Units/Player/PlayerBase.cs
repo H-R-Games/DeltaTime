@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 namespace rene_roid_player
 {
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
-    public class PlayerBase : MonoBehaviour
+    public class PlayerBase : MonoBehaviour, IPlayerController
     {
         [SerializeField] private PlayerBaseStats _baseStats;
 
@@ -17,6 +18,40 @@ namespace rene_roid_player
         private PlayerInput _input;
         private FrameInput _frameInput;
         private int _fixedFrame;
+        #endregion
+
+        #region External Variables
+        // [Header("External Variables")]
+        public event Action<bool, float> GroundedChanged; // Event for when the player's grounded state changes
+        public event Action<bool> WallGrabChanged;
+        public event Action<bool> Jumped;
+        public event Action AirJumped;
+        
+        public PlayerBaseStats PlayerStats => _baseStats;
+        public Vector2 Input => _frameInput.Move;
+        public Vector2 Speed => _speed;
+        public Vector2 GroundNormal => _groundNormal;
+        public int WallDirection => _wallDir;
+        public bool ClimbingLadder => _onLadder;
+
+
+        public virtual void ApplyVelocity(Vector2 vel, PlayerForce forceType)
+        {
+            if (forceType == PlayerForce.Burst) _speed += vel;
+            else _currentExternalVelocity += vel;
+        }
+
+        public virtual void TakeAwayControl(bool resetVelocity = true)
+        {
+            if (resetVelocity) _currentExternalVelocity = Vector2.zero;
+            _hasControl = false;
+        }
+
+        public virtual void ReturnControl()
+        {
+            _speed = Vector2.zero;
+            _hasControl = true;
+        }
         #endregion
 
         public virtual void Awake()
@@ -173,6 +208,10 @@ namespace rene_roid_player
         {
             TakeDamage(DealDamage(dmg, 1));
         }
+        #endregion
+
+        #region Getters and Setters
+        public PlayerBaseStats MaxStats => _maxStats;
         #endregion
         #endregion
 
@@ -369,7 +408,7 @@ namespace rene_roid_player
             {
                 _grounded = true;
                 ResetJump();
-                // Grounded changed Invoke
+                GroundedChanged?.Invoke(true, Mathf.Abs(_speed.y));
             }
 
             // Left the ground
@@ -377,7 +416,7 @@ namespace rene_roid_player
             {
                 _grounded = false;
                 _frameLeftGrounded = _fixedFrame;
-                // Grounded changed Invoke
+                GroundedChanged?.Invoke(false, 0);
             }
         }
         #endregion
@@ -415,7 +454,7 @@ namespace rene_roid_player
                 _isLeavingWall = false;
                 ResetAirJumps();
             }
-            // WallGrabbedChanged Invoke "on"
+            WallGrabChanged?.Invoke(on);
         }
 
         #endregion
@@ -488,6 +527,7 @@ namespace rene_roid_player
             ToggleClimbingLadder(false);
             _speed.y = _jumpForce;
             // Jumped Invoke
+            Jumped?.Invoke(false);
         }
 
         protected virtual void WallJump()
@@ -498,6 +538,7 @@ namespace rene_roid_player
             _currentWallJumpMoveMultiplier = 0;
             _speed = Vector2.Scale(_wallJumpPower, new Vector2(-_wallDir, 1));
             // Jumped Invoke
+            Jumped?.Invoke(true);
         }
 
         protected virtual void AirJump()
@@ -506,6 +547,7 @@ namespace rene_roid_player
             _airJumpsRemaining--;
             _speed.y = _jumpForce;
             // Air Jumped Invoke
+            AirJumped?.Invoke();
         }
 
         protected virtual void ResetJump()
@@ -640,19 +682,6 @@ namespace rene_roid_player
         // External
         private int _externalVelocityDecay = 100;
         #endregion
-
-        public enum PlayerForce
-        {
-            /// <summary>
-            /// Added directly to the players movement speed, to be controlled by the standard deceleration
-            /// </summary>
-            Burst,
-
-            /// <summary>
-            /// An additive force handled by the decay system
-            /// </summary>
-            Decay
-        }
         #endregion
 
 #if UNITY_EDITOR
@@ -661,6 +690,10 @@ namespace rene_roid_player
             Gizmos.color = Color.white;
             var bounds = GetWallDetectionBounds();
             Gizmos.DrawWireCube(bounds.center, bounds.size);
+
+            Gizmos.color = Color.green;
+            var bound = new Bounds(_rb.position, _col.size);
+            Gizmos.DrawWireCube(bound.center, bound.size);
         }
 
         private void OnValidate()
@@ -670,5 +703,34 @@ namespace rene_roid_player
             if (_rb == null) _rb = GetComponent<Rigidbody2D>(); // serialized but hidden in the inspector
         }
 #endif
+    }
+
+    public interface IPlayerController
+    {
+        public event Action<bool, float> GroundedChanged;
+        public event Action<bool> WallGrabChanged;
+        public event Action<bool> Jumped;
+        public event Action AirJumped;
+
+        public PlayerBaseStats PlayerStats { get; }
+        public Vector2 Input { get; }
+        public Vector2 Speed { get; }
+        public Vector2 GroundNormal { get; }
+        public int WallDirection { get; }
+        public bool ClimbingLadder { get; }
+        public void ApplyVelocity(Vector2 vel, PlayerForce force);
+    }
+
+    public enum PlayerForce
+    {
+        /// <summary>
+        /// Added directly to the players movement speed, to be controlled by the standard deceleration
+        /// </summary>
+        Burst,
+
+        /// <summary>
+        /// An additive force handled by the decay system
+        /// </summary>
+        Decay
     }
 }
