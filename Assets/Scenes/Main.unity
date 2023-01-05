@@ -1199,6 +1199,7 @@ GameObject:
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
   - component: {fileID: 963194229}
+  - component: {fileID: 963194230}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1305,6 +1306,21 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &963194230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0473acdde08f5948b6585b82b780c6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 1394134794}
+  _smoothSpeed: 0.125
+  _yOffset: 0
 --- !u!1 &989779863
 GameObject:
   m_ObjectHideFlags: 0
@@ -2232,6 +2248,10 @@ MonoBehaviour:
   _skill1Frames: 8
   _skill2Frames: 8
   _ultimateFrames: 8
+  _basicAttackTimeLock: 0.5
+  _skill1TimeLock: 0.5
+  _skill2TimeLock: 0.5
+  _ultimateTimeLock: 0.5
   _wallLayerMask:
     serializedVersion: 2
     m_Bits: 256
