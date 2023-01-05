@@ -26,6 +26,11 @@ namespace rene_roid_player
         public event Action<bool> WallGrabChanged;
         public event Action<bool> Jumped;
         public event Action AirJumped;
+
+        public event Action BasicAttack1;
+        public event Action SpecialAttack1;
+        public event Action SpecialAttack2;
+        public event Action UltimateAttack;
         
         public PlayerBaseStats PlayerStats => _baseStats;
         public Vector2 Input => _frameInput.Move;
@@ -60,6 +65,7 @@ namespace rene_roid_player
             _input = GetComponent<PlayerInput>();
 
             AwakePlayerStats();
+            AwakeSkillFrameSetup();
         }
 
         public virtual void Start()
@@ -232,26 +238,59 @@ namespace rene_roid_player
         private bool _skill2Ready = true;
         private bool _ultimateReady = true;
 
+        [SerializeField] private int _basicAttackFrames = 8;
+        [SerializeField] private int _skill1Frames = 8;
+        [SerializeField] private int _skill2Frames = 8;
+        [SerializeField] private int _ultimateFrames = 8;
 
+        private int _basicFrameWasPressed;
+        private int _skill1FrameWasPressed;
+        private int _skill2FrameWasPressed;
+        private int _ultimateFrameWasPressed;
+
+        [SerializeField] public float _basicAttackTimeLock = 0.5f;
+        [SerializeField] public float _skill1TimeLock = 0.5f;
+        [SerializeField] public float _skill2TimeLock = 0.5f;
+        [SerializeField] public float _ultimateTimeLock = 0.5f;
+
+        private float _basicAttackTimeLockTimer;
+        private float _skill1TimeLockTimer;
+        private float _skill2TimeLockTimer;
+        private float _ultimateTimeLockTimer;
+
+        private bool _locked = false;
+
+        private void AwakeSkillFrameSetup()
+        {
+            _basicFrameWasPressed = -_basicAttackFrames;
+            _skill1FrameWasPressed = -_skill1Frames;
+            _skill2FrameWasPressed = -_skill2Frames;
+            _ultimateFrameWasPressed = -_ultimateFrames;
+        }
+        
         private void GatherSkillInput()
         {
-            if ((_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld) && _basicAttackReady)
+            if ((_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld || _basicFrameWasPressed + _basicAttackFrames > _fixedFrame) && _basicAttackReady)
             {
+                _basicFrameWasPressed = 0;
                 BasicAttack();
             }
 
-            if ((_frameInput.SpecialAttack1Down || _frameInput.SpecialAttack1Held) && _skill1Ready)
+            if ((_frameInput.SpecialAttack1Down || _frameInput.SpecialAttack1Held || _skill1FrameWasPressed + _skill1Frames > _fixedFrame) && _skill1Ready)
             {
+                _skill1FrameWasPressed = 0;
                 Skill1();
             }
 
-            if ((_frameInput.SpecialAttack2Down || _frameInput.SpecialAttack2Held) && _skill2Ready)
+            if ((_frameInput.SpecialAttack2Down || _frameInput.SpecialAttack2Held || _skill2FrameWasPressed + _skill2Frames > _fixedFrame) && _skill2Ready)
             {
+                _skill2FrameWasPressed = 0;
                 Skill2();
             }
 
-            if ((_frameInput.UltimateDown || _frameInput.UltimateHeld) && _ultimateReady)
+            if ((_frameInput.UltimateDown || _frameInput.UltimateHeld || _ultimateFrameWasPressed + _ultimateFrames > _fixedFrame) && _ultimateReady)
             {
+                _ultimateFrameWasPressed = 0;
                 Ultimate();
             }
 
@@ -260,6 +299,12 @@ namespace rene_roid_player
 
         protected void SkillCooldowns()
         {
+            if (_locked)
+            {
+                // If any skill lock is active, count until timer has reached 0
+                
+            }
+
             // If _basic attack not ready count until timer is over cooldown
             if (!_basicAttackReady)
             {
@@ -268,6 +313,11 @@ namespace rene_roid_player
                 {
                     _basicAttackReady = true;
                     _basicAttackTimer = 0;
+                }
+
+                if (_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld)
+                {
+                    _basicFrameWasPressed = _fixedFrame;
                 }
             }
 
@@ -280,6 +330,11 @@ namespace rene_roid_player
                     _skill1Ready = true;
                     _skill1Timer = 0;
                 }
+
+                if (_frameInput.SpecialAttack1Down || _frameInput.SpecialAttack1Held)
+                {
+                    _skill1FrameWasPressed = _fixedFrame;
+                }
             }
 
             // If _skill2 not ready count until timer is over cooldown
@@ -290,6 +345,11 @@ namespace rene_roid_player
                 {
                     _skill2Ready = true;
                     _skill2Timer = 0;
+                }
+
+                if (_frameInput.SpecialAttack2Down || _frameInput.SpecialAttack2Held)
+                {
+                    _skill2FrameWasPressed = _fixedFrame;
                 }
             }
 
@@ -302,31 +362,40 @@ namespace rene_roid_player
                     _ultimateReady = true;
                     _ultimateTimer = 0;
                 }
+
+                if (_frameInput.UltimateDown || _frameInput.UltimateHeld)
+                {
+                    _ultimateFrameWasPressed = _fixedFrame;
+                }
             }
         }
 
-        public void BasicAttack()
+        public virtual void BasicAttack()
         {
             print("Basic attack!");
             _basicAttackReady = false;
+            BasicAttack1.Invoke();
         }
 
-        public void Skill1()
+        public virtual void Skill1()
         {
             print("Skill 1!");
             _skill1Ready = false;
+            SpecialAttack1.Invoke();
         }
 
-        public void Skill2()
+        public virtual void Skill2()
         {
             print("Skill 2!");
             _skill2Ready = false;
+            SpecialAttack2.Invoke();
         }
 
-        public void Ultimate()
+        public virtual void Ultimate()
         {
             print("ULTIMATE!");
             _ultimateReady = false;
+            UltimateAttack.Invoke();
         }
         #endregion
 
@@ -711,6 +780,11 @@ namespace rene_roid_player
         public event Action<bool> WallGrabChanged;
         public event Action<bool> Jumped;
         public event Action AirJumped;
+
+        public event Action BasicAttack1;
+        public event Action SpecialAttack1;
+        public event Action SpecialAttack2;
+        public event Action UltimateAttack;
 
         public PlayerBaseStats PlayerStats { get; }
         public Vector2 Input { get; }

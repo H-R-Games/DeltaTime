@@ -1241,7 +1241,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 11.03
+  orthographic size: 5.89
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1264,8 +1264,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 9.6, z: -10}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 4.42, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2228,6 +2228,10 @@ MonoBehaviour:
   Skill1Cooldown: 1
   Skill2Cooldown: 2
   UltimateCooldown: 5
+  _basicAttackFrames: 8
+  _skill1Frames: 8
+  _skill2Frames: 8
+  _ultimateFrames: 8
   _wallLayerMask:
     serializedVersion: 2
     m_Bits: 256
@@ -2638,6 +2642,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 191a3d45630ab0c40a783854db2beb23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _footstepClips: []
+  _tiltChangeSpeed: 0.05
+  _ladderClips: []
+  _minImpactForce: 20
 --- !u!1 &1726357851
 GameObject:
   m_ObjectHideFlags: 0

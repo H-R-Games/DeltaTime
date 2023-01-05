@@ -29,6 +29,10 @@ namespace rene_roid_player
             _player.WallGrabChanged += OnWallGrabChanged;
             _player.Jumped += OnJumped;
             _player.AirJumped += OnAirJumped;
+            _player.BasicAttack1 += OnBasicAttack1;
+            _player.SpecialAttack1 += OnSpecialAttack1;
+            _player.SpecialAttack2 += OnSpecialAttack2;
+            _player.UltimateAttack += OnUltimateAttack;
         }
 
         private void Update()
@@ -45,6 +49,29 @@ namespace rene_roid_player
             else if (Mathf.Abs(_player.Input.x) > 0.1f) _renderer.flipX = _player.Input.x < 0;
         }
 
+        #region Skills
+        private bool _basicAttack1, _specialAttack1, _specialAttack2, _ultimateAttack;
+
+        private void OnBasicAttack1()
+        {
+            _basicAttack1 = true;
+        }
+
+        private void OnSpecialAttack1()
+        {
+            _specialAttack1 = true;
+        }
+
+        private void OnSpecialAttack2()
+        {
+            _specialAttack2 = true;
+        }
+
+        private void OnUltimateAttack()
+        {
+            _ultimateAttack = true;
+        }
+        #endregion
 
         #region Ground Movement
         [Header("GROUND MOVEMENT")]
@@ -165,13 +192,46 @@ namespace rene_roid_player
             ResetFlags();
             if (state == _currentState) return;
 
+            _anim.Play(state, 0); //_anim.CrossFade(state, 0, 0);
+            _currentState = state;
+
             int GetState()
             {
-                return 0;
+                if (Time.time < _lockedTill) return _currentState;
+
+                // ANY SKILL PRESSED
+                if (_ultimateAttack) return LockState(UltimateAttackAnim, .1f);
+                if (_specialAttack2) return LockState(SpecialAttack2Anim, .1f);
+                if (_specialAttack1) return LockState(SpecialAttack1Anim, 1.1f);
+                if (_basicAttack1) return LockState(BasicAttackAnim, .17f);
+
+                if (!_grounded)
+                {
+                    // Hit wall?
+                    if (_isOnWall)
+                    {
+                        // Wall animations?
+                    }
+                }
+
+                if (_jumpTriggered) return _wallJumped ? Jump : Jump;
+
+                if (_grounded) return _player.Input.x == 0 ? Idle : Run;
+                if (_player.Speed.y > 0) return _wallJumped ? Jump : Jump;
+                return Fall;
+
+                // State and time to lock
+                int LockState(int s, float t)
+                {
+                    _lockedTill = Time.time + t;
+                    return s;
+                }
             }
 
             void ResetFlags()
             {
+                _basicAttack1 = _specialAttack1 = _specialAttack2 = _ultimateAttack = false;
+
                 _jumpTriggered = false;
                 _landed = false;
                 _hitWall = false;
@@ -188,8 +248,13 @@ namespace rene_roid_player
 
         private static readonly int Jump = Animator.StringToHash("Jump");
         private static readonly int Fall = Animator.StringToHash("Fall");
+
+        private static readonly int BasicAttackAnim = Animator.StringToHash("BasicAttack");
+        private static readonly int SpecialAttack1Anim = Animator.StringToHash("SpecialAttack1");
+        private static readonly int SpecialAttack2Anim = Animator.StringToHash("SpecialAttack2");
+        private static readonly int UltimateAttackAnim = Animator.StringToHash("UltimateAttack");
         #endregion
-        
+
         #region Audio
         private void PlaySound(AudioClip clip, float volume = 1, float pitch = 1)
         {
