@@ -755,6 +755,12 @@ namespace rene_roid_player
 
         #region Getters & Setters
         public FrameInput GetFrameInput() => _frameInput;
+
+        public bool IsGrounded() => _grounded;
+
+        public bool IsFalling() => _speed.y < 0;
+
+        public bool IsClimbing() => _onLadder || _isOnWall;
         #endregion
 
 #if UNITY_EDITOR
