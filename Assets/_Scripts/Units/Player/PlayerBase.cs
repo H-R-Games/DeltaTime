@@ -753,6 +753,10 @@ namespace rene_roid_player
         #endregion
         #endregion
 
+        #region Getters & Setters
+        public FrameInput GetFrameInput() => _frameInput;
+        #endregion
+
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
