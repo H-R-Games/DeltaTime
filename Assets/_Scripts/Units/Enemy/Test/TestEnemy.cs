@@ -1,7 +1,7 @@
 using UnityEngine;
 
-namespace rene_roid_player {
-    public class TestPlayer : PlayerBase
+namespace rene_roid_enemy {
+    public class TestEnemy : EnemyBase
     {
         public override void Start()
         {

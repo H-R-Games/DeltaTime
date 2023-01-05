@@ -1,12 +1,26 @@
+using System;
 using UnityEngine;
 
 namespace rene_roid_player {
     public class PlayerInput : MonoBehaviour
     {
+        [Header("Player Input")]
+        [Tooltip("The player's basic attack")]
+        [SerializeField] private KeyCode _basicAttack = KeyCode.Mouse0;
+
+        [Tooltip("The player's ability 1")]
+        [SerializeField] private KeyCode _ability1 = KeyCode.Mouse1;
+
+        [Tooltip("The player's ability 2")]
+        [SerializeField] private KeyCode _ability2 = KeyCode.Q;
+
+        [Tooltip("The player's ultimate")]
+        [SerializeField] private KeyCode _ultimate = KeyCode.E;
+
         public FrameInput FrameInput { get; private set; }
 
         void Update() => FrameInput = Gather();
-        
+
         private FrameInput Gather()
         {
             return new FrameInput
@@ -16,17 +30,17 @@ namespace rene_roid_player {
                 JumpDown = Input.GetButtonDown("Jump"),
                 JumpHeld = Input.GetButton("Jump"),
 
-                BasicAttackDown = Input.GetKeyDown(KeyCode.Mouse0),
-                BasicAttackHeld = Input.GetKey(KeyCode.Mouse0),
+                BasicAttackDown = Input.GetKeyDown(_basicAttack),
+                BasicAttackHeld = Input.GetKey(_basicAttack),
 
-                SpecialAttack1Down = Input.GetKeyDown(KeyCode.Mouse1),
-                SpecialAttack1Held = Input.GetKey(KeyCode.Mouse1),
+                SpecialAttack1Down = Input.GetKeyDown(_ability1),
+                SpecialAttack1Held = Input.GetKey(_ability1),
 
-                SpecialAttack2Down = Input.GetKeyDown(KeyCode.Q),
-                SpecialAttack2Held = Input.GetKey(KeyCode.Q),
+                SpecialAttack2Down = Input.GetKeyDown(_ability2),
+                SpecialAttack2Held = Input.GetKey(_ability2),
 
-                UltimateDown = Input.GetKeyDown(KeyCode.E),
-                UltimateHeld = Input.GetKey(KeyCode.E),
+                UltimateDown = Input.GetKeyDown(_ultimate),
+                UltimateHeld = Input.GetKey(_ultimate),
             };
         }
     }

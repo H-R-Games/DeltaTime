@@ -1,21 +1,62 @@
+using System;
 using UnityEngine;
 
 namespace rene_roid_player
 {
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
-    public class PlayerBase : MonoBehaviour
+    public class PlayerBase : MonoBehaviour, IPlayerController
     {
         [SerializeField] private PlayerBaseStats _baseStats;
 
         #region Internal Variables
-        [HideInInspector] private Rigidbody2D _rb;
+        [Header("Internal Variables")]
         [SerializeField] private CapsuleCollider2D _col;
         [SerializeField] private LayerMask _playerLayer; // Layer mask for the player
+        [HideInInspector] private Rigidbody2D _rb;
         private bool _cachedTriggerSetting; // Used to cache the trigger setting of the collider
 
         private PlayerInput _input;
         private FrameInput _frameInput;
         private int _fixedFrame;
+        #endregion
+
+        #region External Variables
+        // [Header("External Variables")]
+        public event Action<bool, float> GroundedChanged; // Event for when the player's grounded state changes
+        public event Action<bool> WallGrabChanged;
+        public event Action<bool> Jumped;
+        public event Action AirJumped;
+
+        public event Action BasicAttack1;
+        public event Action SpecialAttack1;
+        public event Action SpecialAttack2;
+        public event Action UltimateAttack;
+        
+        public PlayerBaseStats PlayerStats => _baseStats;
+        public Vector2 Input => _frameInput.Move;
+        public Vector2 Speed => _speed;
+        public Vector2 GroundNormal => _groundNormal;
+        public int WallDirection => _wallDir;
+        public bool ClimbingLadder => _onLadder;
+
+
+        public virtual void ApplyVelocity(Vector2 vel, PlayerForce forceType)
+        {
+            if (forceType == PlayerForce.Burst) _speed += vel;
+            else _currentExternalVelocity += vel;
+        }
+
+        public virtual void TakeAwayControl(bool resetVelocity = true)
+        {
+            if (resetVelocity) _currentExternalVelocity = Vector2.zero;
+            _hasControl = false;
+        }
+
+        public virtual void ReturnControl()
+        {
+            _speed = Vector2.zero;
+            _hasControl = true;
+        }
         #endregion
 
         public virtual void Awake()
@@ -24,6 +65,7 @@ namespace rene_roid_player
             _input = GetComponent<PlayerInput>();
 
             AwakePlayerStats();
+            AwakeSkillFrameSetup();
         }
 
         public virtual void Start()
@@ -53,11 +95,12 @@ namespace rene_roid_player
                 _jumpToConsume = true;
                 _frameJumpWasPressed = _fixedFrame;
             }
+
+            GatherSkillInput();
         }
 
         #region Player Stats
-        private PlayerBaseStats _maxStats;
-
+        [Header("Player Stats")]
         [SerializeField] private int _level = 1;
 
         [SerializeField] private float _currentHealth;
@@ -65,6 +108,9 @@ namespace rene_roid_player
         [SerializeField] private float _currentDamage;
         [SerializeField] private float _currentArmor;
         [SerializeField] private float _currentMovementSpeed;
+
+        private PlayerBaseStats _maxStats;
+
 
         private void AwakePlayerStats()
         {
@@ -152,7 +198,7 @@ namespace rene_roid_player
                 //Die();
             }
         }
-        
+
 
         public float DealDamage(float percentage, float proc)
         {
@@ -169,9 +215,192 @@ namespace rene_roid_player
             TakeDamage(DealDamage(dmg, 1));
         }
         #endregion
+
+        #region Getters and Setters
+        public PlayerBaseStats MaxStats => _maxStats;
+        #endregion
+        #endregion
+
+        #region Player Skills
+        [Header("Player Skills")]
+        public float BasicAttackCooldown = 0.5f;
+        public float Skill1Cooldown = 1;
+        public float Skill2Cooldown = 2;
+        public float UltimateCooldown = 5;
+
+        private float _basicAttackTimer;
+        private float _skill1Timer;
+        private float _skill2Timer;
+        private float _ultimateTimer;
+
+        private bool _basicAttackReady = true;
+        private bool _skill1Ready = true;
+        private bool _skill2Ready = true;
+        private bool _ultimateReady = true;
+
+        [SerializeField] private int _basicAttackFrames = 8;
+        [SerializeField] private int _skill1Frames = 8;
+        [SerializeField] private int _skill2Frames = 8;
+        [SerializeField] private int _ultimateFrames = 8;
+
+        private int _basicFrameWasPressed;
+        private int _skill1FrameWasPressed;
+        private int _skill2FrameWasPressed;
+        private int _ultimateFrameWasPressed;
+
+        [SerializeField] public float _basicAttackTimeLock = 0.5f;
+        [SerializeField] public float _skill1TimeLock = 0.5f;
+        [SerializeField] public float _skill2TimeLock = 0.5f;
+        [SerializeField] public float _ultimateTimeLock = 0.5f;
+
+        private float _basicAttackTimeLockTimer;
+        private float _skill1TimeLockTimer;
+        private float _skill2TimeLockTimer;
+        private float _ultimateTimeLockTimer;
+
+        private bool _locked = false;
+
+        private void AwakeSkillFrameSetup()
+        {
+            _basicFrameWasPressed = -_basicAttackFrames;
+            _skill1FrameWasPressed = -_skill1Frames;
+            _skill2FrameWasPressed = -_skill2Frames;
+            _ultimateFrameWasPressed = -_ultimateFrames;
+        }
+        
+        private void GatherSkillInput()
+        {
+            if ((_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld || _basicFrameWasPressed + _basicAttackFrames > _fixedFrame) && _basicAttackReady)
+            {
+                _basicFrameWasPressed = 0;
+                BasicAttack();
+            }
+
+            if ((_frameInput.SpecialAttack1Down || _frameInput.SpecialAttack1Held || _skill1FrameWasPressed + _skill1Frames > _fixedFrame) && _skill1Ready)
+            {
+                _skill1FrameWasPressed = 0;
+                Skill1();
+            }
+
+            if ((_frameInput.SpecialAttack2Down || _frameInput.SpecialAttack2Held || _skill2FrameWasPressed + _skill2Frames > _fixedFrame) && _skill2Ready)
+            {
+                _skill2FrameWasPressed = 0;
+                Skill2();
+            }
+
+            if ((_frameInput.UltimateDown || _frameInput.UltimateHeld || _ultimateFrameWasPressed + _ultimateFrames > _fixedFrame) && _ultimateReady)
+            {
+                _ultimateFrameWasPressed = 0;
+                Ultimate();
+            }
+
+            SkillCooldowns();
+        }
+
+        protected void SkillCooldowns()
+        {
+            if (_locked)
+            {
+                // If any skill lock is active, count until timer has reached 0
+                
+            }
+
+            // If _basic attack not ready count until timer is over cooldown
+            if (!_basicAttackReady)
+            {
+                _basicAttackTimer += Time.deltaTime;
+                if (_basicAttackTimer >= BasicAttackCooldown)
+                {
+                    _basicAttackReady = true;
+                    _basicAttackTimer = 0;
+                }
+
+                if (_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld)
+                {
+                    _basicFrameWasPressed = _fixedFrame;
+                }
+            }
+
+            // If _skill1 not ready count until timer is over cooldown
+            if (!_skill1Ready)
+            {
+                _skill1Timer += Time.deltaTime;
+                if (_skill1Timer >= Skill1Cooldown)
+                {
+                    _skill1Ready = true;
+                    _skill1Timer = 0;
+                }
+
+                if (_frameInput.SpecialAttack1Down || _frameInput.SpecialAttack1Held)
+                {
+                    _skill1FrameWasPressed = _fixedFrame;
+                }
+            }
+
+            // If _skill2 not ready count until timer is over cooldown
+            if (!_skill2Ready)
+            {
+                _skill2Timer += Time.deltaTime;
+                if (_skill2Timer >= Skill2Cooldown)
+                {
+                    _skill2Ready = true;
+                    _skill2Timer = 0;
+                }
+
+                if (_frameInput.SpecialAttack2Down || _frameInput.SpecialAttack2Held)
+                {
+                    _skill2FrameWasPressed = _fixedFrame;
+                }
+            }
+
+            // If _ultimate attack not ready count until timer is over cooldown
+            if (!_ultimateReady)
+            {
+                _ultimateTimer += Time.deltaTime;
+                if (_ultimateTimer >= UltimateCooldown)
+                {
+                    _ultimateReady = true;
+                    _ultimateTimer = 0;
+                }
+
+                if (_frameInput.UltimateDown || _frameInput.UltimateHeld)
+                {
+                    _ultimateFrameWasPressed = _fixedFrame;
+                }
+            }
+        }
+
+        public virtual void BasicAttack()
+        {
+            print("Basic attack!");
+            _basicAttackReady = false;
+            BasicAttack1.Invoke();
+        }
+
+        public virtual void Skill1()
+        {
+            print("Skill 1!");
+            _skill1Ready = false;
+            SpecialAttack1.Invoke();
+        }
+
+        public virtual void Skill2()
+        {
+            print("Skill 2!");
+            _skill2Ready = false;
+            SpecialAttack2.Invoke();
+        }
+
+        public virtual void Ultimate()
+        {
+            print("ULTIMATE!");
+            _ultimateReady = false;
+            UltimateAttack.Invoke();
+        }
         #endregion
 
         #region Movement
+        [Header("Movement")]
         private Vector2 _speed;
         private Vector2 _currentExternalVelocity;
 
@@ -248,7 +477,7 @@ namespace rene_roid_player
             {
                 _grounded = true;
                 ResetJump();
-                // Grounded changed Invoke
+                GroundedChanged?.Invoke(true, Mathf.Abs(_speed.y));
             }
 
             // Left the ground
@@ -256,7 +485,7 @@ namespace rene_roid_player
             {
                 _grounded = false;
                 _frameLeftGrounded = _fixedFrame;
-                // Grounded changed Invoke
+                GroundedChanged?.Invoke(false, 0);
             }
         }
         #endregion
@@ -294,10 +523,11 @@ namespace rene_roid_player
                 _isLeavingWall = false;
                 ResetAirJumps();
             }
-            // WallGrabbedChanged Invoke "on"
+            WallGrabChanged?.Invoke(on);
         }
 
         #endregion
+        
         #region Ladders
         private Vector2 _ladderSnapVel; // TODO: determine if we need to reset this when leaving a ladder, or use a different kind of Lerp/MoveTowards
         private int _frameLeftLadder = int.MinValue;
@@ -366,6 +596,7 @@ namespace rene_roid_player
             ToggleClimbingLadder(false);
             _speed.y = _jumpForce;
             // Jumped Invoke
+            Jumped?.Invoke(false);
         }
 
         protected virtual void WallJump()
@@ -376,6 +607,7 @@ namespace rene_roid_player
             _currentWallJumpMoveMultiplier = 0;
             _speed = Vector2.Scale(_wallJumpPower, new Vector2(-_wallDir, 1));
             // Jumped Invoke
+            Jumped?.Invoke(true);
         }
 
         protected virtual void AirJump()
@@ -384,6 +616,7 @@ namespace rene_roid_player
             _airJumpsRemaining--;
             _speed.y = _jumpForce;
             // Air Jumped Invoke
+            AirJumped?.Invoke();
         }
 
         protected virtual void ResetJump()
@@ -411,7 +644,7 @@ namespace rene_roid_player
                     _speed.x = 0;
 
                 var inputX = _frameInput.Move.x * (_onLadder ? _ladderShimmySpeedMultiplier : 1);
-                _speed.x = Mathf.MoveTowards(_speed.x, inputX * _baseStats.MovementSpeed, _currentWallJumpMoveMultiplier * _acceleration * Time.fixedDeltaTime);
+                _speed.x = Mathf.MoveTowards(_speed.x, inputX * _currentMovementSpeed, _currentWallJumpMoveMultiplier * _acceleration * Time.fixedDeltaTime);
             }
         }
         #endregion
@@ -491,7 +724,7 @@ namespace rene_roid_player
         [SerializeField] private LayerMask _wallLayerMask; // Layer mask for climbable walls are on
         private bool _requireInputPush = false; // If true, the player must push against the wall to climb it
 
-        private float _wallClimbSpeed = 7; // Speed at which the player climbs walls -------------- NEEDS TO BE HALF OF PLAYER SPEED
+        private float _wallClimbSpeed => _currentMovementSpeed / 2; // Speed at which the player climbs walls -------------- NEEDS TO BE HALF OF PLAYER SPEED
         private float _wallFallAcceleration = 8; // Acceleration applied to the player when falling off a wall
         private float _maxWallFallSpeed = 16; // Max speed the player can fall off a wall at
         private Vector2 _wallJumpPower = new Vector2(30, 25); // Power applied to the player when jumping off a wall
@@ -518,19 +751,16 @@ namespace rene_roid_player
         // External
         private int _externalVelocityDecay = 100;
         #endregion
+        #endregion
 
-        public enum PlayerForce
-        {
-            /// <summary>
-            /// Added directly to the players movement speed, to be controlled by the standard deceleration
-            /// </summary>
-            Burst,
+        #region Getters & Setters
+        public FrameInput GetFrameInput() => _frameInput;
 
-            /// <summary>
-            /// An additive force handled by the decay system
-            /// </summary>
-            Decay
-        }
+        public bool IsGrounded() => _grounded;
+
+        public bool IsFalling() => _speed.y < 0;
+
+        public bool IsClimbing() => _onLadder || _isOnWall;
         #endregion
 
 #if UNITY_EDITOR
@@ -539,6 +769,10 @@ namespace rene_roid_player
             Gizmos.color = Color.white;
             var bounds = GetWallDetectionBounds();
             Gizmos.DrawWireCube(bounds.center, bounds.size);
+
+            Gizmos.color = Color.green;
+            var bound = new Bounds(_rb.position, _col.size);
+            Gizmos.DrawWireCube(bound.center, bound.size);
         }
 
         private void OnValidate()
@@ -548,5 +782,39 @@ namespace rene_roid_player
             if (_rb == null) _rb = GetComponent<Rigidbody2D>(); // serialized but hidden in the inspector
         }
 #endif
+    }
+
+    public interface IPlayerController
+    {
+        public event Action<bool, float> GroundedChanged;
+        public event Action<bool> WallGrabChanged;
+        public event Action<bool> Jumped;
+        public event Action AirJumped;
+
+        public event Action BasicAttack1;
+        public event Action SpecialAttack1;
+        public event Action SpecialAttack2;
+        public event Action UltimateAttack;
+
+        public PlayerBaseStats PlayerStats { get; }
+        public Vector2 Input { get; }
+        public Vector2 Speed { get; }
+        public Vector2 GroundNormal { get; }
+        public int WallDirection { get; }
+        public bool ClimbingLadder { get; }
+        public void ApplyVelocity(Vector2 vel, PlayerForce force);
+    }
+
+    public enum PlayerForce
+    {
+        /// <summary>
+        /// Added directly to the players movement speed, to be controlled by the standard deceleration
+        /// </summary>
+        Burst,
+
+        /// <summary>
+        /// An additive force handled by the decay system
+        /// </summary>
+        Decay
     }
 }
