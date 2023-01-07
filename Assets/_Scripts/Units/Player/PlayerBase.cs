@@ -78,7 +78,7 @@ namespace rene_roid_player
         public virtual void Update()
         {
             GatherInput();
-
+            UpdateItems();
             UpdatePlayerStats();
         }
 
@@ -151,16 +151,17 @@ namespace rene_roid_player
 
         private void LevelUpPlayerStats()
         {
-            SetPlayerStats();
             UpdateMaxPlayerStats();
+            SetPlayerStats();
         }
 
         private void UpdateMaxPlayerStats()
         {
-            _maxStats.Health = (_baseStats.Health * (_baseStats.HealthPerLevel * _level == 1 ? 0 : _level)) + _extraFlatHealth + ((_baseStats.Health + (_baseStats.HealthPerLevel * _level == 1 ? 0 : _level)) * _extraHealthPercentage);
-            _maxStats.HealthRegen = (_baseStats.HealthRegen * (_baseStats.HealthRegenPerLevel * _level == 1 ? 0 : _level)) + _extraFlatHealthRegen + ((_baseStats.HealthRegen + (_baseStats.HealthRegenPerLevel * _level == 1 ? 0 : _level)) * _extraHealthRegenPercentage);
-            _maxStats.Armor = (_baseStats.Armor * (_baseStats.ArmorPerLevel * _level == 1 ? 0 : _level)) + _extraFlatArmor + ((_baseStats.Armor + (_baseStats.ArmorPerLevel * _level == 1 ? 0 : _level)) * _extraArmorPercentage);
-            _maxStats.MovementSpeed = (_baseStats.MovementSpeed * (_baseStats.MovementSpeedPerLevel * _level == 1 ? 0 : _level)) + _extraFlatMovementSpeed + ((_baseStats.MovementSpeed + (_baseStats.MovementSpeedPerLevel * _level == 1 ? 0 : _level)) * _extraMovementSpeedPercentage);
+            _maxStats.Health = (_baseStats.Health + ((_level - 1) * _baseStats.HealthPerLevel)) * (1 + _extraHealthPercentage) + _extraFlatHealth;
+            _maxStats.HealthRegen = (_baseStats.HealthRegen + ((_level - 1) * _baseStats.HealthRegenPerLevel)) * (1 + _extraHealthRegenPercentage) + _extraFlatHealthRegen;
+            _maxStats.Damage = (_baseStats.Damage + ((_level - 1) * _baseStats.DamagePerLevel));
+            _maxStats.Armor = (_baseStats.Armor + ((_level - 1) * _baseStats.ArmorPerLevel)) * (1 + _extraArmorPercentage) + _extraFlatArmor;
+            _maxStats.MovementSpeed = (_baseStats.MovementSpeed + ((_level - 1) * _baseStats.MovementSpeedPerLevel)) * (1 + _extraMovementSpeedPercentage) + _extraFlatMovementSpeed;
         }
 
         #region Add Stats
