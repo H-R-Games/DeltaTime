@@ -441,7 +441,7 @@ namespace rene_roid_player
 
             // Ground and Ceiling
             _groundHitCount = Physics2D.CapsuleCastNonAlloc(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _groundHits, _grounderDistance, ~_playerLayer);
-            _ceilingHitCount = Physics2D.CapsuleCastNonAlloc(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _ceilingHits, _grounderDistance, ~_playerLayer);
+            _ceilingHitCount = Physics2D.CapsuleCastNonAlloc(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _ceilingHits, _grounderDistance, (~_playerLayer & ~_oneWayFloor));
 
             // Walls and Ladders
             var bounds = GetWallDetectionBounds();
@@ -510,7 +510,7 @@ namespace rene_roid_player
             bool ShouldStickWall()
             {
                 if (_wallDir == 0 || _grounded) return false;
-                return _requireInputPush ? Mathf.Sign(_frameInput.Move.x) == _wallDir : true;
+                return _requireInputPush ? Mathf.Sign(_frameInput.Move.x > 0 ? 1 : - 1) == _wallDir : true;
             }
         }
 
@@ -746,6 +746,7 @@ namespace rene_roid_player
         // Collisions
         private float _grounderDistance = 0.1f; // Distance from the player's feet to the ground
         private Vector2 _wallDetectorSize = new Vector2(0.75f, 1.25f); // Size of the wall detector box
+        [SerializeField] private LayerMask _oneWayFloor; // Layer mask for ground is on
 
 
         // External
