@@ -1,0 +1,1102 @@
+fileFormatVersion: 2
+guid: 4a49941b9b2810a4b8650664b2c72729
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: NAMKA_FULL_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 410
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b0480153eb8a27498dfd3af9fd871ab
+      internalID: -146469495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 369
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 785be6585327a914aa1bca75f89e504a
+      internalID: 2040440195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_2
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 369
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7adbdf242810c9d42a7e4892d1f0d344
+      internalID: 1874060230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_3
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 369
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a899bf17650fb1d42b6c7b35348a30d2
+      internalID: -959684547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_4
+      rect:
+        serializedVersion: 2
+        x: 213
+        y: 369
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7a33093abcc0c74eace0ee8362a1582
+      internalID: 132152640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_5
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 369
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d265be98059e43c49b08c6441abdd499
+      internalID: 1204859501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 328
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48bb93cc2edc51d4ab4b46b2bf34e788
+      internalID: 1228037999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_7
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 328
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c27c16766820947429631bdd1043aa40
+      internalID: -1897674143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_8
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 328
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e11edcf3db14474796abaa6dbb5784b
+      internalID: -330046482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_9
+      rect:
+        serializedVersion: 2
+        x: 213
+        y: 328
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08d402d96ee82994696e30a1d71eda9a
+      internalID: -416446683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_10
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 328
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c477141a28ae7684cbf6b1cfad9b1c90
+      internalID: 231903464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_11
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 328
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4b23a38c0200a64896c9e5661f17549
+      internalID: -1286057975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_12
+      rect:
+        serializedVersion: 2
+        x: 426
+        y: 328
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac50542e1d0b4ee42832dc041b888a5d
+      internalID: 1197804480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_13
+      rect:
+        serializedVersion: 2
+        x: 497
+        y: 328
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2778c3f9d12fad4b8ca50e5622e3cee
+      internalID: 1300841870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_14
+      rect:
+        serializedVersion: 2
+        x: 568
+        y: 328
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11bcd1a0ef0eb3c459ac5f6776ba4de4
+      internalID: -279554739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 287
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd906cc3874b4154eb12a40c2cdfa0eb
+      internalID: -597444477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_16
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 287
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39b9afcf30c68634f868ac50de6216f7
+      internalID: 1566502018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_17
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 246
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6651ceee1d748764781f2fb267dbbf2f
+      internalID: 1279822098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_18
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 246
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fc829632b0dfe44e8a7ae9ff48eba8e
+      internalID: 1488042144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_19
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 205
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a731aca6bac02214ba90a9adbbc33ef7
+      internalID: 34599341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_20
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 205
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 074fd5ee7df31f642888b04186568635
+      internalID: 398545933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_21
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 164
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a87a3c2e32ca1e41adc4fd6cbd3c170
+      internalID: -2102932031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_22
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 164
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 186e3e470cd91c54e86e25570dec4985
+      internalID: 580104043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_23
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 164
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 929f935b1db195049ba99c61848430f1
+      internalID: 1886192545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 123
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a05e304257fef642b74fa6d530706b5
+      internalID: -125857074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_25
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 123
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 165b065462fa5684a956e01c12529db9
+      internalID: -1077646736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_26
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 123
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bcf03fa4349dfe54caa63e29aa98f2d0
+      internalID: -1779129766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_27
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 82
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c6d6fc2d9ea18144b376b96a99bdbad
+      internalID: -73365464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_28
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 82
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 666e28f53b725484baf308745da37a0e
+      internalID: 2124989567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_29
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 41
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b892073ade55f664b9b497af589ce7c4
+      internalID: 1509468392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_30
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 41
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1034ef320e7f59342a3583dac4eceb40
+      internalID: 452813411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_31
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 41
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 296bc8fa940138f409f954d82a964cde
+      internalID: 1389157321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_32
+      rect:
+        serializedVersion: 2
+        x: 213
+        y: 41
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a974924ad96cbb47bf304d5ba2af7ff
+      internalID: -1410757721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_33
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 41
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f62d1ff18b69c8a4e8d49c5c153fcb14
+      internalID: 434204236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_34
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 41
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 402afa7d7a504084fbc998b2f6140905
+      internalID: 2031011527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_35
+      rect:
+        serializedVersion: 2
+        x: 426
+        y: 41
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d752d07a1b712fe479d31af9ce9e175d
+      internalID: 265819455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_36
+      rect:
+        serializedVersion: 2
+        x: 497
+        y: 41
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e60f598e7f158ce479db0df77fbf4a91
+      internalID: 393134149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_37
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1aaa29945a977e488fb6bdf30080580
+      internalID: -155824562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_38
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 0
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9bb38697875da894192f64ec6ce86396
+      internalID: 1376956942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_39
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 0
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 046eea4d4edc44f43836d97b7f3f6892
+      internalID: 598765980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_40
+      rect:
+        serializedVersion: 2
+        x: 213
+        y: 0
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ccbb825f1d695f4fbea90fa2072c385
+      internalID: 913109394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_41
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 0
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b72f9676b8e192f4c8c61f019eb25760
+      internalID: -169118751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_42
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 0
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa87fb3c8d66e3945addf0b0b16a59c7
+      internalID: -2021278928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NAMKA_FULL_43
+      rect:
+        serializedVersion: 2
+        x: 426
+        y: 0
+        width: 71
+        height: 41
+      alignment: 9
+      pivot: {x: 0.32, y: 0.365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 325e44a5e7171ba4c84f72a8c3285f97
+      internalID: -1577127575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      NAMKA_FULL_38: 1376956942
+      NAMKA_FULL_5: 1204859501
+      NAMKA_FULL_34: 2031011527
+      NAMKA_FULL_11: -1286057975
+      NAMKA_FULL_37: -155824562
+      NAMKA_FULL_4: 132152640
+      NAMKA_FULL_8: -330046482
+      NAMKA_FULL_3: -959684547
+      NAMKA_FULL_36: 393134149
+      NAMKA_FULL_2: 1874060230
+      NAMKA_FULL_32: -1410757721
+      NAMKA_FULL_43: -1577127575
+      NAMKA_FULL_20: 398545933
+      NAMKA_FULL_40: 913109394
+      NAMKA_FULL_0: -146469495
+      NAMKA_FULL_12: 1197804480
+      NAMKA_FULL_29: 1509468392
+      NAMKA_FULL_18: 1488042144
+      NAMKA_FULL_27: -73365464
+      NAMKA_FULL_7: -1897674143
+      NAMKA_FULL_17: 1279822098
+      NAMKA_FULL_9: -416446683
+      NAMKA_FULL_13: 1300841870
+      NAMKA_FULL_19: 34599341
+      NAMKA_FULL_33: 434204236
+      NAMKA_FULL_16: 1566502018
+      NAMKA_FULL_22: 580104043
+      NAMKA_FULL_31: 1389157321
+      NAMKA_FULL_14: -279554739
+      NAMKA_FULL_24: -125857074
+      NAMKA_FULL_41: -169118751
+      NAMKA_FULL_21: -2102932031
+      NAMKA_FULL_1: 2040440195
+      NAMKA_FULL_15: -597444477
+      NAMKA_FULL_35: 265819455
+      NAMKA_FULL_10: 231903464
+      NAMKA_FULL_23: 1886192545
+      NAMKA_FULL_25: -1077646736
+      NAMKA_FULL_28: 2124989567
+      NAMKA_FULL_42: -2021278928
+      NAMKA_FULL_39: 598765980
+      NAMKA_FULL_30: 452813411
+      NAMKA_FULL_6: 1228037999
+      NAMKA_FULL_26: -1779129766
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

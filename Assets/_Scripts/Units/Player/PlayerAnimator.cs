@@ -50,6 +50,9 @@ namespace rene_roid_player
         }
 
         #region Skills
+        [Header("Skills")]
+        [SerializeField] private float _basicAttack1Time;
+        [SerializeField] private float _specialAttack1Time, _specialAttack2Time, _ultimateAttackTime;
         private bool _basicAttack1, _specialAttack1, _specialAttack2, _ultimateAttack;
 
         private void OnBasicAttack1()
@@ -200,10 +203,10 @@ namespace rene_roid_player
                 if (Time.time < _lockedTill) return _currentState;
 
                 // ANY SKILL PRESSED
-                if (_ultimateAttack) return LockState(UltimateAttackAnim, .1f);
-                if (_specialAttack2) return LockState(SpecialAttack2Anim, .1f);
-                if (_specialAttack1) return LockState(SpecialAttack1Anim, 1.1f);
-                if (_basicAttack1) return LockState(BasicAttackAnim, .17f);
+                if (_ultimateAttack) return LockState(UltimateAttackAnim, _ultimateAttackTime);
+                if (_specialAttack2) return LockState(SpecialAttack2Anim, _specialAttack2Time);
+                if (_specialAttack1) return LockState(SpecialAttack1Anim, _specialAttack1Time);
+                if (_basicAttack1) return LockState(BasicAttackAnim, _basicAttack1Time);
 
                 if (!_grounded)
                 {

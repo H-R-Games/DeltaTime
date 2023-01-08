@@ -420,7 +420,7 @@ namespace rene_roid_player
 
         private void GatherSkillInput()
         {
-            if ((_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld || _basicFrameWasPressed + _basicAttackFrames > _fixedFrame) && _basicAttackReady)
+            if ((_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld) && _basicAttackReady)
             {
                 _basicFrameWasPressed = 0;
                 BasicAttack();
