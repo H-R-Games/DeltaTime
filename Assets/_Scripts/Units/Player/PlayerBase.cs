@@ -1,6 +1,7 @@
 using rene_roid;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace rene_roid_player
@@ -79,7 +80,7 @@ namespace rene_roid_player
         public virtual void Update()
         {
             GatherInput();
-
+            UpdateItems();
             UpdatePlayerStats();
         }
 
@@ -110,6 +111,15 @@ namespace rene_roid_player
         [SerializeField] private float _currentDamage;
         [SerializeField] private float _currentArmor;
         [SerializeField] private float _currentMovementSpeed;
+
+        private float _extraHealthPercentage = 0f;
+        private float _extraFlatHealth = 0f;
+        private float _extraHealthRegenPercentage = 0f;
+        private float _extraFlatHealthRegen = 0f;
+        private float _extraArmorPercentage = 0f;
+        private float _extraFlatArmor = 0f;
+        private float _extraMovementSpeedPercentage = 0f;
+        private float _extraFlatMovementSpeed = 0f;
 
         private PlayerBaseStats _maxStats;
 
@@ -143,14 +153,150 @@ namespace rene_roid_player
 
         private void LevelUpPlayerStats()
         {
-            _maxStats.Health += _maxStats.HealthPerLevel;
-            _maxStats.HealthRegen += _maxStats.HealthRegenPerLevel;
-            _maxStats.Damage += _maxStats.DamagePerLevel;
-            _maxStats.Armor += _maxStats.ArmorPerLevel;
-            _maxStats.MovementSpeed += _maxStats.MovementSpeedPerLevel;
-
+            UpdateMaxPlayerStats();
             SetPlayerStats();
         }
+
+        private void UpdateMaxPlayerStats()
+        {
+            _maxStats.Health = (_baseStats.Health + ((_level - 1) * _baseStats.HealthPerLevel)) * (1 + _extraHealthPercentage) + _extraFlatHealth;
+            _maxStats.HealthRegen = (_baseStats.HealthRegen + ((_level - 1) * _baseStats.HealthRegenPerLevel)) * (1 + _extraHealthRegenPercentage) + _extraFlatHealthRegen;
+            _maxStats.Damage = (_baseStats.Damage + ((_level - 1) * _baseStats.DamagePerLevel));
+            _maxStats.Armor = (_baseStats.Armor + ((_level - 1) * _baseStats.ArmorPerLevel)) * (1 + _extraArmorPercentage) + _extraFlatArmor;
+            _maxStats.MovementSpeed = (_baseStats.MovementSpeed + ((_level - 1) * _baseStats.MovementSpeedPerLevel)) * (1 + _extraMovementSpeedPercentage) + _extraFlatMovementSpeed;
+        }
+
+        #region Add Stats
+
+        public void AddHealthPercentage(float percentage)
+        {
+            _extraHealthPercentage += percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddHealthFlat(float flat)
+        {
+            _extraFlatHealth += flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddHealthRegenPercentage(float percentage)
+        {
+            _extraHealthRegenPercentage += percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddHealthRegenFlat(float flat)
+        {
+            _extraFlatHealthRegen += flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddArmorPercentage(float percentage)
+        {
+            _extraArmorPercentage += percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddArmorFlat(float flat)
+        {
+            _extraFlatArmor += flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddMovementSpeedPercentage(float percentage)
+        {
+            _extraMovementSpeedPercentage += percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddMovementSpeedFlat(float flat)
+        {
+            _extraFlatMovementSpeed += flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddSpecialMultiplier(float multiplier)
+        {
+            _specialMultiplier += multiplier;
+        }
+
+        public void AddFlatDamageBonus(float flat)
+        {
+            _flatDmgBonus += flat;
+        }
+
+        public void AddPercentageDamageBonus(float percentage)
+        {
+            _percentageDmgBonus += percentage;
+        }
+        #endregion
+
+        #region Remove Stats
+
+        public void RemoveHealthPercentage(float percentage)
+        {
+            _extraHealthPercentage -= percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveHealthFlat(float flat)
+        {
+            _extraFlatHealth -= flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveHealthRegenPercentage(float percentage)
+        {
+            _extraHealthRegenPercentage -= percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveHealthRegenFlat(float flat)
+        {
+            _extraFlatHealthRegen -= flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveArmorPercentage(float percentage)
+        {
+            _extraArmorPercentage -= percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveArmorFlat(float flat)
+        {
+            _extraFlatArmor -= flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveMovementSpeedPercentage(float percentage)
+        {
+            _extraMovementSpeedPercentage -= percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveMovementSpeedFlat(float flat)
+        {
+            _extraFlatMovementSpeed -= flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveSpecialMultiplier(float multiplier)
+        {
+            _specialMultiplier -= multiplier;
+        }
+
+        public void RemoveFlatDamageBonus(float flat)
+        {
+            _flatDmgBonus -= flat;
+        }
+
+        public void RemovePercentageDamageBonus(float percentage)
+        {
+            _percentageDmgBonus -= percentage;
+        }
+        #endregion
 
         #region Health
         private void ConstantHealing()
@@ -225,6 +371,7 @@ namespace rene_roid_player
 
         #region Player Skills
         [Header("Player Skills")]
+        [Header("Cooldowns")]
         public float BasicAttackCooldown = 0.5f;
         public float Skill1Cooldown = 1;
         public float Skill2Cooldown = 2;
@@ -240,20 +387,21 @@ namespace rene_roid_player
         private bool _skill2Ready = true;
         private bool _ultimateReady = true;
 
-        [SerializeField] private int _basicAttackFrames = 8;
-        [SerializeField] private int _skill1Frames = 8;
-        [SerializeField] private int _skill2Frames = 8;
-        [SerializeField] private int _ultimateFrames = 8;
+        private int _basicAttackFrames = 8;
+        private int _skill1Frames = 8;
+        private int _skill2Frames = 8;
+        private int _ultimateFrames = 8;
 
         private int _basicFrameWasPressed;
         private int _skill1FrameWasPressed;
         private int _skill2FrameWasPressed;
         private int _ultimateFrameWasPressed;
 
-        [SerializeField] public float _basicAttackTimeLock = 0.5f;
-        [SerializeField] public float _skill1TimeLock = 0.5f;
-        [SerializeField] public float _skill2TimeLock = 0.5f;
-        [SerializeField] public float _ultimateTimeLock = 0.5f;
+        [Header("Time Between Skills")]
+        public float _basicAttackTimeLock = 0.5f;
+        public float _skill1TimeLock = 0.5f;
+        public float _skill2TimeLock = 0.5f;
+        public float _ultimateTimeLock = 0.5f;
 
         private float _basicAttackTimeLockTimer;
         private float _skill1TimeLockTimer;
@@ -398,6 +546,25 @@ namespace rene_roid_player
             print("ULTIMATE!");
             _ultimateReady = false;
             UltimateAttack.Invoke();
+        }
+        #endregion
+
+        #region Item Management
+        [Header("Item Management")]
+        public List<Item> _items = new List<Item>();
+
+        public void AddItem(Item item)
+        {
+            _items.Add(item);
+            item.Items.ForEach(i => i.OnGet(this));
+        }
+
+        private void UpdateItems() => _items.ForEach(i => i.Items.ForEach(i => i.OnUpdate(this)));
+
+        public void RemoveItem(Item item)
+        {
+            _items.Remove(item);
+            item.Items.ForEach(i => i.OnRemove(this));
         }
         #endregion
 
@@ -725,6 +892,7 @@ namespace rene_roid_player
         }
 
         #region Movement Stats
+        [Header("Movement Stats")]
         // Movement
         private float _acceleration = 120; // Capacity to gain horizontal speed
         private float _groundDeceleration = 60; // Pace at which the player comes to a stop
@@ -747,6 +915,7 @@ namespace rene_roid_player
 
         // Walls
         private bool _allowWalls = true; // Allows wall slide / Jump
+        [Header("Layers")]
         [SerializeField] private LayerMask _wallLayerMask; // Layer mask for climbable walls are on
         private bool _requireInputPush = false; // If true, the player must push against the wall to climb it
 

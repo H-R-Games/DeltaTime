@@ -23,6 +23,10 @@ namespace rene_roid {
         private void Update()
         {
             AdaptiveCamera();
+        }
+
+        private void OnGUI()
+        {
             CameraMovement();
         }
 
