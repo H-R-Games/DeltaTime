@@ -1,4 +1,6 @@
+using rene_roid;
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace rene_roid_player
@@ -31,7 +33,7 @@ namespace rene_roid_player
         public event Action SpecialAttack1;
         public event Action SpecialAttack2;
         public event Action UltimateAttack;
-        
+
         public PlayerBaseStats PlayerStats => _baseStats;
         public Vector2 Input => _frameInput.Move;
         public Vector2 Speed => _speed;
@@ -267,7 +269,7 @@ namespace rene_roid_player
             _skill2FrameWasPressed = -_skill2Frames;
             _ultimateFrameWasPressed = -_ultimateFrames;
         }
-        
+
         private void GatherSkillInput()
         {
             if ((_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld || _basicFrameWasPressed + _basicAttackFrames > _fixedFrame) && _basicAttackReady)
@@ -302,7 +304,7 @@ namespace rene_roid_player
             if (_locked)
             {
                 // If any skill lock is active, count until timer has reached 0
-                
+
             }
 
             // If _basic attack not ready count until timer is over cooldown
@@ -450,6 +452,8 @@ namespace rene_roid_player
             Physics2D.queriesHitTriggers = true; // Ladders are set to Trigger
             _ladderHitCount = Physics2D.OverlapBoxNonAlloc(bounds.center, bounds.size, 0, _ladderHits, _ladderLayerMask);
             Physics2D.queriesHitTriggers = _cachedTriggerSetting;
+
+            FallThroughFloor();
         }
 
         protected virtual bool TryGetGroundNormal(out Vector2 groundNormal)
@@ -488,6 +492,28 @@ namespace rene_roid_player
                 GroundedChanged?.Invoke(false, 0);
             }
         }
+
+        protected virtual void FallThroughFloor()
+        {
+            if (/*_grounded &&*/ _frameInput.Move.y <= -0.65f)
+            {
+                // Detect if player is on top of _oneWayFloor layer
+                var hit = Physics2D.Raycast(_col.bounds.center, Vector2.down, /*_grounderDistance * 2*/ 2, _oneWayFloor);
+                if (hit.collider != null)
+                {
+                    // If player is on top of _oneWayFloor layer then ignore floor collision and fall through
+                    // Activate the collision again after a short delay
+                    hit.collider.enabled = false;
+                    StartCoroutine(EnableColliderAfterDelay(hit.collider, 0.3f));
+                }
+            }
+        }
+
+        private IEnumerator EnableColliderAfterDelay(Collider2D collider, float delay)
+        {
+            yield return Helpers.GetWait(delay);
+            collider.enabled = true;
+        }
         #endregion
 
         #region Walls
@@ -510,7 +536,7 @@ namespace rene_roid_player
             bool ShouldStickWall()
             {
                 if (_wallDir == 0 || _grounded) return false;
-                return _requireInputPush ? Mathf.Sign(_frameInput.Move.x > 0 ? 1 : - 1) == _wallDir : true;
+                return _requireInputPush ? Mathf.Sign(_frameInput.Move.x > 0 ? 1 : -1) == _wallDir : true;
             }
         }
 
@@ -527,7 +553,7 @@ namespace rene_roid_player
         }
 
         #endregion
-        
+
         #region Ladders
         private Vector2 _ladderSnapVel; // TODO: determine if we need to reset this when leaving a ladder, or use a different kind of Lerp/MoveTowards
         private int _frameLeftLadder = int.MinValue;
@@ -774,6 +800,10 @@ namespace rene_roid_player
             Gizmos.color = Color.green;
             var bound = new Bounds(_rb.position, _col.size);
             Gizmos.DrawWireCube(bound.center, bound.size);
+
+            Gizmos.color = Color.red;
+            var down = new Vector2(_col.bounds.center.x, -_col.bounds.center.y + 1);
+            Gizmos.DrawLine(_col.bounds.center, down);
         }
 
         private void OnValidate()
