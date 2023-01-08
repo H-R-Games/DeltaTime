@@ -79,7 +79,7 @@ namespace rene_roid_enemy {
             if (_armor > 0) damage *= 100 / (100 + _armor);
 
             _health -= damage;
-            OnHit.Invoke(damage);
+            //OnHit.Invoke(damage);
 
             if (_health <= 0)
             {
