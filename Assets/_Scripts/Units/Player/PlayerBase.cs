@@ -366,6 +366,12 @@ namespace rene_roid_player
 
         #region Getters and Setters
         public PlayerBaseStats MaxStats => _maxStats;
+
+        // Get only current stats
+        public float CurrentHealth => _currentHealth;
+        public float CurrentHealthRegen => _currentHealthRegen;
+        public float CurrentArmor => _currentArmor;
+        public float CurrentMovementSpeed => _currentMovementSpeed;
         #endregion
         #endregion
 

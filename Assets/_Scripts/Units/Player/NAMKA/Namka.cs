@@ -14,6 +14,8 @@ namespace rene_roid_player
         private Rigidbody2D _rb2;
 
         [SerializeField] private LayerMask _enemyLayer;
+
+        private FrameInput _fInput;
         #endregion
 
         public override void Start()
@@ -22,10 +24,12 @@ namespace rene_roid_player
             _renderer = GetComponentInChildren<SpriteRenderer>();
             _collider = GetComponent<CapsuleCollider2D>();
             _rb2 = GetComponent<Rigidbody2D>();
+            _fInput = GetFrameInput();
         }
 
         public override void Update()
         {
+            Skill2Cancel();
             base.Update();
         }
 
@@ -44,7 +48,7 @@ namespace rene_roid_player
 
             StartCoroutine(RemoveControl(.3f));
 
-            if (IsGrounded()) _rb2.velocity = new Vector2(0, _rb2.velocity.y);
+            if (IsGrounded() && !_skill2Active) _rb2.velocity = new Vector2(0, _rb2.velocity.y);
 
             RaycastHit2D hit = Physics2D.Raycast(_collider.bounds.center, _renderer.flipX ? Vector2.left : Vector2.right, _collider.bounds.extents.x + 100f, _enemyLayer);
             if (hit.collider != null)
@@ -64,6 +68,8 @@ namespace rene_roid_player
         [SerializeField] private float _procCoSkill1 = 1f;
 
         [SerializeField] private BoxCollider2D _skill1Rad;
+        [SerializeField] private GameObject _skill1Slash;
+        [SerializeField] private Vector2 _skill1SpawnOffset;
 
         public override void Skill1()
         {
@@ -75,7 +81,7 @@ namespace rene_roid_player
 
             _rb2.velocity = new Vector2(0, 0);
 
-            StartCoroutine(DealDamage(_skill1Percentage, _procCoSkill1, 0.28f));
+            StartCoroutine(DealDamage(_skill1Percentage, _procCoSkill1, 0.30f));
         }
 
         private IEnumerator DealDamage(float percentage, float procCo, float delay)
@@ -93,7 +99,101 @@ namespace rene_roid_player
                 var enemyBase = enemy.GetComponent<EnemyBase>();
                 if (enemyBase != null) enemyBase.TakeDamage(DealDamage(percentage, procCo));
             }
+
+            // Wait until current animation reached 0.3 seconds
+            yield return new WaitForSeconds(0.2f);
+
+            // Spawn _skill1Slash
+            var slash = Instantiate(_skill1Slash, transform.position + (Vector3)(_renderer.flipX ? new Vector2(-_skill1SpawnOffset.x, _skill1SpawnOffset.y) : _skill1SpawnOffset), Quaternion.identity);
+            var slashScript = slash.GetComponent<NamkaSlash>();
+            slashScript.SetFlipX(_renderer.flipX);
+            slashScript.SetSlashInfo(this, percentage, procCo, MaxStats.MovementSpeed * 1.5f);
         }
+
+        public void Skill1Slash()
+        {
+            // Spawn _skill1Slash
+            var slash = Instantiate(_skill1Slash, transform.position + (Vector3)_skill1SpawnOffset, Quaternion.identity);
+            slash.GetComponent<NamkaSlash>().SetSlashInfo(this, _skill1Percentage / 3, _procCoSkill1, MaxStats.MovementSpeed * 2);
+            slash.GetComponent<NamkaSlash>().SetFlipX(_renderer.flipX);
+        }
+
+
+        [Header("Skill 2")]
+        [Tooltip("The clone duration before it disappears")]
+        [SerializeField] private float _skill2Duration = 10f;
+        [SerializeField] private GameObject _skill2Clone;
+        [SerializeField] private float _healPercentage = 0.5f;
+
+        private float _skill2TimerClone = 0f;
+        private bool _skill2Active = false;
+
+        private float _startHealth = 0f;
+        
+
+        public override void Skill2()
+        {
+            base.Skill2();
+            _skill2Active = true;
+            _startHealth = CurrentHealth;
+
+            StartCoroutine(Skill2Clone());
+        }
+
+        private IEnumerator Skill2Clone()
+        {
+            // Construct new gameobject with the same position and rotation and the same sprite
+            GameObject initClone = new GameObject();
+            initClone.transform.position = transform.position;
+            initClone.transform.rotation = transform.rotation;
+            initClone.AddComponent<SpriteRenderer>().sprite = _renderer.sprite;
+
+            // Instantiate the initClone
+            var clon = Instantiate(initClone, transform.position, transform.rotation);
+
+            // Spawn _skill2Clone every x seconds
+            while (_skill2TimerClone < _skill2Duration)
+            {
+                _skill2TimerClone += 0.1f;
+                yield return new WaitForSeconds(0.1f);
+
+                var clone = Instantiate(_skill2Clone, transform.position, Quaternion.identity);
+                clone.GetComponent<CloneFade>().SetFadeTime(1);
+                clone.GetComponent<CloneFade>().SetSprite(_renderer.sprite, _renderer.flipX);
+                clone.GetComponent<CloneFade>().Fade();
+            }
+
+            // Heal player
+            HealAmmount(_startHealth * _healPercentage);
+
+            // Reset variables
+            _skill2TimerClone = 0f;
+            _skill2Active = false;
+
+            // Teleport player to the clone
+            transform.position = clon.transform.position;
+
+            // Destroy initClone
+            Destroy(initClone);
+
+            // Destroy clon
+            Destroy(clon);
+        }
+
+        // If player presses skill 2 before the clone is done, teleport player to the clone
+        private void Skill2Cancel()
+        {
+            if (!_skill2Active) return;
+
+            print("Skill 2 Pressed");
+
+            if (_fInput.SpecialAttack2Down)
+            {
+                _skill2TimerClone = _skill2Duration;
+                print("Skill 2 Cancelled");
+            }
+        }
+
         #endregion
 
         #region Functions
