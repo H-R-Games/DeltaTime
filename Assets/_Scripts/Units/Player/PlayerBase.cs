@@ -9,18 +9,18 @@ namespace rene_roid_player
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerBase : MonoBehaviour, IPlayerController
     {
-        [SerializeField] private PlayerBaseStats _baseStats;
+        [SerializeField] protected PlayerBaseStats _baseStats;
 
         #region Internal Variables
         [Header("Internal Variables")]
-        [SerializeField] private CapsuleCollider2D _col;
-        [SerializeField] private LayerMask _playerLayer; // Layer mask for the player
-        [HideInInspector] private Rigidbody2D _rb;
-        private bool _cachedTriggerSetting; // Used to cache the trigger setting of the collider
+        [SerializeField] protected CapsuleCollider2D _col;
+        [SerializeField] protected LayerMask _playerLayer; // Layer mask for the player
+        [HideInInspector] protected Rigidbody2D _rb;
+        protected bool _cachedTriggerSetting; // Used to cache the trigger setting of the collider
 
-        private PlayerInput _input;
-        private FrameInput _frameInput;
-        private int _fixedFrame;
+        protected PlayerInput _input;
+        protected FrameInput _frameInput;
+        protected int _fixedFrame;
         #endregion
 
         #region External Variables
@@ -104,39 +104,39 @@ namespace rene_roid_player
 
         #region Player Stats
         [Header("Player Stats")]
-        [SerializeField] private int _level = 1;
+        [SerializeField] protected int _level = 1;
 
-        [SerializeField] private float _currentHealth;
-        [SerializeField] private float _currentHealthRegen;
-        [SerializeField] private float _currentDamage;
-        [SerializeField] private float _currentArmor;
-        [SerializeField] private float _currentMovementSpeed;
+        [SerializeField] protected float _currentHealth;
+        [SerializeField] protected float _currentHealthRegen;
+        [SerializeField] protected float _currentDamage;
+        [SerializeField] protected float _currentArmor;
+        [SerializeField] protected float _currentMovementSpeed;
 
-        private float _extraHealthPercentage = 0f;
-        private float _extraFlatHealth = 0f;
-        private float _extraHealthRegenPercentage = 0f;
-        private float _extraFlatHealthRegen = 0f;
-        private float _extraArmorPercentage = 0f;
-        private float _extraFlatArmor = 0f;
-        private float _extraMovementSpeedPercentage = 0f;
-        private float _extraFlatMovementSpeed = 0f;
+        protected float _extraHealthPercentage = 0f;
+        protected float _extraFlatHealth = 0f;
+        protected float _extraHealthRegenPercentage = 0f;
+        protected float _extraFlatHealthRegen = 0f;
+        protected float _extraArmorPercentage = 0f;
+        protected float _extraFlatArmor = 0f;
+        protected float _extraMovementSpeedPercentage = 0f;
+        protected float _extraFlatMovementSpeed = 0f;
 
-        private PlayerBaseStats _maxStats;
+        protected PlayerBaseStats _maxStats;
 
 
-        private void AwakePlayerStats()
+        protected void AwakePlayerStats()
         {
             _maxStats = Instantiate(_baseStats);
 
             SetPlayerStats();
         }
 
-        private void UpdatePlayerStats()
+        protected void UpdatePlayerStats()
         {
             ConstantHealing();
         }
 
-        private void SetPlayerStats()
+        protected void SetPlayerStats()
         {
             _currentHealth = _maxStats.Health;
             _currentHealthRegen = _maxStats.HealthRegen;
@@ -151,13 +151,13 @@ namespace rene_roid_player
             LevelUpPlayerStats();
         }
 
-        private void LevelUpPlayerStats()
+        protected void LevelUpPlayerStats()
         {
             UpdateMaxPlayerStats();
             SetPlayerStats();
         }
 
-        private void UpdateMaxPlayerStats()
+        protected void UpdateMaxPlayerStats()
         {
             _maxStats.Health = (_baseStats.Health + ((_level - 1) * _baseStats.HealthPerLevel)) * (1 + _extraHealthPercentage) + _extraFlatHealth;
             _maxStats.HealthRegen = (_baseStats.HealthRegen + ((_level - 1) * _baseStats.HealthRegenPerLevel)) * (1 + _extraHealthRegenPercentage) + _extraFlatHealthRegen;
@@ -299,7 +299,7 @@ namespace rene_roid_player
         #endregion
 
         #region Health
-        private void ConstantHealing()
+        protected void ConstantHealing()
         {
             // Heal the player every second
             if (_currentHealth >= _maxStats.Health) return;
@@ -328,9 +328,9 @@ namespace rene_roid_player
         #endregion
 
         #region Damage
-        private float _specialMultiplier = 1;
-        private float _flatDmgBonus = 0;
-        private float _percentageDmgBonus = 1;
+        protected float _specialMultiplier = 1;
+        protected float _flatDmgBonus = 0;
+        protected float _percentageDmgBonus = 1;
 
         public void TakeDamage(float damage)
         {
@@ -383,25 +383,25 @@ namespace rene_roid_player
         public float Skill2Cooldown = 2;
         public float UltimateCooldown = 5;
 
-        private float _basicAttackTimer;
-        private float _skill1Timer;
-        private float _skill2Timer;
-        private float _ultimateTimer;
+        protected float _basicAttackTimer;
+        protected float _skill1Timer;
+        protected float _skill2Timer;
+        protected float _ultimateTimer;
 
-        private bool _basicAttackReady = true;
-        private bool _skill1Ready = true;
-        private bool _skill2Ready = true;
-        private bool _ultimateReady = true;
+        protected bool _basicAttackReady = true;
+        protected bool _skill1Ready = true;
+        protected bool _skill2Ready = true;
+        protected bool _ultimateReady = true;
 
-        private int _basicAttackFrames = 8;
-        private int _skill1Frames = 8;
-        private int _skill2Frames = 8;
-        private int _ultimateFrames = 8;
+        protected int _basicAttackFrames = 8;
+        protected int _skill1Frames = 8;
+        protected int _skill2Frames = 8;
+        protected int _ultimateFrames = 8;
 
-        private int _basicFrameWasPressed;
-        private int _skill1FrameWasPressed;
-        private int _skill2FrameWasPressed;
-        private int _ultimateFrameWasPressed;
+        protected int _basicFrameWasPressed;
+        protected int _skill1FrameWasPressed;
+        protected int _skill2FrameWasPressed;
+        protected int _ultimateFrameWasPressed;
 
         [Header("Time Between Skills")]
         public float _basicAttackTimeLock = 0.5f;
@@ -409,14 +409,14 @@ namespace rene_roid_player
         public float _skill2TimeLock = 0.5f;
         public float _ultimateTimeLock = 0.5f;
 
-        private float _basicAttackTimeLockTimer;
-        private float _skill1TimeLockTimer;
-        private float _skill2TimeLockTimer;
-        private float _ultimateTimeLockTimer;
+        protected float _basicAttackTimeLockTimer;
+        protected float _skill1TimeLockTimer;
+        protected float _skill2TimeLockTimer;
+        protected float _ultimateTimeLockTimer;
 
-        private bool _locked = false;
+        protected bool _locked = false;
 
-        private void AwakeSkillFrameSetup()
+        protected void AwakeSkillFrameSetup()
         {
             _basicFrameWasPressed = -_basicAttackFrames;
             _skill1FrameWasPressed = -_skill1Frames;
@@ -424,7 +424,7 @@ namespace rene_roid_player
             _ultimateFrameWasPressed = -_ultimateFrames;
         }
 
-        private void GatherSkillInput()
+        protected void GatherSkillInput()
         {
             if ((_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld) && _basicAttackReady)
             {
@@ -565,7 +565,7 @@ namespace rene_roid_player
             item.Items.ForEach(i => i.OnGet(this));
         }
 
-        private void UpdateItems() => _items.ForEach(i => i.Items.ForEach(i => i.OnUpdate(this)));
+        protected void UpdateItems() => _items.ForEach(i => i.Items.ForEach(i => i.OnUpdate(this)));
 
         public void RemoveItem(Item item)
         {
@@ -576,12 +576,12 @@ namespace rene_roid_player
 
         #region Movement
         [Header("Movement")]
-        private Vector2 _speed;
-        private Vector2 _currentExternalVelocity;
+        protected Vector2 _speed;
+        protected Vector2 _currentExternalVelocity;
 
-        private bool _hasControl = true;
+        protected bool _hasControl = true;
 
-        private void FixedMovement()
+        protected void FixedMovement()
         {
             _fixedFrame++;
 
@@ -598,17 +598,17 @@ namespace rene_roid_player
         }
 
         #region Collisions
-        private readonly RaycastHit2D[] _groundHits = new RaycastHit2D[2];
-        private readonly RaycastHit2D[] _ceilingHits = new RaycastHit2D[2];
-        private readonly Collider2D[] _wallHits = new Collider2D[5];
-        private readonly Collider2D[] _ladderHits = new Collider2D[1];
-        private Vector2 _groundNormal;
-        private int _groundHitCount;
-        private int _ceilingHitCount;
-        private int _wallHitCount;
-        private int _ladderHitCount;
-        private int _frameLeftGrounded = int.MinValue;
-        private bool _grounded;
+        protected readonly RaycastHit2D[] _groundHits = new RaycastHit2D[2];
+        protected readonly RaycastHit2D[] _ceilingHits = new RaycastHit2D[2];
+        protected readonly Collider2D[] _wallHits = new Collider2D[5];
+        protected readonly Collider2D[] _ladderHits = new Collider2D[1];
+        protected Vector2 _groundNormal;
+        protected int _groundHitCount;
+        protected int _ceilingHitCount;
+        protected int _wallHitCount;
+        protected int _ladderHitCount;
+        protected int _frameLeftGrounded = int.MinValue;
+        protected bool _grounded;
 
         protected virtual void CheckCollisions()
         {
@@ -638,7 +638,7 @@ namespace rene_roid_player
             return hit.collider != null;
         }
 
-        private Bounds GetWallDetectionBounds()
+        protected Bounds GetWallDetectionBounds()
         {
             var colliderOrigin = _rb.position + _col.offset;
             return new Bounds(colliderOrigin, _wallDetectorSize);
@@ -682,7 +682,7 @@ namespace rene_roid_player
             }
         }
 
-        private IEnumerator EnableColliderAfterDelay(Collider2D collider, float delay)
+        protected IEnumerator EnableColliderAfterDelay(Collider2D collider, float delay)
         {
             yield return Helpers.GetWait(delay);
             collider.enabled = true;
@@ -690,10 +690,10 @@ namespace rene_roid_player
         #endregion
 
         #region Walls
-        private float _currentWallJumpMoveMultiplier = 1f; // aka "Horizontal input influence"
-        private int _wallDir;
-        private bool _isOnWall;
-        private bool _isLeavingWall; // prevents immediate re-sticking to wall
+        protected float _currentWallJumpMoveMultiplier = 1f; // aka "Horizontal input influence"
+        protected int _wallDir;
+        protected bool _isOnWall;
+        protected bool _isLeavingWall; // prevents immediate re-sticking to wall
 
         protected virtual void HandleWalls()
         {
@@ -713,7 +713,7 @@ namespace rene_roid_player
             }
         }
 
-        private void SetOnWall(bool on)
+        protected void SetOnWall(bool on)
         {
             _isOnWall = on;
             if (on) _speed = Vector2.zero;
@@ -728,13 +728,13 @@ namespace rene_roid_player
         #endregion
 
         #region Ladders
-        private Vector2 _ladderSnapVel; // TODO: determine if we need to reset this when leaving a ladder, or use a different kind of Lerp/MoveTowards
-        private int _frameLeftLadder = int.MinValue;
-        private bool _onLadder;
+        protected Vector2 _ladderSnapVel; // TODO: determine if we need to reset this when leaving a ladder, or use a different kind of Lerp/MoveTowards
+        protected int _frameLeftLadder = int.MinValue;
+        protected bool _onLadder;
 
-        private bool CanEnterLadder => _ladderHitCount > 0 && _fixedFrame > _frameLeftLadder + _ladderCooldownFrames;
-        private bool MountLadderInputReached => _frameInput.Move.y > _verticalDeadzoneThreshold || (!_grounded && _frameInput.Move.y < -_verticalDeadzoneThreshold);
-        private bool DismountLadderInputReached => _grounded && _frameInput.Move.y < -_verticalDeadzoneThreshold;
+        protected bool CanEnterLadder => _ladderHitCount > 0 && _fixedFrame > _frameLeftLadder + _ladderCooldownFrames;
+        protected bool MountLadderInputReached => _frameInput.Move.y > _verticalDeadzoneThreshold || (!_grounded && _frameInput.Move.y < -_verticalDeadzoneThreshold);
+        protected bool DismountLadderInputReached => _grounded && _frameInput.Move.y < -_verticalDeadzoneThreshold;
 
         protected virtual void HandleLadders()
         {
@@ -751,7 +751,7 @@ namespace rene_roid_player
             }
         }
 
-        private void ToggleClimbingLadder(bool on)
+        protected void ToggleClimbingLadder(bool on)
         {
             if (_onLadder == on) return;
             if (on) _speed = Vector2.zero;
@@ -762,16 +762,16 @@ namespace rene_roid_player
         #endregion
 
         #region Jumping 
-        private bool _jumpToConsume;
-        private bool _endedJumpEarly;
-        private bool _coyoteUsable;
-        private bool _bufferedJumpUsable;
-        private int _frameJumpWasPressed = int.MinValue;
-        private int _airJumpsRemaining;
+        protected bool _jumpToConsume;
+        protected bool _endedJumpEarly;
+        protected bool _coyoteUsable;
+        protected bool _bufferedJumpUsable;
+        protected int _frameJumpWasPressed = int.MinValue;
+        protected int _airJumpsRemaining;
 
-        private bool CanUseCoyote => _coyoteUsable && !_grounded && _fixedFrame < _frameLeftGrounded + _coyoteFrames;
-        private bool HasBufferedJump => _bufferedJumpUsable && _fixedFrame < _frameJumpWasPressed + _jumpBufferFrames;
-        private bool CanAirJump => _airJumpsRemaining > 0;
+        protected bool CanUseCoyote => _coyoteUsable && !_grounded && _fixedFrame < _frameLeftGrounded + _coyoteFrames;
+        protected bool HasBufferedJump => _bufferedJumpUsable && _fixedFrame < _frameJumpWasPressed + _jumpBufferFrames;
+        protected bool CanAirJump => _airJumpsRemaining > 0;
 
         protected virtual void HandleJump()
         {
@@ -900,58 +900,58 @@ namespace rene_roid_player
         #region Movement Stats
         [Header("Movement Stats")]
         // Movement
-        private float _acceleration = 120; // Capacity to gain horizontal speed
-        private float _groundDeceleration = 60; // Pace at which the player comes to a stop
-        private float _airDeceleration = 30; // Deceleration in air only after stopping input mid-air
-        private float _groundingForce = -1.5f; // Constant force applied to the player when grounded (Slopes)
+        protected float _acceleration = 120; // Capacity to gain horizontal speed
+        protected float _groundDeceleration = 60; // Pace at which the player comes to a stop
+        protected float _airDeceleration = 30; // Deceleration in air only after stopping input mid-air
+        protected float _groundingForce = -1.5f; // Constant force applied to the player when grounded (Slopes)
 
-        private float _verticalDeadzoneThreshold = 0.3f; // Min input required to mount ladders
-        private float _horizontalDeadzoneThreshold = 0.1f; // Min input required to move
+        protected float _verticalDeadzoneThreshold = 0.3f; // Min input required to mount ladders
+        protected float _horizontalDeadzoneThreshold = 0.1f; // Min input required to move
 
 
         // Jump
-        private int _maxAirJumps = 0; // Max amount of jumps the player can do in the air. 0 = No air jumps
-        private float _jumpForce = 36; // Inmediate force applied to the player when jumping
-        private float _maxFallSpeed = 40; // Max speed the player can fall at
-        private float _fallAcceleration = 100; // Acceleration applied to the player when falling
-        private float _jumpEndEarlyGravityModifier = 3; // Gravity modifier applied to the player when ending a jump early
-        private int _coyoteFrames = 7; // Amount of frames the player can jump after leaving the ground
-        private int _jumpBufferFrames = 7; // Amount of fixed frames we buffer a jump. This allows jump input before actually hitting the ground
+        protected int _maxAirJumps = 0; // Max amount of jumps the player can do in the air. 0 = No air jumps
+        protected float _jumpForce = 36; // Inmediate force applied to the player when jumping
+        protected float _maxFallSpeed = 40; // Max speed the player can fall at
+        protected float _fallAcceleration = 100; // Acceleration applied to the player when falling
+        protected float _jumpEndEarlyGravityModifier = 3; // Gravity modifier applied to the player when ending a jump early
+        protected int _coyoteFrames = 7; // Amount of frames the player can jump after leaving the ground
+        protected int _jumpBufferFrames = 7; // Amount of fixed frames we buffer a jump. This allows jump input before actually hitting the ground
 
 
         // Walls
-        private bool _allowWalls = true; // Allows wall slide / Jump
+        protected bool _allowWalls = true; // Allows wall slide / Jump
         [Header("Layers")]
-        [SerializeField] private LayerMask _wallLayerMask; // Layer mask for climbable walls are on
-        private bool _requireInputPush = false; // If true, the player must push against the wall to climb it
+        [SerializeField] protected LayerMask _wallLayerMask; // Layer mask for climbable walls are on
+        protected bool _requireInputPush = false; // If true, the player must push against the wall to climb it
 
-        private float _wallClimbSpeed => _currentMovementSpeed / 2; // Speed at which the player climbs walls -------------- NEEDS TO BE HALF OF PLAYER SPEED
-        private float _wallFallAcceleration = 8; // Acceleration applied to the player when falling off a wall
-        private float _maxWallFallSpeed = 16; // Max speed the player can fall off a wall at
-        private Vector2 _wallJumpPower = new Vector2(30, 25); // Power applied to the player when jumping off a wall
-        private int _wallJumpInputLossFrames = 18; // The frames before full horizontal movement is returned after a wall jump
+        protected float _wallClimbSpeed => _currentMovementSpeed / 2; // Speed at which the player climbs walls -------------- NEEDS TO BE HALF OF PLAYER SPEED
+        protected float _wallFallAcceleration = 8; // Acceleration applied to the player when falling off a wall
+        protected float _maxWallFallSpeed = 16; // Max speed the player can fall off a wall at
+        protected Vector2 _wallJumpPower = new Vector2(30, 25); // Power applied to the player when jumping off a wall
+        protected int _wallJumpInputLossFrames = 18; // The frames before full horizontal movement is returned after a wall jump
 
 
         // Ladders
-        private bool _allowLadders = true; // Allows ladder climbing
-        private bool _snapToLadders = true; // If true, the player will snap to the ladder when climbing it
-        [SerializeField] private LayerMask _ladderLayerMask; // Layer mask for climbable ladders are on
-        private float _ladderSnapSpeed = 0.05f;
-        private float _ladderShimmySpeedMultiplier = 0.5f; // Horizontal speed multiplier while attached to a ladder
+        protected bool _allowLadders = true; // Allows ladder climbing
+        protected bool _snapToLadders = true; // If true, the player will snap to the ladder when climbing it
+        [SerializeField] protected LayerMask _ladderLayerMask; // Layer mask for climbable ladders are on
+        protected float _ladderSnapSpeed = 0.05f;
+        protected float _ladderShimmySpeedMultiplier = 0.5f; // Horizontal speed multiplier while attached to a ladder
 
-        private float _ladderClimbSpeed = 8; // Speed at which the player climbs ladders
-        private float _ladderSlideSpeed = 12;
-        private int _ladderCooldownFrames = 8; // How many frames can pass between ladder interactions
+        protected float _ladderClimbSpeed = 8; // Speed at which the player climbs ladders
+        protected float _ladderSlideSpeed = 12;
+        protected int _ladderCooldownFrames = 8; // How many frames can pass between ladder interactions
 
 
         // Collisions
-        private float _grounderDistance = 0.1f; // Distance from the player's feet to the ground
-        private Vector2 _wallDetectorSize = new Vector2(0.75f, 1.25f); // Size of the wall detector box
-        [SerializeField] private LayerMask _oneWayFloor; // Layer mask for ground is on
+        protected float _grounderDistance = 0.1f; // Distance from the player's feet to the ground
+        protected Vector2 _wallDetectorSize = new Vector2(0.75f, 1.25f); // Size of the wall detector box
+        [SerializeField] protected LayerMask _oneWayFloor; // Layer mask for ground is on
 
 
         // External
-        private int _externalVelocityDecay = 100;
+        protected int _externalVelocityDecay = 100;
         #endregion
         #endregion
 
@@ -966,7 +966,7 @@ namespace rene_roid_player
         #endregion
 
 #if UNITY_EDITOR
-        private void OnDrawGizmos()
+        protected void OnDrawGizmos()
         {
             Gizmos.color = Color.white;
             var bounds = GetWallDetectionBounds();
@@ -981,7 +981,7 @@ namespace rene_roid_player
             Gizmos.DrawLine(_col.bounds.center, down);
         }
 
-        private void OnValidate()
+        protected void OnValidate()
         {
             if (_baseStats == null) Debug.LogWarning("Please assign a ScriptableStats asset to the Player Controller's Stats slot", this);
             if (_col == null) Debug.LogWarning("Please assign a Capsule Collider to the collider slot", this);

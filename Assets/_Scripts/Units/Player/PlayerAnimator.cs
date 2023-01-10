@@ -207,6 +207,7 @@ namespace rene_roid_player
                 if (_specialAttack2) return LockState(SpecialAttack2Anim, _specialAttack2Time);
                 if (_specialAttack1) return LockState(SpecialAttack1Anim, _specialAttack1Time);
                 if (_basicAttack1) return LockState(BasicAttackAnim, _basicAttack1Time);
+                // return LockState(BasicAttackAnim, _basicAttack1Time);
 
                 if (!_grounded)
                 {

@@ -11,11 +11,8 @@ namespace rene_roid_player
         #region Internal
         private CapsuleCollider2D _collider;
         private SpriteRenderer _renderer;
-        private Rigidbody2D _rb2;
 
         [SerializeField] private LayerMask _enemyLayer;
-
-        private FrameInput _fInput;
         #endregion
 
         public override void Start()
@@ -23,14 +20,13 @@ namespace rene_roid_player
             base.Start();
             _renderer = GetComponentInChildren<SpriteRenderer>();
             _collider = GetComponent<CapsuleCollider2D>();
-            _rb2 = GetComponent<Rigidbody2D>();
-            _fInput = GetFrameInput();
         }
 
         public override void Update()
         {
-            Skill2Cancel();
             base.Update();
+            
+            Skill2Cancel();
         }
 
         #region Skills
@@ -46,9 +42,9 @@ namespace rene_roid_player
         {
             base.BasicAttack();
 
-            StartCoroutine(RemoveControl(.3f));
+            if (!_skill2Active) StartCoroutine(RemoveControl(.3f));
 
-            if (IsGrounded() && !_skill2Active) _rb2.velocity = new Vector2(0, _rb2.velocity.y);
+            if (IsGrounded() && !_skill2Active) _rb.velocity = new Vector2(0, _rb.velocity.y);
 
             RaycastHit2D hit = Physics2D.Raycast(_collider.bounds.center, _renderer.flipX ? Vector2.left : Vector2.right, _collider.bounds.extents.x + 100f, _enemyLayer);
             if (hit.collider != null)
@@ -79,7 +75,7 @@ namespace rene_roid_player
 
             StartCoroutine(RemoveControl(1f));
 
-            _rb2.velocity = new Vector2(0, 0);
+            _rb.velocity = new Vector2(0, 0);
 
             StartCoroutine(DealDamage(_skill1Percentage, _procCoSkill1, 0.30f));
         }
@@ -129,6 +125,8 @@ namespace rene_roid_player
         private bool _skill2Active = false;
 
         private float _startHealth = 0f;
+
+        private Vector2 _initClonePos;
         
 
         public override void Skill2()
@@ -151,6 +149,8 @@ namespace rene_roid_player
             // Instantiate the initClone
             var clon = Instantiate(initClone, transform.position, transform.rotation);
 
+            _initClonePos = initClone.transform.position;
+
             // Spawn _skill2Clone every x seconds
             while (_skill2TimerClone < _skill2Duration)
             {
@@ -170,9 +170,6 @@ namespace rene_roid_player
             _skill2TimerClone = 0f;
             _skill2Active = false;
 
-            // Teleport player to the clone
-            transform.position = clon.transform.position;
-
             // Destroy initClone
             Destroy(initClone);
 
@@ -184,14 +181,81 @@ namespace rene_roid_player
         private void Skill2Cancel()
         {
             if (!_skill2Active) return;
-
+            
             print("Skill 2 Pressed");
 
-            if (_fInput.SpecialAttack2Down)
+            if (_frameInput.SpecialAttack2Down)
             {
-                _skill2TimerClone = _skill2Duration;
-                print("Skill 2 Cancelled");
+                if (_skill2TimerClone > 0.1f)
+                {
+                    _skill2TimerClone = _skill2Duration;
+                    transform.position = _initClonePos;
+                    print("Skill 2 Cancelled");
+                }
             }
+        }
+
+
+        [Header("Ultimate")]
+        [Tooltip("The damage of the basic attack: 0 = 0% | 1 = 100% | 1.5 = 150%...")]
+        [SerializeField] private float _ultimatePercentage = 5;
+
+        [Tooltip("The proc chance of the basic attack: 0 = 0% | 1 = 100% | 1.5 = 150%...")]
+        [SerializeField] private float _procCoUltimate = 2f;
+
+        [SerializeField] private GameObject _ultimateRad;
+        [SerializeField] private float _ultimateChargeTime = 2f;
+
+        private float _ultimateChargeTimer = 0f;
+
+        public override void Ultimate()
+        {
+            if (!IsGrounded()) return;
+
+            base.Ultimate();
+
+            StartCoroutine(RemoveControl(_ultimateChargeTime));
+
+            _rb.velocity = new Vector2(0, 0);
+
+            StartCoroutine(DealDamageUltimate(_ultimatePercentage, _procCoUltimate, 2));
+        }
+
+        private IEnumerator DealDamageUltimate(float percentage, float procCo, float delay)
+        {
+            var cam = Helpers.Camera;
+            var camScript = cam.GetComponent<CameraFollow>();
+            var camX = cam.orthographicSize * cam.aspect;
+
+            // Flip the camX if the player is facing left
+            if (_renderer.flipX) camX *= -1;
+
+            var boxRad = _ultimateRad.GetComponent<BoxCollider2D>();
+
+            if (_renderer.flipX) _ultimateRad.transform.position = new Vector3(-_ultimateRad.transform.position.x, _ultimateRad.transform.position.y, _ultimateRad.transform.position.z);
+            else _ultimateRad.transform.position = new Vector3(_ultimateRad.transform.position.x, _ultimateRad.transform.position.y, _ultimateRad.transform.position.z);
+
+            camScript.MoveCameraToPosition(new Vector2(transform.position.x + camX, cam.transform.position.y), delay);
+            yield return new WaitForSeconds(delay + 0.5f);
+            _ultimateRad.SetActive(true);
+
+            // Flip _ultimateRad to the correct direction
+            if (_renderer.flipX) _ultimateRad.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+            else _ultimateRad.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+
+            // Detect if _enemyLayer is inside _ultimateRad
+            var enemies = Physics2D.OverlapBoxAll(boxRad.bounds.center, boxRad.bounds.size, 0, _enemyLayer);
+
+            // Deal damage to all enemies
+            foreach (var enemy in enemies)
+            {
+                var enemyBase = enemy.GetComponent<EnemyBase>();
+                if (enemyBase != null) enemyBase.TakeDamage(DealDamage(percentage, procCo));
+            }
+
+            yield return new WaitForSeconds(1f);
+            _ultimateRad.SetActive(false);
+            camScript.ReturnToPlayer();
         }
 
         #endregion
