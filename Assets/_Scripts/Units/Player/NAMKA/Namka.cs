@@ -230,6 +230,10 @@ namespace rene_roid_player
             // Flip the camX if the player is facing left
             if (_renderer.flipX) camX *= -1;
 
+            // Flip _ultimateRad to the correct direction
+            if (_renderer.flipX) _ultimateRad.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+            else _ultimateRad.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+
             var boxRad = _ultimateRad.GetComponent<BoxCollider2D>();
 
             if (_renderer.flipX) _ultimateRad.transform.position = new Vector3(-_ultimateRad.transform.position.x, _ultimateRad.transform.position.y, _ultimateRad.transform.position.z);
@@ -238,10 +242,6 @@ namespace rene_roid_player
             camScript.MoveCameraToPosition(new Vector2(transform.position.x + camX, cam.transform.position.y), delay);
             yield return new WaitForSeconds(delay + 0.5f);
             _ultimateRad.SetActive(true);
-
-            // Flip _ultimateRad to the correct direction
-            if (_renderer.flipX) _ultimateRad.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
-            else _ultimateRad.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
 
             // Detect if _enemyLayer is inside _ultimateRad
             var enemies = Physics2D.OverlapBoxAll(boxRad.bounds.center, boxRad.bounds.size, 0, _enemyLayer);
