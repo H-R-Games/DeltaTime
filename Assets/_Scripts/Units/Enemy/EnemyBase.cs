@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace rene_roid_enemy {
@@ -18,6 +19,10 @@ namespace rene_roid_enemy {
         #endregion
 
         #region External Variables
+        public float Cost;
+        public float Wheigth;
+        public List<float> StageCondition;
+
         public event Action<float> OnHit;
         public event Action OnDeath;
         #endregion
