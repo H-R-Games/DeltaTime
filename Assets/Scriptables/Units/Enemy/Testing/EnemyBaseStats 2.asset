@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987569b084917784ab815b4d235dfa33, type: 3}
+  m_Name: EnemyBaseStats 2
+  m_EditorClassIdentifier: 
+  Name: 2
+  Description: Enemy Description
+  Cost: 6
+  Weight: 1
+  StageCondition:
+  - 0
+  - 1
+  Health: 80
+  Damage: 12
+  Armor: 0
+  MovementSpeed: 6
+  HealthPerLevel: 24
+  DamagePerLevel: 2.4
+  ArmorPerLevel: 0
+  MovementSpeedPerLevel: 0
