@@ -96,7 +96,7 @@ namespace rene_roid
 
         /// <summary>
         /// Convert a number in a range to the percentage of the number in that range
-        /// Ex: min = 10, max = 20, actual = 15, result = 50%
+        /// Ex: min = 10, max = 20, actual = 15, result = 0.5
         /// </summary>
         /// <param name="actualVar"></param>
         /// <param name="minVar"></param>
@@ -115,6 +115,7 @@ namespace rene_roid
 
         /// <summary>
         /// Get the percentage value of a number in a range
+        /// Ex: percentage = 50%, min = 10, max = 20, result = 15
         /// </summary>
         /// <param name="percentage"></param>
         /// <param name="minVar"></param>
@@ -129,9 +130,10 @@ namespace rene_roid
             return result;
         }
 
-        
+
         /// <summary>
         /// Transform from range to range
+        /// Ex: actual = 50, min = 0, max = 100, min2 = 0, max2 = 1, result = 0.5
         /// </summary>
         /// <param name="actualVar"></param>
         /// <param name="range1min"></param>

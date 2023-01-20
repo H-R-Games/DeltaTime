@@ -1,6 +1,8 @@
 using rene_roid_enemy;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 
 namespace rene_roid
@@ -28,11 +30,49 @@ namespace rene_roid
             GetCurrentStageEnemies();
         }
 
+        // TESINT -----------------
+        //private void Test()
+        //{
+        //    float t = 0;
+
+        //    while (t < 1)
+        //    {
+        //        t += Time.deltaTime / 1;
+        //        // Move the cube with sine wave
+        //        float y = Mathf.Sin(t * 2 * Mathf.PI);
+        //        Cube.transform.position = new Vector3(Cube.transform.position.x, Mathf.Abs(y), Cube.transform.position.z);
+        //        print(Mathf.Sin(t * 2 * Mathf.PI) * 2);
+        //        yield return null;
+        //    }
+
+        //    print("Done");
+
+        //    StartCoroutine(Test());
+        //}
+        // TESINT -----------------
+
         void Update()
         {
             if (CurrentStageEnemies.Count < 0) return;
             DirectorsUpdate();
+
+            Test();
         }
+
+        // TESINT -----------------
+        public GameObject Cube;
+        [Range(0, 1)] public float posSin = 0;
+        public float range = 0;
+        private void Test()
+        {
+            var x = Mathf.Sin(posSin * Mathf.PI);
+            //print(x);
+
+            range = Mathf.Clamp(x, 0.2f, 1);
+
+            Cube.transform.position = new Vector3(Cube.transform.position.x, x, Cube.transform.position.z);
+        }
+        // TESINT -----------------
 
         #region Directors
 
@@ -56,12 +96,15 @@ namespace rene_roid
         }
 
         [Header("Passive Director")]
+        [SerializeField] private PassiveDirectorState _passiveDirectorState = PassiveDirectorState.Innactive;
+        
         [SerializeField] private float _creditsPD = 120f;
         [SerializeField] private float _creditsPerSecondPD = 1.2f;
 
         [SerializeField] private float _creditsPerSecondPerLevelPD = 2f;
         [SerializeField] [Range(0, 1)] private float _creditPercentagePerEnemyPD = .2f;
-        [SerializeField] [Range(0, 1)] private float _creditPercentageToStartSpawningPD = 0.8f;
+        [SerializeField] [Range(0, 1)] private float _creditPercentageToStartSpawningPD = 80f;
+        [SerializeField] private float _multiplierToSpawnEnemies = 5;
 
         [SerializeField] private float _spawningDurationPD = 15f;
         [SerializeField] private float _timeBetweenEnemySpawnPD = .7f;
@@ -70,38 +113,47 @@ namespace rene_roid
         [SerializeField] private float _maxEnemiesPerWavePD = 10f;
         [SerializeField] private float _maxEnemiesPerWaveLevelUpPD = 1f;
 
-        [SerializeField] private PassiveDirectorState _passiveDirectorState = PassiveDirectorState.Innactive;
-
         // Smol vars
-        private float _checkStartSpawningCooldown = 5f;
-        private float _lastTime = 0;
+        // Gethering --
+        private float _checkStartSpawningCooldownPD = 5f;
+        private float _lastTimePD = 0;
+
+        // Waiting --
+        private float _waitTimePD = 0;
 
         private void PassiveDirectorUpdate()
         {
             switch (_passiveDirectorState)
             {
-                case PassiveDirectorState.Innactive:
+                case PassiveDirectorState.Innactive: // The director is innactive
                     break;
-                case PassiveDirectorState.Gathering:
+                case PassiveDirectorState.Gathering: // Needs credits to spawn enemies
                     // Update
                     PassiveDirectorGathering();
                     
                     // Change state conditions
-                    if (_lastTime + _checkStartSpawningCooldown <= Time.time)
+                    if (_lastTimePD + _checkStartSpawningCooldownPD <= Time.time)
                     {
-                        _lastTime = Time.time;
+                        _lastTimePD = Time.time;
                         if (StartSpawning()) PassiveDirectorChangeState(PassiveDirectorState.Spawning);
                     }
                     
                     break;
-                case PassiveDirectorState.Spawning:
+                case PassiveDirectorState.Spawning: // Spawning enemies (Spending credits)
                     // Update
                     PassiveDirectorSpawning();
 
                     // Change state conditions
                     
                     break;
-                case PassiveDirectorState.Waiting:
+                case PassiveDirectorState.Waiting: // Check if the director can start spawning again or if it needs to gather more credits
+                    // Update
+                    PassiveDirectorGathering();
+                    if (_waitTimePD + _timeBetweenWavesPD > Time.time) return; // If has not waited for the time between waves, return
+
+                    // Change state conditions
+                    if (StartSpawning()) PassiveDirectorChangeState(PassiveDirectorState.Spawning);
+                    else PassiveDirectorChangeState(PassiveDirectorState.Gathering);
                     break;
                 default:
                     break;
@@ -135,6 +187,7 @@ namespace rene_roid
                 case PassiveDirectorState.Spawning:
                     break;
                 case PassiveDirectorState.Waiting:
+                    _waitTimePD = Time.time; // Set wait time when entering the state
                     break;
                 default:
                     break;
@@ -154,20 +207,60 @@ namespace rene_roid
         
         private bool StartSpawning()
         {
-            print("Credit requirement: " + CurrentStageEnemies[Mathf.RoundToInt(Helpers.FromPercentageToRange(0.8f, 0, CurrentStageEnemies.Count))].EnemyBaseStats.Cost);
-            return CurrentStageEnemies[Mathf.RoundToInt(Helpers.FromPercentageToRange(0.8f, 0, CurrentStageEnemies.Count))].EnemyBaseStats.Cost >= _creditsPD;
+            var multiplier = Mathf.RoundToInt(Helpers.FromPercentageToRange(_creditPercentageToStartSpawningPD, 0, CurrentStageEnemies.Count));
+            return CurrentStageEnemies[Mathf.RoundToInt(Helpers.FromPercentageToRange(_creditPercentageToStartSpawningPD, 0, CurrentStageEnemies.Count))].EnemyBaseStats.Cost * multiplier <= _creditsPD;
         }
 
 
         // ----------- Spawning
-
+        private float _timeSpawningPD = 0;
+        private float _waitBetweenEnemySpawnTimePD = 0;
+        private int _enemiesSpawnedPD = 0;
         private void PassiveDirectorSpawning()
         {
             // Spawn enemies every _timeBetweenEnemySpawnPD
             // Spawn for _spawningDurationPD seconds or until _maxEnemiesPerWavePD is reached or until _creditsPD is 0
             // Change state to waiting
+            _timeSpawningPD += Time.deltaTime;
+            if (_waitBetweenEnemySpawnTimePD + _timeBetweenEnemySpawnPD > Time.time) return; // Wait _timeBetweenEnemiesPD seconds between each enemy spawn
+
+            // Spawn enemy
+            _waitBetweenEnemySpawnTimePD = Time.time;
+            SpawnEnemy();
+
+            // Check if end of wave
+            //if (CurrentStageEnemies[0].EnemyBaseStats.Cost < _creditsPD) return; // Still have more credits
+            //if (_timeSpawningPD < _spawningDurationPD) return; // Not spent max time spawning
+            //if (_enemiesSpawnedPD < _maxEnemiesPerWavePD) return; // Not spawned max ammount of enemies
+
+            // Check if end of wave
+            if (CurrentStageEnemies[0].EnemyBaseStats.Cost > _creditsPD || _timeSpawningPD > _spawningDurationPD || _enemiesSpawnedPD >= _maxEnemiesPerWavePD)
+            {
+                // Reset
+                _timeSpawningPD = 0;
+                _waitBetweenEnemySpawnTimePD = Time.time;
+                _enemiesSpawnedPD = 0;
+                PassiveDirectorChangeState(PassiveDirectorState.Waiting);                
+            }
+
         }
+
+
+        private void SpawnEnemy()
+        {
+            _enemiesSpawnedPD++;
+            _creditsPD -= 0;
+        }
+
+        // ----------- Waiting
+
         #endregion
+
+        private void GetWheightRange()
+        {
+            var x = Mathf.Sin(Helpers.FromRangeToPercentage(_directorsLevel, 0, 100, true) * Mathf.PI);
+            _wheightRange = Mathf.Clamp(x, 0.2f, 1);
+        }
 
         private void GetCurrentStageEnemies()
         {
@@ -176,6 +269,8 @@ namespace rene_roid
                 if (AllEnemies[i].EnemyBaseStats.StageCondition.Contains(_currentStage))
                     CurrentStageEnemies.Add(AllEnemies[i]);
             }
+
+            CurrentStageEnemies.Sort((x, y) => x.EnemyBaseStats.Cost.CompareTo(y.EnemyBaseStats.Cost));
         }
         #endregion
     }
