@@ -15,7 +15,7 @@ MonoBehaviour:
   Name: 6
   Description: Enemy Description
   Cost: 6
-  Weight: 1
+  Weight: 5
   StageCondition:
   - 0
   Health: 80

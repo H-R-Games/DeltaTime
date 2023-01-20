@@ -2,24 +2,27 @@ using rene_roid_enemy;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace rene_roid
 {
-    public class Director : MonoBehaviour
+    public class Director : PersistentSingleton<Director>
     {
         #region Internal
         [Header("Internal")]
         [SerializeField] private int _directorsLevel = 1;
         [SerializeField] private float _currentStage = 1;
-        [SerializeField] private float _currentWheight = 0;
-        private float _wheightRange = .2f;
+        private float _weightRange = .2f;
+
+        private int _maxNumEnemiesInScene = 400;
         #endregion
         
         #region External
         public List<EnemyBase> AllEnemies = new List<EnemyBase>();
         public List<EnemyBase> CurrentStageEnemies = new List<EnemyBase>();
+
+        public int CurrentEnemiesInSceneCount = 0;
         #endregion
 
         void Start()
@@ -28,62 +31,27 @@ namespace rene_roid
             AllEnemies.Sort((x, y) => x.EnemyBaseStats.Cost.CompareTo(y.EnemyBaseStats.Cost));
 
             GetCurrentStageEnemies();
+            
         }
-
-        // TESINT -----------------
-        //private void Test()
-        //{
-        //    float t = 0;
-
-        //    while (t < 1)
-        //    {
-        //        t += Time.deltaTime / 1;
-        //        // Move the cube with sine wave
-        //        float y = Mathf.Sin(t * 2 * Mathf.PI);
-        //        Cube.transform.position = new Vector3(Cube.transform.position.x, Mathf.Abs(y), Cube.transform.position.z);
-        //        print(Mathf.Sin(t * 2 * Mathf.PI) * 2);
-        //        yield return null;
-        //    }
-
-        //    print("Done");
-
-        //    StartCoroutine(Test());
-        //}
-        // TESINT -----------------
 
         void Update()
         {
             if (CurrentStageEnemies.Count < 0) return;
             DirectorsUpdate();
-
-            Test();
         }
-
-        // TESINT -----------------
-        public GameObject Cube;
-        [Range(0, 1)] public float posSin = 0;
-        public float range = 0;
-        private void Test()
-        {
-            var x = Mathf.Sin(posSin * Mathf.PI);
-            //print(x);
-
-            range = Mathf.Clamp(x, 0.2f, 1);
-
-            Cube.transform.position = new Vector3(Cube.transform.position.x, x, Cube.transform.position.z);
-        }
-        // TESINT -----------------
 
         #region Directors
 
         private void DirectorsUpdate()
         {
             PassiveDirectorUpdate();
+            ActiveDirectorUpdate();
+            TeleportEventUpdate();
         }
 
         private void DirectorLevelUp()
         {
-            
+            _directorsLevel++;
         }
 
         #region Passive Director
@@ -103,7 +71,7 @@ namespace rene_roid
 
         [SerializeField] private float _creditsPerSecondPerLevelPD = 2f;
         [SerializeField] [Range(0, 1)] private float _creditPercentagePerEnemyPD = .2f;
-        [SerializeField] [Range(0, 1)] private float _creditPercentageToStartSpawningPD = 80f;
+        [SerializeField] [Range(0, 100)] private float _creditPercentageToStartSpawningPD = 80f;
         [SerializeField] private float _multiplierToSpawnEnemies = 5;
 
         [SerializeField] private float _spawningDurationPD = 15f;
@@ -118,11 +86,16 @@ namespace rene_roid
         private float _checkStartSpawningCooldownPD = 5f;
         private float _lastTimePD = 0;
 
+        private int _minIndexPD = 0;
+
         // Waiting --
         private float _waitTimePD = 0;
 
+        
         private void PassiveDirectorUpdate()
         {
+            if (CurrentEnemiesInSceneCount >= _maxNumEnemiesInScene) return;
+
             switch (_passiveDirectorState)
             {
                 case PassiveDirectorState.Innactive: // The director is innactive
@@ -229,12 +202,7 @@ namespace rene_roid
             SpawnEnemy();
 
             // Check if end of wave
-            //if (CurrentStageEnemies[0].EnemyBaseStats.Cost < _creditsPD) return; // Still have more credits
-            //if (_timeSpawningPD < _spawningDurationPD) return; // Not spent max time spawning
-            //if (_enemiesSpawnedPD < _maxEnemiesPerWavePD) return; // Not spawned max ammount of enemies
-
-            // Check if end of wave
-            if (CurrentStageEnemies[0].EnemyBaseStats.Cost > _creditsPD || _timeSpawningPD > _spawningDurationPD || _enemiesSpawnedPD >= _maxEnemiesPerWavePD)
+            if (CurrentStageEnemies[_minIndexPD].EnemyBaseStats.Cost > _creditsPD || _timeSpawningPD > _spawningDurationPD || _enemiesSpawnedPD >= _maxEnemiesPerWavePD)
             {
                 // Reset
                 _timeSpawningPD = 0;
@@ -242,24 +210,345 @@ namespace rene_roid
                 _enemiesSpawnedPD = 0;
                 PassiveDirectorChangeState(PassiveDirectorState.Waiting);                
             }
-
         }
 
 
         private void SpawnEnemy()
         {
+            // Instantiate enemy
+            var enemy2spawn = ChooseEnemeyToSpawnPD();
+
+            print("Enemy is null: " + (enemy2spawn == null));
+            if (enemy2spawn == null) return;
+
             _enemiesSpawnedPD++;
-            _creditsPD -= 0;
+            _creditsPD -= enemy2spawn.EnemyBaseStats.Cost;
+
+            print($"Spawning enemy: {enemy2spawn.name} | Cost: {enemy2spawn.EnemyBaseStats.Cost} | Credits left: {_creditsPD}");
+        }
+
+        private EnemyBase ChooseEnemeyToSpawnPD()
+        {
+            GetWheightRange(); // Update wheight range
+
+            var xpos = Helpers.FromRangeToPercentage(_directorsLevel, 0, 100, true) * 100;
+            var minIndex = Mathf.FloorToInt(xpos - (xpos * (_weightRange / 2)));
+            var maxIndex = Mathf.CeilToInt(xpos + (xpos * (_weightRange / 2)));
+            _minIndexPD = minIndex;
+            print($"minIndex: {minIndex} | maxIndex: {maxIndex} | xpos: {xpos}");
+
+            // Get enemies inside the weight range
+            List<EnemyBase> enemies = new List<EnemyBase>();
+            for (int i = 0; i < CurrentStageEnemies.Count; i++)
+            {
+                var fatness = CurrentStageEnemies[i].EnemyBaseStats.Weight;
+                if (fatness >= minIndex && fatness <= maxIndex) enemies.Add(CurrentStageEnemies[i]);
+            }
+
+            // Get random enemy from enemies list
+            if (enemies.Count == 0) return null;
+            return enemies[Random.Range(0, enemies.Count)];
         }
 
         // ----------- Waiting
+        
+        #endregion
+
+        #region Active Director
+        private enum ActiveDirectorState
+        {
+            Innactive,
+            Activate,
+            Spawning,
+            Deactivate
+        }
+        [Header("Active Director")]
+        [SerializeField] private ActiveDirectorState _activeDirectorState = ActiveDirectorState.Innactive;
+        [SerializeField] private float _creditsAC = 0;
+        [SerializeField] private float _creditsOnActivateAC = 100;
+        [SerializeField] private float _extraCreditsPerLevelAC = 25;
+
+        [SerializeField] private float _timeBetweenEnemySpawnAC = 1;
+
+        private int _minIndexAC = 0;
+
+
+        /* --- Workflow ---
+         * Innactive --> Activate
+         * On activate --> Get initial credits
+         * Change state to spawn
+         * On enter spawn start spawn coroutine
+         * End spawn --> Change to Deactivate
+         * Send unused credits to passive director
+         * Change to innactive
+         */
+        private void ActiveDirectorUpdate()
+        {
+            if (CurrentEnemiesInSceneCount >= _maxNumEnemiesInScene) return;
+
+            switch (_activeDirectorState)
+            {
+                case ActiveDirectorState.Innactive:
+                    break;
+                case ActiveDirectorState.Activate:
+                    ActiveDirectorChangeState(ActiveDirectorState.Spawning);
+                    break;
+                case ActiveDirectorState.Spawning:
+                    break;
+                case ActiveDirectorState.Deactivate:
+                    ActiveDirectorChangeState(ActiveDirectorState.Innactive);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ActiveDirectorChangeState(ActiveDirectorState newState)
+        {
+            // Exit current state
+            switch (_activeDirectorState)
+            {
+                case ActiveDirectorState.Innactive:
+                    break;
+                case ActiveDirectorState.Activate:
+                    break;
+                case ActiveDirectorState.Spawning:
+                    break;
+                case ActiveDirectorState.Deactivate:
+                    break;
+                default:
+                    break;
+            }
+
+            // Enter new state
+            switch (newState)
+            {
+                case ActiveDirectorState.Innactive:
+                    break;
+                case ActiveDirectorState.Activate:
+                    _creditsAC += _creditsOnActivateAC;
+                    break;
+                case ActiveDirectorState.Spawning:
+                    StartCoroutine(SpawnEnemiesActiveDirector());
+                    break;
+                case ActiveDirectorState.Deactivate:
+                    _creditsPD += _creditsAC;
+                    _creditsAC = 0;
+                    break;
+                default:
+                    break;
+            }
+
+            _activeDirectorState = newState;
+        }
+
+        private IEnumerator SpawnEnemiesActiveDirector()
+        {
+            GetWheightRange(); // Update wheight range
+
+            var xpos = Helpers.FromRangeToPercentage(_directorsLevel, 0, 100, true) * 100;
+            var minIndex = Mathf.FloorToInt(xpos - (xpos * (_weightRange / 2)));
+            var maxIndex = Mathf.CeilToInt(xpos + (xpos * (_weightRange / 2)));
+            _minIndexAC = minIndex;
+
+            minIndex = Mathf.Clamp(minIndex, 0, 80);
+            maxIndex = Mathf.Clamp(maxIndex, 20, 100);
+            print($"minIndex: {minIndex} | maxIndex: {maxIndex} | xpos: {xpos}");
+
+            // Get enemies inside the weight range
+            List<EnemyBase> enemies = new List<EnemyBase>();
+            for (int i = 0; i < CurrentStageEnemies.Count; i++)
+            {
+                var fatness = CurrentStageEnemies[i].EnemyBaseStats.Weight;
+                if (fatness >= minIndex && fatness <= maxIndex) enemies.Add(CurrentStageEnemies[i]);
+            }
+
+            if (enemies == null) yield break;
+
+            enemies.Sort((x, y) => x.EnemyBaseStats.Cost.CompareTo(x.EnemyBaseStats.Cost));
+            var minCost = enemies[_minIndexAC].EnemyBaseStats.Cost;
+
+            while (_creditsAC > minCost)
+            {
+                // Spawn enemy
+                var enemy = enemies[Random.Range(0, enemies.Count)];
+                // Remove credits
+                _creditsAC -= enemy.EnemyBaseStats.Cost;
+
+                print($"Spawning enemy: {enemy.EnemyBaseStats.name} | Cost: {enemy.EnemyBaseStats.Cost} | Credits left: {_creditsAC}");
+
+                yield return Helpers.GetWait(_timeBetweenEnemySpawnAC);
+            }
+
+            ActiveDirectorChangeState(ActiveDirectorState.Deactivate);
+        }
+        #endregion
+
+        #region Teleport Event Director
+        private enum TeleportEventDirectorState { Innactive, Activate, Gathering, Spawning, Waiting, Deactivate }
+        [Header("Teleport Event Director")]
+        [SerializeField] private TeleportEventDirectorState _teleportEventDirectorState = TeleportEventDirectorState.Innactive;
+        
+        [SerializeField] private float _creditsTED = 0;
+        [SerializeField] private float _creditsOnActivateTED = 100;
+        [SerializeField] private float _extraCreditsPerLevelTED = 25;
+        [SerializeField] private float _creditsPerSecondTED = 2;
+
+        [SerializeField] private float _timeBetweenEnemySpawnTED = 1;
+
+        // Smol vars
+        private float _checkGatherTEDFreq = 3;
+        private float _timeGatherTEDFreq = 0;
+        private int _minIndexTED = 0;
+        private float _lastSpawnTimeTED = 0;
+        
+        private float _timeBetweenWavesTED = 10;
+        private float _lastWaveTimeTED = 0;
+
+        private void TeleportEventUpdate()
+        {
+            switch (_teleportEventDirectorState)
+            {
+                case TeleportEventDirectorState.Innactive:
+                    break;
+                case TeleportEventDirectorState.Activate:
+                    GatherCreditsTED();
+                    if (_timeGatherTEDFreq + _checkGatherTEDFreq > Time.time) ChangeStateTED(TeleportEventDirectorState.Spawning);
+                    break;
+                case TeleportEventDirectorState.Gathering:
+                    GatherCreditsTED();
+
+                    if (_timeGatherTEDFreq + _checkGatherTEDFreq > Time.time && CanSpawnPED()/* && Check if can spawn */) ChangeStateTED(TeleportEventDirectorState.Spawning); // Spawn();
+                    break;
+                case TeleportEventDirectorState.Spawning:
+                    if (CurrentEnemiesInSceneCount >= _maxNumEnemiesInScene) return;
+
+                    SpawnEnemiesTED();
+                    break;
+                case TeleportEventDirectorState.Waiting:
+                    GatherCreditsTED();
+
+                    if (_lastWaveTimeTED + _timeBetweenWavesTED < Time.time) ChangeStateTED(TeleportEventDirectorState.Gathering);
+                    break;
+                case TeleportEventDirectorState.Deactivate:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ChangeStateTED(TeleportEventDirectorState newState)
+        {
+            // Exit current state
+            switch (_teleportEventDirectorState)
+            {
+                case TeleportEventDirectorState.Innactive:
+                    break;
+                case TeleportEventDirectorState.Activate:
+                    break;
+                case TeleportEventDirectorState.Gathering:
+                    break;
+                case TeleportEventDirectorState.Spawning:
+                    break;
+                case TeleportEventDirectorState.Waiting:
+                    break;
+                case TeleportEventDirectorState.Deactivate:
+                    break;
+                default:
+                    break;
+            }
+
+            // Enter new state
+            switch (newState)
+            {
+                case TeleportEventDirectorState.Innactive:
+                    break;
+                case TeleportEventDirectorState.Activate:
+                    _creditsTED += _creditsOnActivateTED;
+                    _timeGatherTEDFreq = Time.time;
+                    break;
+                case TeleportEventDirectorState.Gathering:
+                    _timeGatherTEDFreq = Time.time;
+                    break;
+                case TeleportEventDirectorState.Spawning:
+                    _creditsTED *= 1.5f;
+                    _lastSpawnTimeTED = Time.time;
+                    break;
+                case TeleportEventDirectorState.Waiting:
+                    break;
+                case TeleportEventDirectorState.Deactivate:
+                    break;
+                default:
+                    break;
+            }
+
+            _teleportEventDirectorState = newState;
+        }
+
+        private void GatherCreditsTED()
+        {
+            if (_teleportEventDirectorState != TeleportEventDirectorState.Gathering) _creditsTED += _extraCreditsPerLevelTED * Time.deltaTime;
+            else _creditsTED += (_creditsPerSecondTED * Time.deltaTime) * 2;
+        }
+
+        private bool CanSpawnPED()
+        {
+            GetWheightRange();
+            var multiplier = Mathf.RoundToInt(Helpers.FromPercentageToRange(_creditPercentageToStartSpawningPD, 0, CurrentStageEnemies.Count));
+            return CurrentStageEnemies[Mathf.RoundToInt(Helpers.FromPercentageToRange(_creditPercentageToStartSpawningPD, 0, CurrentStageEnemies.Count))].EnemyBaseStats.Cost * multiplier <= _creditsPD;
+        }
+
+        private void SpawnEnemiesTED()
+        {
+            if (_lastSpawnTimeTED + _timeBetweenEnemySpawnTED > Time.time) return;
+
+            // Instantiate enemy
+            var enemy2spawn = ChooseEnemeyToSpawnTED();
+            if (enemy2spawn == null) return;
+            print("Enemy is null: " + (enemy2spawn == null));
+            print($"Spawning enemy: {enemy2spawn.name} | Cost: {enemy2spawn.EnemyBaseStats.Cost} | Credits left: {_creditsTED}");
+            _enemiesSpawnedPD++;
+            _creditsTED -= enemy2spawn.EnemyBaseStats.Cost;
+            // Spawn actual enemy
+
+            print("Credits left: " + _creditsTED + " | Credits needed: " + CurrentStageEnemies[_minIndexTED].EnemyBaseStats.Cost);
+            if (_creditsTED < CurrentStageEnemies[_minIndexTED].EnemyBaseStats.Cost)
+            {
+                ChangeStateTED(TeleportEventDirectorState.Waiting);
+            }
+
+            _lastSpawnTimeTED = Time.time;
+        }
+
+        private EnemyBase ChooseEnemeyToSpawnTED()
+        {
+            GetWheightRange(); // Update wheight range
+
+            var xpos = Helpers.FromRangeToPercentage(_directorsLevel, 0, 100, true) * 100;
+            var minIndex = Mathf.FloorToInt(xpos - (xpos * (_weightRange / 2)));
+            var maxIndex = Mathf.CeilToInt(xpos + (xpos * (_weightRange / 2)));
+            _minIndexTED = minIndex;
+            print($"minIndex: {minIndex} | maxIndex: {maxIndex} | xpos: {xpos}");
+
+            // Get enemies inside the weight range
+            List<EnemyBase> enemies = new List<EnemyBase>();
+            for (int i = 0; i < CurrentStageEnemies.Count; i++)
+            {
+                var fatness = CurrentStageEnemies[i].EnemyBaseStats.Weight;
+                if (fatness >= minIndex && fatness <= maxIndex) enemies.Add(CurrentStageEnemies[i]);
+            }
+
+            // Get random enemy from enemies list
+            if (enemies.Count == 0) return null;
+            return enemies[Random.Range(0, enemies.Count)];
+        }
 
         #endregion
 
         private void GetWheightRange()
         {
             var x = Mathf.Sin(Helpers.FromRangeToPercentage(_directorsLevel, 0, 100, true) * Mathf.PI);
-            _wheightRange = Mathf.Clamp(x, 0.2f, 1);
+            _weightRange = Mathf.Clamp(x, 0.2f, 1);
         }
 
         private void GetCurrentStageEnemies()

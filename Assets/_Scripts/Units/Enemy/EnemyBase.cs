@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace rene_roid_enemy {
@@ -102,7 +101,7 @@ namespace rene_roid_enemy {
         }
         #endregion
 
-        #region Movement
+        #region Movement AI
         [Header("Movement")]
         [SerializeField] private float _movementSpeedMultiplier = 1f;
         [SerializeField] private float _headLevel = 0.5f;

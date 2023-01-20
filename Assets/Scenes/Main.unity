@@ -973,7 +973,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _directorsLevel: 1
   _currentStage: 1
-  _currentWheight: 6
   AllEnemies:
   - {fileID: 2007257614}
   - {fileID: 1812987347}
@@ -982,9 +981,6 @@ MonoBehaviour:
   - {fileID: 212001373}
   - {fileID: 1529303614}
   CurrentStageEnemies: []
-  Cube: {fileID: 1382967519}
-  posSin: 0
-  range: 0
   _passiveDirectorState: 0
   _creditsPD: 120
   _creditsPerSecondPD: 2
@@ -997,6 +993,11 @@ MonoBehaviour:
   _timeBetweenWavesPD: 5
   _maxEnemiesPerWavePD: 10
   _maxEnemiesPerWaveLevelUpPD: 1
+  _activeDirectorState: 0
+  _creditsAC: 0
+  _creditsOnActivateAC: 100
+  _extraCreditsPerLevelAC: 25
+  _timeBetweenEnemySpawnAC: 1
 --- !u!1 &381557616
 GameObject:
   m_ObjectHideFlags: 0
