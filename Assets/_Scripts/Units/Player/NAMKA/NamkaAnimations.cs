@@ -12,6 +12,13 @@ namespace rene_roid_player
 
         #region Skills
         private bool _stopSpecial2 = false;
+
+        public override void OnSpecialAttack2()
+        {
+            _stopSpecial2 = false;
+            base.OnSpecialAttack2();
+        }
+
         public void StopSpecial2()
         {
             _stopSpecial2 = true;
@@ -26,8 +33,10 @@ namespace rene_roid_player
 
             if (_currentState == SpecialAttack2Anim && _stopSpecial2)
             {
-                _lockedTill = Time.time + 1f;
-                _stopSpecial2 = false;    
+                print("YAS QUEEN");
+                _lockedTill = Time.time - 1f;
+                _stopSpecial2 = false;
+                state = GetState();
             }
 
             if (state == _currentState) return;

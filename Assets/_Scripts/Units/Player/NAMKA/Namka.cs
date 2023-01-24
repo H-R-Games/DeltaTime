@@ -193,11 +193,10 @@ namespace rene_roid_player
                 {
                     _skill2TimerClone = _skill2Duration;
                     transform.position = _initClonePos;
+                    _anims.StopSpecial2();
                     print("Skill 2 Cancelled");
                 }
             }
-
-            _anims.StopSpecial2();
         }
 
 
