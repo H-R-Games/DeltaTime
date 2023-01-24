@@ -1,10 +1,13 @@
 using System;
 using UnityEngine;
 
-namespace rene_roid_enemy {
+namespace rene_roid_enemy
+{
     [RequireComponent(typeof(BoxCollider2D))]
     public class EnemyBase : MonoBehaviour
     {
+        public enum EnemyTypes { EnemyHorizontal, EnemyFly, EnemyPro };
+
         [Header("Enemy stats")]
         [SerializeField] private EnemyBaseStats _enemyBaseStats;
 
@@ -20,6 +23,7 @@ namespace rene_roid_enemy {
         #region External Variables
         public event Action<float> OnHit;
         public event Action OnDeath;
+        public EnemyTypes EnemyType;
         #endregion
 
         public virtual void Awake()
@@ -35,7 +39,16 @@ namespace rene_roid_enemy {
 
         public virtual void Update()
         {
-            
+            switch (EnemyType)
+            {
+                case EnemyTypes.EnemyHorizontal:
+                    UpdateHorizontal();
+                    break;
+                case EnemyTypes.EnemyFly:
+                    break;
+                case EnemyTypes.EnemyPro:
+                    break;
+            }
         }
 
         public virtual void FixedUpdate()
@@ -103,10 +116,13 @@ namespace rene_roid_enemy {
         [Header("Movement")]
         [SerializeField] private float _movementSpeedMultiplier = 1f;
         [SerializeField] private float _headLevel = 0.5f;
+        [SerializeField] private float _gravity = -9.15f;
         private Vector2 _movementDirection = Vector2.right;
 
         private bool _grounded = false;
         private bool _walled = false;
+        private bool _isTarget = false;
+        private bool _isStunned = false;
 
         #region Raycast
         private RaycastHit2D _feetRaycast;
@@ -117,7 +133,7 @@ namespace rene_roid_enemy {
             _feetRaycast = Physics2D.Raycast(transform.position, Vector2.down, _boxCollider2D.bounds.extents.y + 0.1f, ~_enemyLayer);
             _grounded = _feetRaycast.collider != null;
 
-            _headRaycast = Physics2D.Raycast((Vector2)transform.position + new Vector2(0, _headLevel), _movementDirection, _boxCollider2D.bounds.extents.y + 10f, _wallLayer);
+            _headRaycast = Physics2D.Raycast((Vector2)transform.position + new Vector2(0, _headLevel), _movementDirection, _boxCollider2D.bounds.extents.y + 1f, _wallLayer);
             _walled = _headRaycast.collider != null;
         }
 
@@ -128,15 +144,35 @@ namespace rene_roid_enemy {
             _movementDirection = (player.transform.position - this.transform.position).normalized;
         }
 
-        #region Horizontal
+        #endregion
+
+        #region Stun
+
+        #endregion
+
+        private void HorizontalEnemyMovement()
+        {
+            
+        }
+
+        #region Horeizontal
         private void Horizontal()
         {
-            if (_grounded && !_walled)
-            {
-                transform.Translate(_movementDirection * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
-            }
+            Vertical();
+            Vector3 direction = new Vector3(_movementDirection.x, 0, 0);
+
+            if (_walled) _movementDirection = _movementDirection * -1;
+            if (!_grounded) _movementDirection = _movementDirection * -1;
+            transform.Translate(direction * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
         }
         #endregion
+
+        #region Verticall
+        private void Vertical()
+        {
+            Mathf.Clamp(_gravity, -_gravity, _gravity);
+            if (!_grounded) transform.Translate(new Vector3(0, _gravity * Time.deltaTime, 0));
+        }
         #endregion
 
         #endregion
@@ -147,7 +183,7 @@ namespace rene_roid_enemy {
             Gizmos.DrawRay(transform.position, Vector2.down * (_boxCollider2D.bounds.extents.y + 0.1f));
 
             Gizmos.color = Color.green;
-            Gizmos.DrawRay((Vector2)transform.position + new Vector2(0, _headLevel), Vector2.right * (_boxCollider2D.bounds.extents.y + 10f));
+            Gizmos.DrawRay((Vector2)transform.position + new Vector2(0, _headLevel), _movementDirection * new Vector2(0, _boxCollider2D.bounds.extents.y + 1f) * Vector2.right);
         }
     }
 }
