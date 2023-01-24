@@ -1,4 +1,7 @@
+using rene_roid;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace rene_roid_enemy
@@ -42,7 +45,7 @@ namespace rene_roid_enemy
             switch (EnemyType)
             {
                 case EnemyTypes.EnemyHorizontal:
-                    UpdateHorizontal();
+                    HorizontalEnemyMovement();
                     break;
                 case EnemyTypes.EnemyFly:
                     break;
@@ -118,6 +121,7 @@ namespace rene_roid_enemy
         [SerializeField] private float _headLevel = 0.5f;
         [SerializeField] private float _gravity = -9.15f;
         private Vector2 _movementDirection = Vector2.right;
+        [SerializeField] private float _timeStun = 0;
 
         private bool _grounded = false;
         private bool _walled = false;
@@ -147,12 +151,29 @@ namespace rene_roid_enemy
         #endregion
 
         #region Stun
+        public void StunEnemy(float stunTime)
+        {
+            StartCoroutine(Stun(stunTime));
+        }
+        
+        IEnumerator Stun(float stunTime)
+        {
+            _isStunned = true;
+            _timeStun = stunTime;
 
+            yield return Helpers.GetWait(_timeStun);
+
+            _timeStun = 0;
+            _isStunned = false;
+
+            GetPlayerDirection();
+        }
         #endregion
 
         private void HorizontalEnemyMovement()
         {
-            
+            if (!_isStunned) Horizontal();
+            if (!_grounded) Vertical();
         }
 
         #region Horeizontal
@@ -184,6 +205,9 @@ namespace rene_roid_enemy
 
             Gizmos.color = Color.green;
             Gizmos.DrawRay((Vector2)transform.position + new Vector2(0, _headLevel), _movementDirection * new Vector2(0, _boxCollider2D.bounds.extents.y + 1f) * Vector2.right);
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, 5f);
         }
     }
 }
