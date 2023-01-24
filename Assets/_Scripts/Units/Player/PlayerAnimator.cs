@@ -6,14 +6,14 @@ namespace rene_roid_player
     public class PlayerAnimator : MonoBehaviour
     {
         #region Internal Variables
-        [SerializeField] private IPlayerController _player;
-        private PlayerBase _playerBase;
-        private Animator _anim;
-        private SpriteRenderer _renderer;
-        private AudioSource _source;
+        [SerializeField] protected IPlayerController _player;
+        protected PlayerBase _playerBase;
+        protected Animator _anim;
+        protected SpriteRenderer _renderer;
+        protected AudioSource _source;
         #endregion
 
-        private void Awake()
+        protected void Awake()
         {
             _anim = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
@@ -23,7 +23,7 @@ namespace rene_roid_player
             _playerBase = GetComponentInParent<PlayerBase>();
         }
 
-        private void Start()
+        protected void Start()
         {
             _player.GroundedChanged += OnGroundedChanged;
             _player.WallGrabChanged += OnWallGrabChanged;
@@ -35,7 +35,7 @@ namespace rene_roid_player
             _player.UltimateAttack += OnUltimateAttack;
         }
 
-        private void Update()
+        protected void Update()
         {
             HandleSpriteFlipping();
             HandleGroundEffects();
@@ -43,31 +43,31 @@ namespace rene_roid_player
             HandleAnimations();
         }
 
-        private void HandleSpriteFlipping()
+        protected void HandleSpriteFlipping()
         {
             if (_player.WallDirection != 0) _renderer.flipX = _player.WallDirection == -1;
             else if (Mathf.Abs(_player.Input.x) > 0.1f) _renderer.flipX = _player.Input.x < 0;
         }
 
         #region Skills
-        private bool _basicAttack1, _specialAttack1, _specialAttack2, _ultimateAttack;
+        protected bool _basicAttack1, _specialAttack1, _specialAttack2, _ultimateAttack;
 
-        private void OnBasicAttack1()
+        protected void OnBasicAttack1()
         {
             _basicAttack1 = true;
         }
 
-        private void OnSpecialAttack1()
+        protected void OnSpecialAttack1()
         {
             _specialAttack1 = true;
         }
 
-        private void OnSpecialAttack2()
+        protected void OnSpecialAttack2()
         {
             _specialAttack2 = true;
         }
 
-        private void OnUltimateAttack()
+        protected void OnUltimateAttack()
         {
             _ultimateAttack = true;
         }
@@ -75,11 +75,11 @@ namespace rene_roid_player
 
         #region Ground Movement
         [Header("GROUND MOVEMENT")]
-        [SerializeField] private AudioClip[] _footstepClips;
-        [SerializeField] private float _tiltChangeSpeed = .05f;
-        private Vector2 _tiltVelocity;
+        [SerializeField] protected AudioClip[] _footstepClips;
+        [SerializeField] protected float _tiltChangeSpeed = .05f;
+        protected Vector2 _tiltVelocity;
 
-        private void HandleGroundEffects()
+        protected void HandleGroundEffects()
         {
             // Move particles get bigger as you gain momentum
             var speedPoint = Mathf.InverseLerp(0, _playerBase.MaxStats.MovementSpeed, Mathf.Abs(_player.Speed.x));
@@ -89,7 +89,7 @@ namespace rene_roid_player
             transform.up = Vector2.SmoothDamp(transform.up, _grounded ? _player.GroundNormal : Vector2.up, ref _tiltVelocity, _tiltChangeSpeed);
         }
 
-        private int _stepIndex = 0;
+        protected int _stepIndex = 0;
 
         public void PlayFootstep()
         {
@@ -103,15 +103,15 @@ namespace rene_roid_player
         #region Wall Sliding and Climbing
         [Header("WALL")]
 
-        private bool _hitWall, _isOnWall, _isSliding, _dismountedWall;
+        protected bool _hitWall, _isOnWall, _isSliding, _dismountedWall;
 
-        private void OnWallGrabChanged(bool onWall)
+        protected void OnWallGrabChanged(bool onWall)
         {
             _hitWall = _isOnWall = onWall;
             _dismountedWall = !onWall;
         }
 
-        private void HandleWallSlideEffects()
+        protected void HandleWallSlideEffects()
         {
             var slidingThisFrame = _isOnWall && !_grounded && _player.Speed.y < 0;
 
@@ -125,7 +125,7 @@ namespace rene_roid_player
             }
         }
 
-        private int _wallClimbIndex = 0;
+        protected int _wallClimbIndex = 0;
 
         public void PlayWallClimbSound()
         {
@@ -135,12 +135,11 @@ namespace rene_roid_player
 
         #endregion
 
-
         #region Ladders
 
         [Header("LADDER")]
-        [SerializeField] private AudioClip[] _ladderClips;
-        private int _climbIndex = 0;
+        [SerializeField] protected AudioClip[] _ladderClips;
+        protected int _climbIndex = 0;
 
         public void PlayLadderClimbClip()
         {
@@ -152,26 +151,26 @@ namespace rene_roid_player
 
         #region Jumping & Landing
         [Header("JUMPING")]
-        [SerializeField] private float _minImpactForce = 20;
+        [SerializeField] protected float _minImpactForce = 20;
 
-        private bool _jumpTriggered;
-        private bool _landed;
-        private bool _grounded;
-        private bool _wallJumped;
+        protected bool _jumpTriggered;
+        protected bool _landed;
+        protected bool _grounded;
+        protected bool _wallJumped;
 
-        private void OnJumped(bool wallJumped)
+        protected void OnJumped(bool wallJumped)
         {
             _jumpTriggered = true;
             _wallJumped = wallJumped;
         }
 
-        private void OnAirJumped()
+        protected void OnAirJumped()
         {
             _jumpTriggered = true;
             _wallJumped = false;
         }
 
-        private void OnGroundedChanged(bool grounded, float impactForce)
+        protected void OnGroundedChanged(bool grounded, float impactForce)
         {
             _grounded = grounded;
 
@@ -184,9 +183,9 @@ namespace rene_roid_player
         #endregion
 
         #region Animation Methods
-        private float _lockedTill;
+        protected float _lockedTill;
 
-        private void HandleAnimations()
+        protected void HandleAnimations()
         {
             var state = GetState();
             ResetFlags();
@@ -241,22 +240,22 @@ namespace rene_roid_player
         #endregion
 
         #region Cached Properties
-        private int _currentState;
+        protected int _currentState;
 
-        private static readonly int Idle = Animator.StringToHash("Idle");
-        private static readonly int Run = Animator.StringToHash("Run");
+        protected static readonly int Idle = Animator.StringToHash("Idle");
+        protected static readonly int Run = Animator.StringToHash("Run");
 
-        private static readonly int Jump = Animator.StringToHash("Jump");
-        private static readonly int Fall = Animator.StringToHash("Fall");
+        protected static readonly int Jump = Animator.StringToHash("Jump");
+        protected static readonly int Fall = Animator.StringToHash("Fall");
 
-        private static readonly int BasicAttackAnim = Animator.StringToHash("BasicAttack");
-        private static readonly int SpecialAttack1Anim = Animator.StringToHash("SpecialAttack1");
-        private static readonly int SpecialAttack2Anim = Animator.StringToHash("SpecialAttack2");
-        private static readonly int UltimateAttackAnim = Animator.StringToHash("UltimateAttack");
+        protected static readonly int BasicAttackAnim = Animator.StringToHash("BasicAttack");
+        protected static readonly int SpecialAttack1Anim = Animator.StringToHash("SpecialAttack1");
+        protected static readonly int SpecialAttack2Anim = Animator.StringToHash("SpecialAttack2");
+        protected static readonly int UltimateAttackAnim = Animator.StringToHash("UltimateAttack");
         #endregion
 
         #region Audio
-        private void PlaySound(AudioClip clip, float volume = 1, float pitch = 1)
+        protected void PlaySound(AudioClip clip, float volume = 1, float pitch = 1)
         {
             _source.pitch = pitch;
             _source.PlayOneShot(clip, volume);
