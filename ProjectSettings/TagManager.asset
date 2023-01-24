@@ -15,8 +15,8 @@ TagManager:
   - Player
   - Wall
   - Ladder
-  - 
-  - 
+  - Enemy
+  - OneWayFloor
   - 
   - 
   - 

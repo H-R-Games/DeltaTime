@@ -1,4 +1,7 @@
+using rene_roid;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace rene_roid_player
@@ -31,7 +34,7 @@ namespace rene_roid_player
         public event Action SpecialAttack1;
         public event Action SpecialAttack2;
         public event Action UltimateAttack;
-        
+
         public PlayerBaseStats PlayerStats => _baseStats;
         public Vector2 Input => _frameInput.Move;
         public Vector2 Speed => _speed;
@@ -77,7 +80,7 @@ namespace rene_roid_player
         public virtual void Update()
         {
             GatherInput();
-
+            UpdateItems();
             UpdatePlayerStats();
         }
 
@@ -108,6 +111,15 @@ namespace rene_roid_player
         [SerializeField] private float _currentDamage;
         [SerializeField] private float _currentArmor;
         [SerializeField] private float _currentMovementSpeed;
+
+        private float _extraHealthPercentage = 0f;
+        private float _extraFlatHealth = 0f;
+        private float _extraHealthRegenPercentage = 0f;
+        private float _extraFlatHealthRegen = 0f;
+        private float _extraArmorPercentage = 0f;
+        private float _extraFlatArmor = 0f;
+        private float _extraMovementSpeedPercentage = 0f;
+        private float _extraFlatMovementSpeed = 0f;
 
         private PlayerBaseStats _maxStats;
 
@@ -141,14 +153,150 @@ namespace rene_roid_player
 
         private void LevelUpPlayerStats()
         {
-            _maxStats.Health += _maxStats.HealthPerLevel;
-            _maxStats.HealthRegen += _maxStats.HealthRegenPerLevel;
-            _maxStats.Damage += _maxStats.DamagePerLevel;
-            _maxStats.Armor += _maxStats.ArmorPerLevel;
-            _maxStats.MovementSpeed += _maxStats.MovementSpeedPerLevel;
-
+            UpdateMaxPlayerStats();
             SetPlayerStats();
         }
+
+        private void UpdateMaxPlayerStats()
+        {
+            _maxStats.Health = (_baseStats.Health + ((_level - 1) * _baseStats.HealthPerLevel)) * (1 + _extraHealthPercentage) + _extraFlatHealth;
+            _maxStats.HealthRegen = (_baseStats.HealthRegen + ((_level - 1) * _baseStats.HealthRegenPerLevel)) * (1 + _extraHealthRegenPercentage) + _extraFlatHealthRegen;
+            _maxStats.Damage = (_baseStats.Damage + ((_level - 1) * _baseStats.DamagePerLevel));
+            _maxStats.Armor = (_baseStats.Armor + ((_level - 1) * _baseStats.ArmorPerLevel)) * (1 + _extraArmorPercentage) + _extraFlatArmor;
+            _maxStats.MovementSpeed = (_baseStats.MovementSpeed + ((_level - 1) * _baseStats.MovementSpeedPerLevel)) * (1 + _extraMovementSpeedPercentage) + _extraFlatMovementSpeed;
+        }
+
+        #region Add Stats
+
+        public void AddHealthPercentage(float percentage)
+        {
+            _extraHealthPercentage += percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddHealthFlat(float flat)
+        {
+            _extraFlatHealth += flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddHealthRegenPercentage(float percentage)
+        {
+            _extraHealthRegenPercentage += percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddHealthRegenFlat(float flat)
+        {
+            _extraFlatHealthRegen += flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddArmorPercentage(float percentage)
+        {
+            _extraArmorPercentage += percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddArmorFlat(float flat)
+        {
+            _extraFlatArmor += flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddMovementSpeedPercentage(float percentage)
+        {
+            _extraMovementSpeedPercentage += percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddMovementSpeedFlat(float flat)
+        {
+            _extraFlatMovementSpeed += flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void AddSpecialMultiplier(float multiplier)
+        {
+            _specialMultiplier += multiplier;
+        }
+
+        public void AddFlatDamageBonus(float flat)
+        {
+            _flatDmgBonus += flat;
+        }
+
+        public void AddPercentageDamageBonus(float percentage)
+        {
+            _percentageDmgBonus += percentage;
+        }
+        #endregion
+
+        #region Remove Stats
+
+        public void RemoveHealthPercentage(float percentage)
+        {
+            _extraHealthPercentage -= percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveHealthFlat(float flat)
+        {
+            _extraFlatHealth -= flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveHealthRegenPercentage(float percentage)
+        {
+            _extraHealthRegenPercentage -= percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveHealthRegenFlat(float flat)
+        {
+            _extraFlatHealthRegen -= flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveArmorPercentage(float percentage)
+        {
+            _extraArmorPercentage -= percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveArmorFlat(float flat)
+        {
+            _extraFlatArmor -= flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveMovementSpeedPercentage(float percentage)
+        {
+            _extraMovementSpeedPercentage -= percentage;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveMovementSpeedFlat(float flat)
+        {
+            _extraFlatMovementSpeed -= flat;
+            UpdateMaxPlayerStats();
+        }
+
+        public void RemoveSpecialMultiplier(float multiplier)
+        {
+            _specialMultiplier -= multiplier;
+        }
+
+        public void RemoveFlatDamageBonus(float flat)
+        {
+            _flatDmgBonus -= flat;
+        }
+
+        public void RemovePercentageDamageBonus(float percentage)
+        {
+            _percentageDmgBonus -= percentage;
+        }
+        #endregion
 
         #region Health
         private void ConstantHealing()
@@ -223,6 +371,7 @@ namespace rene_roid_player
 
         #region Player Skills
         [Header("Player Skills")]
+        [Header("Cooldowns")]
         public float BasicAttackCooldown = 0.5f;
         public float Skill1Cooldown = 1;
         public float Skill2Cooldown = 2;
@@ -238,20 +387,21 @@ namespace rene_roid_player
         private bool _skill2Ready = true;
         private bool _ultimateReady = true;
 
-        [SerializeField] private int _basicAttackFrames = 8;
-        [SerializeField] private int _skill1Frames = 8;
-        [SerializeField] private int _skill2Frames = 8;
-        [SerializeField] private int _ultimateFrames = 8;
+        private int _basicAttackFrames = 8;
+        private int _skill1Frames = 8;
+        private int _skill2Frames = 8;
+        private int _ultimateFrames = 8;
 
         private int _basicFrameWasPressed;
         private int _skill1FrameWasPressed;
         private int _skill2FrameWasPressed;
         private int _ultimateFrameWasPressed;
 
-        [SerializeField] public float _basicAttackTimeLock = 0.5f;
-        [SerializeField] public float _skill1TimeLock = 0.5f;
-        [SerializeField] public float _skill2TimeLock = 0.5f;
-        [SerializeField] public float _ultimateTimeLock = 0.5f;
+        [Header("Time Between Skills")]
+        public float _basicAttackTimeLock = 0.5f;
+        public float _skill1TimeLock = 0.5f;
+        public float _skill2TimeLock = 0.5f;
+        public float _ultimateTimeLock = 0.5f;
 
         private float _basicAttackTimeLockTimer;
         private float _skill1TimeLockTimer;
@@ -267,7 +417,7 @@ namespace rene_roid_player
             _skill2FrameWasPressed = -_skill2Frames;
             _ultimateFrameWasPressed = -_ultimateFrames;
         }
-        
+
         private void GatherSkillInput()
         {
             if ((_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld || _basicFrameWasPressed + _basicAttackFrames > _fixedFrame) && _basicAttackReady)
@@ -302,7 +452,7 @@ namespace rene_roid_player
             if (_locked)
             {
                 // If any skill lock is active, count until timer has reached 0
-                
+
             }
 
             // If _basic attack not ready count until timer is over cooldown
@@ -399,6 +549,25 @@ namespace rene_roid_player
         }
         #endregion
 
+        #region Item Management
+        [Header("Item Management")]
+        public List<Item> _items = new List<Item>();
+
+        public void AddItem(Item item)
+        {
+            _items.Add(item);
+            item.Items.ForEach(i => i.OnGet(this));
+        }
+
+        private void UpdateItems() => _items.ForEach(i => i.Items.ForEach(i => i.OnUpdate(this)));
+
+        public void RemoveItem(Item item)
+        {
+            _items.Remove(item);
+            item.Items.ForEach(i => i.OnRemove(this));
+        }
+        #endregion
+
         #region Movement
         [Header("Movement")]
         private Vector2 _speed;
@@ -441,7 +610,7 @@ namespace rene_roid_player
 
             // Ground and Ceiling
             _groundHitCount = Physics2D.CapsuleCastNonAlloc(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _groundHits, _grounderDistance, ~_playerLayer);
-            _ceilingHitCount = Physics2D.CapsuleCastNonAlloc(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _ceilingHits, _grounderDistance, ~_playerLayer);
+            _ceilingHitCount = Physics2D.CapsuleCastNonAlloc(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _ceilingHits, _grounderDistance, (~_playerLayer & ~_oneWayFloor));
 
             // Walls and Ladders
             var bounds = GetWallDetectionBounds();
@@ -450,6 +619,8 @@ namespace rene_roid_player
             Physics2D.queriesHitTriggers = true; // Ladders are set to Trigger
             _ladderHitCount = Physics2D.OverlapBoxNonAlloc(bounds.center, bounds.size, 0, _ladderHits, _ladderLayerMask);
             Physics2D.queriesHitTriggers = _cachedTriggerSetting;
+
+            FallThroughFloor();
         }
 
         protected virtual bool TryGetGroundNormal(out Vector2 groundNormal)
@@ -488,6 +659,28 @@ namespace rene_roid_player
                 GroundedChanged?.Invoke(false, 0);
             }
         }
+
+        protected virtual void FallThroughFloor()
+        {
+            if (/*_grounded &&*/ _frameInput.Move.y <= -0.65f)
+            {
+                // Detect if player is on top of _oneWayFloor layer
+                var hit = Physics2D.Raycast(_col.bounds.center, Vector2.down, /*_grounderDistance * 2*/ 2, _oneWayFloor);
+                if (hit.collider != null)
+                {
+                    // If player is on top of _oneWayFloor layer then ignore floor collision and fall through
+                    // Activate the collision again after a short delay
+                    hit.collider.enabled = false;
+                    StartCoroutine(EnableColliderAfterDelay(hit.collider, 0.3f));
+                }
+            }
+        }
+
+        private IEnumerator EnableColliderAfterDelay(Collider2D collider, float delay)
+        {
+            yield return Helpers.GetWait(delay);
+            collider.enabled = true;
+        }
         #endregion
 
         #region Walls
@@ -510,7 +703,7 @@ namespace rene_roid_player
             bool ShouldStickWall()
             {
                 if (_wallDir == 0 || _grounded) return false;
-                return _requireInputPush ? Mathf.Sign(_frameInput.Move.x) == _wallDir : true;
+                return _requireInputPush ? Mathf.Sign(_frameInput.Move.x > 0 ? 1 : -1) == _wallDir : true;
             }
         }
 
@@ -527,7 +720,7 @@ namespace rene_roid_player
         }
 
         #endregion
-        
+
         #region Ladders
         private Vector2 _ladderSnapVel; // TODO: determine if we need to reset this when leaving a ladder, or use a different kind of Lerp/MoveTowards
         private int _frameLeftLadder = int.MinValue;
@@ -699,6 +892,7 @@ namespace rene_roid_player
         }
 
         #region Movement Stats
+        [Header("Movement Stats")]
         // Movement
         private float _acceleration = 120; // Capacity to gain horizontal speed
         private float _groundDeceleration = 60; // Pace at which the player comes to a stop
@@ -721,6 +915,7 @@ namespace rene_roid_player
 
         // Walls
         private bool _allowWalls = true; // Allows wall slide / Jump
+        [Header("Layers")]
         [SerializeField] private LayerMask _wallLayerMask; // Layer mask for climbable walls are on
         private bool _requireInputPush = false; // If true, the player must push against the wall to climb it
 
@@ -746,11 +941,22 @@ namespace rene_roid_player
         // Collisions
         private float _grounderDistance = 0.1f; // Distance from the player's feet to the ground
         private Vector2 _wallDetectorSize = new Vector2(0.75f, 1.25f); // Size of the wall detector box
+        [SerializeField] private LayerMask _oneWayFloor; // Layer mask for ground is on
 
 
         // External
         private int _externalVelocityDecay = 100;
         #endregion
+        #endregion
+
+        #region Getters & Setters
+        public FrameInput GetFrameInput() => _frameInput;
+
+        public bool IsGrounded() => _grounded;
+
+        public bool IsFalling() => _speed.y < 0;
+
+        public bool IsClimbing() => _onLadder || _isOnWall;
         #endregion
 
 #if UNITY_EDITOR
@@ -763,6 +969,10 @@ namespace rene_roid_player
             Gizmos.color = Color.green;
             var bound = new Bounds(_rb.position, _col.size);
             Gizmos.DrawWireCube(bound.center, bound.size);
+
+            Gizmos.color = Color.red;
+            var down = new Vector2(_col.bounds.center.x, -_col.bounds.center.y + 1);
+            Gizmos.DrawLine(_col.bounds.center, down);
         }
 
         private void OnValidate()
