@@ -188,7 +188,7 @@ namespace rene_roid_player
         #region Animation Methods
         protected float _lockedTill;
 
-        protected void HandleAnimations()
+        public virtual void HandleAnimations()
         {
             var state = GetState();
             ResetFlags();
