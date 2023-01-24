@@ -240,7 +240,7 @@ namespace rene_roid_player
 
             var boxRad = _ultimateRad.GetComponent<BoxCollider2D>();
 
-            if (_renderer.flipX) _ultimateRad.transform.position = new Vector3(-_ultimateRad.transform.position.x, _ultimateRad.transform.position.y, _ultimateRad.transform.position.z);
+            if (_renderer.flipX) _ultimateRad.transform.position = new Vector3(_ultimateRad.transform.position.x, _ultimateRad.transform.position.y, _ultimateRad.transform.position.z);
             else _ultimateRad.transform.position = new Vector3(_ultimateRad.transform.position.x, _ultimateRad.transform.position.y, _ultimateRad.transform.position.z);
 
             camScript.MoveCameraToPosition(new Vector2(transform.position.x + camX, cam.transform.position.y), delay);
