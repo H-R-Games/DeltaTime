@@ -5,39 +5,31 @@ namespace rene_roid_player
     [RequireComponent(typeof(Animator), typeof(SpriteRenderer))]
     public class NamkaAnimations : PlayerAnimator
     {
+        public override void Update()
+        {
+            base.Update();
+        }
+
         #region Skills
-        [Header("Skills")]
-        [SerializeField] private float _basicAttack1Time;
-        [SerializeField] private float _specialAttack1Time, _specialAttack2Time, _ultimateAttackTime;
-        private bool _basicAttack1, _specialAttack1, _specialAttack2, _ultimateAttack;
-
-        protected void OnBasicAttack1()
+        private bool _stopSpecial2 = false;
+        public void StopSpecial2()
         {
-            _basicAttack1 = true;
-        }
-
-        protected void OnSpecialAttack1()
-        {
-            _specialAttack1 = true;
-        }
-
-        protected void OnSpecialAttack2()
-        {
-            _specialAttack2 = true;
-        }
-
-        protected void OnUltimateAttack()
-        {
-            _ultimateAttack = true;
+            _stopSpecial2 = true;
         }
         #endregion
 
         #region Animation Methods
-
         public override void HandleAnimations()
         {
             var state = GetState();
             ResetFlags();
+
+            if (_currentState == SpecialAttack2Anim && _stopSpecial2)
+            {
+                _lockedTill = Time.time + 1f;
+                _stopSpecial2 = false;    
+            }
+
             if (state == _currentState) return;
 
             _anim.Play(state, 0); //_anim.CrossFade(state, 0, 0);
@@ -88,21 +80,5 @@ namespace rene_roid_player
             }
         }
         #endregion
-
-        #region Cached Properties
-        protected int _currentState;
-
-        protected static readonly int Idle = Animator.StringToHash("Idle");
-        protected static readonly int Run = Animator.StringToHash("Run");
-
-        protected static readonly int Jump = Animator.StringToHash("Jump");
-        protected static readonly int Fall = Animator.StringToHash("Fall");
-
-        protected static readonly int BasicAttackAnim = Animator.StringToHash("BasicAttack");
-        protected static readonly int SpecialAttack1Anim = Animator.StringToHash("SpecialAttack1");
-        protected static readonly int SpecialAttack2Anim = Animator.StringToHash("SpecialAttack2");
-        protected static readonly int UltimateAttackAnim = Animator.StringToHash("UltimateAttack");
-        #endregion
-
     }
 }

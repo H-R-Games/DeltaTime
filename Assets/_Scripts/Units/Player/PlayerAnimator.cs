@@ -23,7 +23,7 @@ namespace rene_roid_player
             _playerBase = GetComponentInParent<PlayerBase>();
         }
 
-        protected void Start()
+        public virtual void Start()
         {
             _player.GroundedChanged += OnGroundedChanged;
             _player.WallGrabChanged += OnWallGrabChanged;
@@ -35,7 +35,7 @@ namespace rene_roid_player
             _player.UltimateAttack += OnUltimateAttack;
         }
 
-        protected void Update()
+        public virtual void Update()
         {
             HandleSpriteFlipping();
             HandleGroundEffects();
@@ -51,26 +51,26 @@ namespace rene_roid_player
 
         #region Skills
         [Header("Skills")]
-        [SerializeField] private float _basicAttack1Time;
-        [SerializeField] private float _specialAttack1Time, _specialAttack2Time, _ultimateAttackTime;
-        private bool _basicAttack1, _specialAttack1, _specialAttack2, _ultimateAttack;
+        [SerializeField] protected float _basicAttack1Time;
+        [SerializeField] protected float _specialAttack1Time, _specialAttack2Time, _ultimateAttackTime;
+        protected bool _basicAttack1, _specialAttack1, _specialAttack2, _ultimateAttack;
 
-        protected void OnBasicAttack1()
+        public virtual void OnBasicAttack1()
         {
             _basicAttack1 = true;
         }
 
-        protected void OnSpecialAttack1()
+        public virtual void OnSpecialAttack1()
         {
             _specialAttack1 = true;
         }
 
-        protected void OnSpecialAttack2()
+        public virtual void OnSpecialAttack2()
         {
             _specialAttack2 = true;
         }
 
-        protected void OnUltimateAttack()
+        public virtual void OnUltimateAttack()
         {
             _ultimateAttack = true;
         }

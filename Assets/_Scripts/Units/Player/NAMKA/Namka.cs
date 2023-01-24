@@ -12,6 +12,8 @@ namespace rene_roid_player
         private CapsuleCollider2D _collider;
         private SpriteRenderer _renderer;
 
+        private NamkaAnimations _anims;
+
         [SerializeField] private LayerMask _enemyLayer;
         #endregion
 
@@ -19,6 +21,7 @@ namespace rene_roid_player
         {
             base.Start();
             _renderer = GetComponentInChildren<SpriteRenderer>();
+            _anims = GetComponentInChildren<NamkaAnimations>();
             _collider = GetComponent<CapsuleCollider2D>();
         }
 
@@ -193,6 +196,8 @@ namespace rene_roid_player
                     print("Skill 2 Cancelled");
                 }
             }
+
+            _anims.StopSpecial2();
         }
 
 
