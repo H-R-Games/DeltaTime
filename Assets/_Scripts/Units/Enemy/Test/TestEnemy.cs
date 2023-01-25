@@ -7,7 +7,6 @@ namespace rene_roid_enemy {
         public override void Start()
         {
             base.Start();
-            EnemyType = EnemyTypes.EnemyHorizontal;
         }
 
         public override void Update()
