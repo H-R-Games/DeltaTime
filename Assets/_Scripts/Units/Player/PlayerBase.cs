@@ -904,11 +904,11 @@ namespace rene_roid_player
 
 
         // Jump
-        private int _maxAirJumps = 0; // Max amount of jumps the player can do in the air. 0 = No air jumps
+        private int _maxAirJumps = 100; // Max amount of jumps the player can do in the air. 0 = No air jumps
         private float _jumpForce = 36; // Inmediate force applied to the player when jumping
         private float _maxFallSpeed = 40; // Max speed the player can fall at
         private float _fallAcceleration = 100; // Acceleration applied to the player when falling
-        private float _jumpEndEarlyGravityModifier = 3; // Gravity modifier applied to the player when ending a jump early
+        private float _jumpEndEarlyGravityModifier = 1.5f; // Gravity modifier applied to the player when ending a jump early
         private int _coyoteFrames = 7; // Amount of frames the player can jump after leaving the ground
         private int _jumpBufferFrames = 7; // Amount of fixed frames we buffer a jump. This allows jump input before actually hitting the ground
 
