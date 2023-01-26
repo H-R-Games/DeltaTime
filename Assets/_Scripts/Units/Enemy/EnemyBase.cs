@@ -9,12 +9,11 @@ namespace rene_roid_enemy
     [RequireComponent(typeof(BoxCollider2D))]
     public class EnemyBase : MonoBehaviour
     {
-        public enum EnemyTypes { EnemyHorizontal, EnemyFly, EnemyPro };
         public enum EnemyStates { Idle, Move, Attack, Stun, Dead }
 
         [Header("Enemy stats")]
         [SerializeField] private EnemyBaseStats _enemyBaseStats;
-        [SerializeField] private EnemyStates _enemyState;
+        [SerializeField] protected EnemyStates _enemyState;
 
         #region Internal Variables
         [Header("Internal Variables")]
@@ -28,7 +27,6 @@ namespace rene_roid_enemy
         #region External Variables
         public event Action<float> OnHit;
         public event Action OnDeath;
-        public EnemyTypes EnemyType;
         #endregion
 
         public virtual void Awake()
@@ -40,7 +38,6 @@ namespace rene_roid_enemy
         public virtual void Start()
         {
             GetPlayerDirection();
-            _enemyState = EnemyStates.Move;
         }
 
         public virtual void Update()
@@ -57,19 +54,17 @@ namespace rene_roid_enemy
 
         #region Enemy Stats
         [Header("Enemy Stats")]
-        [SerializeField] private int _level = 1;
-
-        [SerializeField] private float _health;
-        [SerializeField] private float _damage;
-        [SerializeField] private float _armor;
-        [SerializeField] private float _movementSpeed;
+        [SerializeField] protected int _level = 1;
+        [SerializeField] protected float _health;
+        [SerializeField] protected float _damage;
+        [SerializeField] protected float _armor;
+        [SerializeField] protected float _movementSpeed;
 
         //private EnemyBaseStats _enemyStats;
 
         private void AwakeEnemyStats()
         {
             //_enemyStats = Instantiate(_enemyBaseStats);
-
             SetEnemyStats();
         }
 
@@ -81,10 +76,7 @@ namespace rene_roid_enemy
             _movementSpeed = _enemyBaseStats.MovementSpeed * _level;
         }
 
-        public void LevelUp()
-        {
-            _level++;
-        }
+        public void LevelUp() { _level++; }
         #endregion
 
         #region Health & Damage
@@ -111,98 +103,29 @@ namespace rene_roid_enemy
 
         #region Movement
         [Header("Movement")]
-        [SerializeField] private float _movementSpeedMultiplier = 1f;
-        [SerializeField] private float _headLevel = 0.5f;
-        [SerializeField] private float _gravity = -9.15f;
-        private Vector2 _movementDirection = Vector2.right;
-        [SerializeField] private float _timeStun = 0;
+        [SerializeField] protected float _movementSpeedMultiplier = 1f;
+        [SerializeField] protected float _headLevel = 0.5f;
+        [SerializeField] protected float _gravity = -9.15f;
+        [SerializeField] protected float _timeStun = 0;
+        protected Vector2 _movementDirection = Vector2.right;
 
-        private bool _grounded = false;
-        private bool _walled = false;
-        private bool _isTarget = false;
-        private bool _isStunned = false;
+        protected bool _grounded = false;
+        protected bool _walled = false;
+        protected bool _isTarget = false;
+        protected bool _isStunned = false;
 
         #region State Machine
-        private void ChangeState(EnemyStates newState)
-        {
-            switch (_enemyState)
-            {
-                case EnemyStates.Idle:
+        public virtual void ChangeState(EnemyStates newState) { }
 
-                    break;
-                case EnemyStates.Move:
-
-                    break;
-                case EnemyStates.Attack:
-
-                    break;
-                case EnemyStates.Stun:
-
-                    break;
-                case EnemyStates.Dead:
-
-                    break;
-            }
-
-            switch (newState)
-            {
-                case EnemyStates.Idle:
-
-                    break;
-                case EnemyStates.Move:
-
-                    break;
-                case EnemyStates.Attack:
-
-                    break;
-                case EnemyStates.Stun:
-                    break;
-                case EnemyStates.Dead:
-
-                    break;
-            }
-
-            _enemyState = newState;
-        }
-
-        public void UpdateState()
-        {
-            switch (_enemyState)
-            {
-                case EnemyStates.Idle:
-
-                    break;
-                case EnemyStates.Move:
-                    switch (EnemyType)
-                    {
-                        case EnemyTypes.EnemyHorizontal:
-                            HorizontalEnemyMovement();
-                            break;
-                        case EnemyTypes.EnemyFly:
-                            break;
-                        case EnemyTypes.EnemyPro:
-                            break;
-                    }
-                    break;
-                case EnemyStates.Attack:
-
-                    break;
-                case EnemyStates.Stun:
-                    break;
-                case EnemyStates.Dead:
-
-                    break;
-            }
-
-            StunUpdate();
-        }
+        public virtual void UpdateState() { }
 
         #endregion
+
         #region Raycast
         private RaycastHit2D _feetRaycast;
         private RaycastHit2D _headRaycast;
 
-        private void CheckCollisions()
+        public virtual void CheckCollisions()
         {
             _feetRaycast = Physics2D.Raycast(transform.position, Vector2.down, _boxCollider2D.bounds.extents.y + 0.1f, ~_enemyLayer);
             _grounded = _feetRaycast.collider != null;
@@ -211,7 +134,7 @@ namespace rene_roid_enemy
             _walled = _headRaycast.collider != null;
         }
 
-        private void GetPlayerDirection()
+        public virtual void GetPlayerDirection()
         {
             var player = GameObject.FindGameObjectWithTag("Player");
 
@@ -221,44 +144,24 @@ namespace rene_roid_enemy
         #endregion
 
         #region Stun
-        private void StunnStart(int t)
+        public virtual void StunnStart(int t)
         {
             _timeStun = Time.time + t;
             _isStunned = true;
         }
 
-        private void StunUpdate()
+        public virtual void StunUpdate()
         {
-            if (Time.time > _timeStun) _isStunned = false;
+            print("Time: " + Time.time + " Stun: " + _timeStun);
+            if (Time.time >= _timeStun)
+            {
+                print("Stun end");
+                _isStunned = false;
+                ChangeState(EnemyStates.Move);
+            }
+            print("Stund " + _isStunned);
         }
         #endregion
-
-        private void HorizontalEnemyMovement()
-        {
-            Horizontal();
-            Vertical();
-        }
-
-        #region Horeizontal
-        private void Horizontal()
-        {
-            Vector3 direction = new Vector3(_movementDirection.x, 0, 0);
-
-            if (_isStunned) return;
-            if (_walled) _movementDirection = _movementDirection * -1;
-            if (!_grounded) _movementDirection = _movementDirection * -1;
-            if (!_isStunned) transform.Translate(direction * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
-        }
-        #endregion
-
-        #region Verticall
-        private void Vertical()
-        {
-            Mathf.Clamp(_gravity, -_gravity, _gravity);
-            if (!_grounded) transform.Translate(new Vector3(0, _gravity * Time.deltaTime, 0));
-        }
-        #endregion
-
         #endregion
 
         private void OnDrawGizmos()
@@ -271,14 +174,6 @@ namespace rene_roid_enemy
 
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(transform.position, 5f);
-        }
-
-        private void OnGUI()
-        {
-            if (GUI.Button(new Rect(10, 10, 500, 100), "Stun"))
-            {
-                StunnStart(100);
-            }
         }
     }
 }
