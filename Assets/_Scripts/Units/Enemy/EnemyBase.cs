@@ -1,25 +1,29 @@
 using rene_roid;
+using rene_roid_player;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace rene_roid_enemy
 {
     [RequireComponent(typeof(BoxCollider2D))]
     public class EnemyBase : MonoBehaviour
     {
-        public enum EnemyStates { Idle, Move, Attack, Stun, Dead }
+        public enum EnemyStates { Idle, Move, Attack, Stun, Target }
 
         [Header("Enemy stats")]
         [SerializeField] private EnemyBaseStats _enemyBaseStats;
-        [SerializeField] protected EnemyStates _enemyState;
+        protected EnemyStates _enemyState;
 
         #region Internal Variables
         [Header("Internal Variables")]
         [SerializeField] private BoxCollider2D _boxCollider2D;
         [SerializeField] private LayerMask _enemyLayer;
         [SerializeField] private LayerMask _wallLayer;
+
+        protected PlayerBase _targetPlayer = null;
 
         private int _fixedFrame;
         #endregion
@@ -33,6 +37,7 @@ namespace rene_roid_enemy
         {
             AwakeEnemyStats();
             _boxCollider2D = GetComponent<BoxCollider2D>();
+            _targetPlayer = FindObjectOfType<PlayerBase>();
         }
 
         public virtual void Start()
@@ -48,7 +53,6 @@ namespace rene_roid_enemy
         public virtual void FixedUpdate()
         {
             _fixedFrame++;
-
             CheckCollisions();
         }
 
@@ -101,25 +105,23 @@ namespace rene_roid_enemy
         }
         #endregion
 
+        #region State Machine
+        public virtual void ChangeState(EnemyStates newState) { }
+
+        public virtual void UpdateState() { }
+        #endregion
+
         #region Movement
         [Header("Movement")]
         [SerializeField] protected float _movementSpeedMultiplier = 1f;
         [SerializeField] protected float _headLevel = 0.5f;
         [SerializeField] protected float _gravity = -9.15f;
         [SerializeField] protected float _timeStun = 0;
+        
         protected Vector2 _movementDirection = Vector2.right;
-
         protected bool _grounded = false;
         protected bool _walled = false;
-        protected bool _isTarget = false;
         protected bool _isStunned = false;
-
-        #region State Machine
-        public virtual void ChangeState(EnemyStates newState) { }
-
-        public virtual void UpdateState() { }
-
-        #endregion
 
         #region Raycast
         private RaycastHit2D _feetRaycast;
@@ -140,7 +142,6 @@ namespace rene_roid_enemy
 
             _movementDirection = (player.transform.position - this.transform.position).normalized;
         }
-
         #endregion
 
         #region Stun
@@ -152,14 +153,11 @@ namespace rene_roid_enemy
 
         public virtual void StunUpdate()
         {
-            print("Time: " + Time.time + " Stun: " + _timeStun);
             if (Time.time >= _timeStun)
             {
-                print("Stun end");
                 _isStunned = false;
                 ChangeState(EnemyStates.Move);
             }
-            print("Stund " + _isStunned);
         }
         #endregion
         #endregion
@@ -171,9 +169,6 @@ namespace rene_roid_enemy
 
             Gizmos.color = Color.green;
             Gizmos.DrawRay((Vector2)transform.position + new Vector2(0, _headLevel), _movementDirection * new Vector2(0, _boxCollider2D.bounds.extents.y + 1f) * Vector2.right);
-
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(transform.position, 5f);
         }
     }
 }

@@ -3670,7 +3670,7 @@ MonoBehaviour:
   _items: []
   _wallLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   _ladderLayerMask:
     serializedVersion: 2
     m_Bits: 512
@@ -4728,7 +4728,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyBaseStats: {fileID: 11400000, guid: 8b55b99e437c4004a83b9d9e809aa472, type: 2}
-  _enemyState: 0
   _boxCollider2D: {fileID: 1706718072}
   _enemyLayer:
     serializedVersion: 2
