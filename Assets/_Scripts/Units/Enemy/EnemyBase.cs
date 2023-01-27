@@ -9,11 +9,11 @@ namespace rene_roid_enemy
     [RequireComponent(typeof(BoxCollider2D))]
     public class EnemyBase : MonoBehaviour
     {
-        public enum EnemyStates { Idle, Move, Attack, Stun, Target }
+        public enum EnemyStates { Idle, Move, Attack, Stun, Target, KnockBack }
 
         [Header("Enemy stats")]
         [SerializeField] private EnemyBaseStats _enemyBaseStats;
-        protected EnemyStates _enemyState;
+        [SerializeField] protected EnemyStates _enemyState;
 
         #region Internal Variables
         [Header("Internal Variables")]
@@ -85,6 +85,7 @@ namespace rene_roid_enemy
         public void TakeDamage(float damage)
         {
             if (_armor > 0) damage *= 100 / (100 + _armor);
+            if (_armor < 0) damage *= 2 - 100 / (100 - _armor);
 
             _health -= damage;
             //OnHit.Invoke(damage);
@@ -115,6 +116,8 @@ namespace rene_roid_enemy
         [SerializeField] protected float _headLevel = 0.5f;
         [SerializeField] protected float _gravity = -9.15f;
         [SerializeField] protected float _timeStun = 0;
+        protected float _knockBackForce = 0;
+        protected float _knockBackDuration = 1;
         
         protected Vector2 _movementDirection = Vector2.right;
         protected bool _grounded = false;
@@ -144,6 +147,11 @@ namespace rene_roid_enemy
             var player = GameObject.FindGameObjectWithTag("Player");
 
             _movementDirection = (player.transform.position - this.transform.position).normalized;
+        }
+
+        public virtual void KnockBack(float force) {
+            _knockBackForce = force;
+            ChangeState(EnemyStates.KnockBack);
         }
         #endregion
 
