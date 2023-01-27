@@ -1,8 +1,6 @@
 using rene_roid;
 using rene_roid_player;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 

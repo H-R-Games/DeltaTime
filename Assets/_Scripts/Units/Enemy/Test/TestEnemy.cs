@@ -26,7 +26,6 @@ namespace rene_roid_enemy
                     break;
                 case EnemyStates.Move:
                     HorizontalEnemyMovement();
-
                     if (TargetPlayer()) ChangeState(EnemyStates.Target);
                     break;
                 case EnemyStates.Attack:
@@ -117,10 +116,8 @@ namespace rene_roid_enemy
         private void FollowerPlayer()
         {
             Vector3 directionX = (_targetPlayer.transform.position.x - this.transform.position.x) > 0 ? Vector3.right : Vector3.left;
-
-            if (_isGround) _movementDirection = directionX;
-            if (!_isGround)transform.Translate(directionX * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
-
+            if (!_isGround && !_walled)transform.Translate(directionX * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
+            _movementDirection = directionX;
             Vertical();
         }
         #endregion
@@ -129,7 +126,7 @@ namespace rene_roid_enemy
 #if UNITY_EDITOR
         private void OnGUI()
         {
-
+            
         }
 
         private void OnDrawGizmos()
@@ -151,6 +148,9 @@ namespace rene_roid_enemy
 
             Gizmos.color = Color.red;
             Gizmos.DrawRay((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0), Vector2.down * 5);
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0), Vector2.right * (_movementDirection.x > 0 ? 1 : -1) * 1);
         }
 #endif
     }
