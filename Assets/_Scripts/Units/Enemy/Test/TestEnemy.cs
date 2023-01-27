@@ -87,7 +87,7 @@ namespace rene_roid_enemy
         {
             Vector3 direction = new Vector3(_movementDirection.x, 0, 0);
 
-            if (!_isGround) _movementDirection = _movementDirection * -1;
+            if (_isGround) _movementDirection = _movementDirection * -1;
             if (_walled) _movementDirection = _movementDirection * -1;
             if (!_isStunned) transform.Translate(direction * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
         }
@@ -118,9 +118,8 @@ namespace rene_roid_enemy
         {
             Vector3 directionX = (_targetPlayer.transform.position.x - this.transform.position.x) > 0 ? Vector3.right : Vector3.left;
 
-            if (_isGround) _movementDirection = _movementDirection * -1;
-
-            transform.Translate(directionX * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
+            if (_isGround) _movementDirection = directionX;
+            if (!_isGround)transform.Translate(directionX * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
 
             Vertical();
         }

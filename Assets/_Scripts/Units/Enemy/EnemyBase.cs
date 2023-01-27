@@ -135,7 +135,7 @@ namespace rene_roid_enemy
             _grounded = _feetRaycast.collider != null;
             
             _grounRaycast = Physics2D.Raycast((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0), Vector2.down, _boxCollider2D.bounds.extents.y + 5, ~_enemyLayer);
-            _isGround = _grounRaycast.collider != null;
+            _isGround = _grounRaycast.collider == null;
 
             _headRaycast = Physics2D.Raycast((Vector2)transform.position + new Vector2(0, _headLevel), _movementDirection, _boxCollider2D.bounds.extents.y + 1f, _wallLayer);
             _walled = _headRaycast.collider != null;
