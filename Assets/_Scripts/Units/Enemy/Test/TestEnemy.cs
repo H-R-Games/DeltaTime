@@ -35,7 +35,8 @@ namespace rene_roid_enemy
                     StunUpdate();
                     break;
                 case EnemyStates.Target:
-                    FollowerPlayer();
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
+                    if (!_isStunned) FollowerPlayer();
                     break;
             }
         }
@@ -86,6 +87,7 @@ namespace rene_roid_enemy
         {
             Vector3 direction = new Vector3(_movementDirection.x, 0, 0);
 
+            if (!_isGround) _movementDirection = _movementDirection * -1;
             if (_walled) _movementDirection = _movementDirection * -1;
             if (!_isStunned) transform.Translate(direction * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
         }
@@ -100,20 +102,27 @@ namespace rene_roid_enemy
         #endregion
 
         #region Target Player
+        [Header("Target Player Settings")]
+        [SerializeField] private float _targetDistanceWatchin = 10f;
+        [SerializeField] private float _targetDistanceNotWatchin = 5f;
+        [SerializeField] private float _targetDistanceUnfollow = 50f;
+
         private bool TargetPlayer()
         {
             var p = (_targetPlayer.transform.position - this.transform.position).normalized;
             bool watchin = (p.x > 0 && _movementDirection.x > 0) || (p.x < 0 && _movementDirection.x < 0);
-            return Vector3.Distance(transform.position, _targetPlayer.transform.position) < (watchin ? 10 : 5);
+            return Vector3.Distance(transform.position, _targetPlayer.transform.position) < (watchin ? _targetDistanceWatchin : _targetDistanceNotWatchin);
         }
 
         private void FollowerPlayer()
         {
-            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 50) ChangeState(EnemyStates.Move);
+            Vector3 directionX = (_targetPlayer.transform.position.x - this.transform.position.x) > 0 ? Vector3.right : Vector3.left;
 
-            float directionX = (_targetPlayer.transform.position.x - this.transform.position.x);
+            if (_isGround) _movementDirection = _movementDirection * -1;
 
-            transform.Translate(new Vector3(directionX, 0, 0) * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
+            transform.Translate(directionX * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
+
+            Vertical();
         }
         #endregion
         #endregion
@@ -121,36 +130,28 @@ namespace rene_roid_enemy
 #if UNITY_EDITOR
         private void OnGUI()
         {
-            if (GUI.Button(new Rect(10, 10, 500, 100), "Stun"))
-            {
-                ChangeState(EnemyStates.Target);
-            }
+
         }
 
         private void OnDrawGizmos()
         {
             var p = (_targetPlayer.transform.position - this.transform.position).normalized;
             bool watchin = (p.x > 0 && _movementDirection.x > 0) || (p.x < 0 && _movementDirection.x < 0);
-            bool isRange = Vector3.Distance(transform.position, _targetPlayer.transform.position) < (watchin ? 10 : 5);
+            bool isRange = Vector3.Distance(transform.position, _targetPlayer.transform.position) < (watchin ? _targetDistanceWatchin : _targetDistanceNotWatchin);
 
+            Gizmos.color = isRange ? Color.blue : Color.green;
+            Gizmos.DrawWireSphere(transform.position, _targetDistanceNotWatchin);
+            Gizmos.DrawWireSphere(transform.position, (isRange ? _targetDistanceWatchin : _targetDistanceNotWatchin));
 
-            Gizmos.DrawWireSphere(transform.position, .5f);
-            Gizmos.DrawWireSphere(transform.position, (isRange ? 10 : 5));
-
-            // add 15 degrees to _directionJoystick
             Vector2 dir = _movementDirection;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            //angle += _aimAssistAngle;
-            //dir = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
-
-            // remove 15 degrees to _directionJoystick
             Vector2 dir2 = p;
-            float angle2 = Mathf.Atan2(dir2.y, dir2.x) * Mathf.Rad2Deg;
-            //angle2 -= _aimAssistAngle;
-            //dir2 = new Vector2(Mathf.Cos(angle2 * Mathf.Deg2Rad), Mathf.Sin(angle2 * Mathf.Deg2Rad));
 
-            Gizmos.DrawLine((Vector2)transform.position, (dir) * (isRange ? 10 : 5) + (Vector2)transform.position);
-            Gizmos.DrawLine((Vector2)transform.position, (dir2) * (isRange ? 10 : 5) + (Vector2)transform.position);
+            Gizmos.color = isRange ? Color.blue : Color.green;
+            Gizmos.DrawLine((Vector2)transform.position, (dir) * (isRange ? _targetDistanceWatchin : _targetDistanceNotWatchin) + (Vector2)transform.position);
+            Gizmos.DrawLine((Vector2)transform.position, (dir2) * (isRange ? _targetDistanceWatchin : _targetDistanceNotWatchin) + (Vector2)transform.position);
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0), Vector2.down * 5);
         }
 #endif
     }

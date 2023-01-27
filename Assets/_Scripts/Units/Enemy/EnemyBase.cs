@@ -19,9 +19,9 @@ namespace rene_roid_enemy
 
         #region Internal Variables
         [Header("Internal Variables")]
-        [SerializeField] private BoxCollider2D _boxCollider2D;
-        [SerializeField] private LayerMask _enemyLayer;
-        [SerializeField] private LayerMask _wallLayer;
+        [SerializeField] protected BoxCollider2D _boxCollider2D;
+        [SerializeField] protected LayerMask _enemyLayer;
+        [SerializeField] protected LayerMask _wallLayer;
 
         protected PlayerBase _targetPlayer = null;
 
@@ -122,15 +122,20 @@ namespace rene_roid_enemy
         protected bool _grounded = false;
         protected bool _walled = false;
         protected bool _isStunned = false;
+        protected bool _isGround = true;
 
         #region Raycast
         private RaycastHit2D _feetRaycast;
         private RaycastHit2D _headRaycast;
+        private RaycastHit2D _grounRaycast;
 
         public virtual void CheckCollisions()
         {
             _feetRaycast = Physics2D.Raycast(transform.position, Vector2.down, _boxCollider2D.bounds.extents.y + 0.1f, ~_enemyLayer);
             _grounded = _feetRaycast.collider != null;
+            
+            _grounRaycast = Physics2D.Raycast((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0), Vector2.down, _boxCollider2D.bounds.extents.y + 5, ~_enemyLayer);
+            _isGround = _grounRaycast.collider != null;
 
             _headRaycast = Physics2D.Raycast((Vector2)transform.position + new Vector2(0, _headLevel), _movementDirection, _boxCollider2D.bounds.extents.y + 1f, _wallLayer);
             _walled = _headRaycast.collider != null;
