@@ -29,12 +29,15 @@ namespace rene_roid_enemy
                     if (TargetPlayer()) ChangeState(EnemyStates.Target);
                     break;
                 case EnemyStates.Attack:
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _attackDistance) ChangeState(EnemyStates.Move);
+                    Attack();
                     break;
                 case EnemyStates.Stun:
                     StunUpdate();
                     break;
                 case EnemyStates.Target:
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackDistance) ChangeState(EnemyStates.Attack);
                     if (!_isStunned) FollowerPlayer();
                     break;
             }
@@ -110,7 +113,8 @@ namespace rene_roid_enemy
         {
             var p = (_targetPlayer.transform.position - this.transform.position).normalized;
             bool watchin = (p.x > 0 && _movementDirection.x > 0) || (p.x < 0 && _movementDirection.x < 0);
-            return Vector3.Distance(transform.position, _targetPlayer.transform.position) < (watchin ? _targetDistanceWatchin : _targetDistanceNotWatchin);
+            bool isRange = Vector3.Distance(transform.position, _targetPlayer.transform.position) < (watchin ? _targetDistanceWatchin : _targetDistanceNotWatchin);
+            return isRange;
         }
 
         private void FollowerPlayer()
@@ -121,6 +125,25 @@ namespace rene_roid_enemy
             Vertical();
         }
         #endregion
+        #endregion
+    
+        #region Attack
+        [Header("Attack Settings")]
+        [SerializeField] private float _attackDistance = 1f;
+        [SerializeField] private float _attackDamage = 1f;
+        [SerializeField] private float _attackCooldown = 0.1f;
+        float _attackCooldownTimer = 0f;
+
+        private void Attack()
+        {
+            if (Time.time <= _attackCooldownTimer) return;
+            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackDistance)
+            {
+                _targetPlayer.GetComponent<PlayerBase>().TakeDamage(_attackDamage);
+                _attackCooldownTimer = Time.time + _attackCooldown;
+            }
+        }
+
         #endregion
 
 #if UNITY_EDITOR
@@ -146,11 +169,11 @@ namespace rene_roid_enemy
             Gizmos.DrawLine((Vector2)transform.position, (dir) * (isRange ? _targetDistanceWatchin : _targetDistanceNotWatchin) + (Vector2)transform.position);
             Gizmos.DrawLine((Vector2)transform.position, (dir2) * (isRange ? _targetDistanceWatchin : _targetDistanceNotWatchin) + (Vector2)transform.position);
 
-            Gizmos.color = Color.red;
+            Gizmos.color = Color.white;
             Gizmos.DrawRay((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0), Vector2.down * 5);
 
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawRay((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0), Vector2.right * (_movementDirection.x > 0 ? 1 : -1) * 1);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, _attackDistance);
         }
 #endif
     }
