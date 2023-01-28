@@ -29,22 +29,27 @@ namespace rene_roid_enemy
             switch (_enemyState)
             {
                 case EnemyStates.Idle:
-                    KnockBack(7);
                     break;
                 case EnemyStates.Move:
                     ChangeState(EnemyStates.Target);
                     break;
                 case EnemyStates.Attack:
+                    FollowPlayer();
+                    Attack();
+
+                    if (Vector2.Distance(transform.position, _target.position) > 2f) ChangeState(EnemyStates.Target);
                     break;
                 case EnemyStates.Stun:
                     break;
                 case EnemyStates.Target:
                     FollowPlayer();
+
+                    if (Vector2.Distance(transform.position, _target.position) < 2f) ChangeState(EnemyStates.Attack);
                     break;
                 case EnemyStates.KnockBack:
                     KnockUpdate();
 
-                    if (_knockBackDuration < Time.time)
+                    if (_knockBackTime < Time.time)
                         ChangeState(EnemyStates.Move);
                     break;
             }
@@ -113,11 +118,61 @@ namespace rene_roid_enemy
             transform.Translate(Vector3.up * Time.deltaTime * _movementSpeed);
         }
 
-        private void KnockUpdate() {
-            // Push to the opposite direction of the target
-            var dir = transform.position - _target.position;
-            transform.Translate(dir.normalized * Time.deltaTime * _knockBackForce);
+        private void KnockUpdate()
+        {
+            if (_target == null) return;
+            if (_isStunned) return;
+
+            // Push to the opposite direction of the target and rotate to the target direction instantly
+            var dir = _target.position - transform.position;
+            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
+            var q = Quaternion.AngleAxis(angle, Vector3.forward);
+
+            transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * _rotSpeed * 10f);
+            transform.Translate(-Vector3.up * Time.deltaTime * _knockBackForce);
+
+
         }
         #endregion
+
+        #region Attack
+        [Header("Attack")]
+        [SerializeField] private float _attackRange = 1.5f;
+        [SerializeField] private float _attackDamage = 1f;
+        [SerializeField] private float _attackCooldown = 3.5f;
+        private float _attackCooldownTimer = 0f;
+        private bool _isAttacking = false;
+
+        private void Attack()
+        {
+            if (_target == null) return;
+            if (_isStunned) return;
+            if (Vector2.Distance(transform.position, _target.position) < _attackRange)
+            {
+                if (!_isAttacking)
+                {
+                    _isAttacking = true;
+                    _attackCooldownTimer = Time.time + _attackCooldown;
+                    _targetPlayer.TakeDamage(DealDamage(_attackDamage));
+                }
+                else
+                {
+                    if (_attackCooldownTimer < Time.time)
+                    {
+                        _isAttacking = false;
+                    }
+                }
+            }
+            else
+            {
+                _isAttacking = false;
+            }
+        }
+        #endregion
+
+        private void OnDrawGizmos() {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, _attackRange);
+        }
     }
 }

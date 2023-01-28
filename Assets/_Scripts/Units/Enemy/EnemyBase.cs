@@ -23,7 +23,7 @@ namespace rene_roid_enemy
 
         protected PlayerBase _targetPlayer = null;
 
-        private int _fixedFrame;
+        protected int _fixedFrame;
         #endregion
 
         #region External Variables
@@ -98,9 +98,9 @@ namespace rene_roid_enemy
             }
         }
 
-        public float DealDamage()
+        public float DealDamage(float damage)
         {
-            return _damage;
+            return damage;
         }
         #endregion
 

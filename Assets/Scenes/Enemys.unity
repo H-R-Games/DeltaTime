@@ -574,7 +574,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -603,8 +603,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyBaseStats: {fileID: 11400000, guid: 8b55b99e437c4004a83b9d9e809aa472, type: 2}
-  _enemyState: 0
-  _boxCollider2D: {fileID: 0}
+  _enemyState: 1
+  _boxCollider2D: {fileID: 350589861}
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -620,6 +620,9 @@ MonoBehaviour:
   _headLevel: 0.5
   _gravity: -9.15
   _timeStun: 0
+  _attackRange: 1.5
+  _attackDamage: 6
+  _attackCooldown: 3.5
 --- !u!212 &350589863
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4890,6 +4893,9 @@ MonoBehaviour:
   _targetDistanceWatchin: 10
   _targetDistanceNotWatchin: 5
   _targetDistanceUnfollow: 50
+  _attackDistance: 1
+  _attackDamage: 1
+  _attackCooldown: 0.1
 --- !u!212 &1706718071
 SpriteRenderer:
   m_ObjectHideFlags: 0
