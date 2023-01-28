@@ -102,6 +102,25 @@ namespace rene_roid_enemy
         {
             return _damage;
         }
+
+        #region Attacks
+        [Header("Attack Range Settings")]
+        [SerializeField] protected float _attackRangeDistance = 1f;
+        [SerializeField] protected float _attackRageDamage = 1f;
+        [SerializeField] protected float _attackRangeCooldown = 0.1f;
+        protected float _attackRangeCooldownTimer = 0f;
+
+        public virtual void AttackRange()
+        {
+            if (Time.time <= _attackRangeCooldownTimer) return;
+            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackRangeDistance)
+            {
+                _targetPlayer.GetComponent<PlayerBase>().TakeDamage(_attackRageDamage);
+                _attackRangeCooldownTimer = Time.time + _attackRangeCooldown;
+            }
+        }
+
+        #endregion
         #endregion
 
         #region State Machine
