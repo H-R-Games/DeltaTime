@@ -4,7 +4,7 @@ using static UnityEngine.GraphicsBuffer;
 
 namespace rene_roid_enemy
 {
-    public class TestEnemy : EnemyBase
+    public class HorizontalEnemy : EnemyBase
     {
         public override void Start()
         {

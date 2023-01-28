@@ -616,6 +616,9 @@ MonoBehaviour:
   _damage: 0
   _armor: 0
   _movementSpeed: 0
+  _attackRangeDistance: 1
+  _attackRageDamage: 1
+  _attackRangeCooldown: 0.1
   _movementSpeedMultiplier: 1
   _headLevel: 0.5
   _gravity: -9.15
@@ -4866,7 +4869,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1706718068}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 356f6085b2cb4f74d979691bc950ba5e, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ffca7c2506c92d4dbe9326fa5c5c5a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyBaseStats: {fileID: 11400000, guid: 8b55b99e437c4004a83b9d9e809aa472, type: 2}
@@ -4883,6 +4886,9 @@ MonoBehaviour:
   _damage: 0
   _armor: 0
   _movementSpeed: 0
+  _attackRangeDistance: 3
+  _attackRageDamage: 10
+  _attackRangeCooldown: 0.1
   _movementSpeedMultiplier: 1
   _headLevel: 0.5
   _gravity: -9.15
