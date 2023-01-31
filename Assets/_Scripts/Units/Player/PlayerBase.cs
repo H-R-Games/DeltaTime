@@ -614,8 +614,8 @@ namespace rene_roid_player
             Physics2D.queriesHitTriggers = false;
 
             // Ground and Ceiling
-            _groundHitCount = Physics2D.CapsuleCastNonAlloc(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _groundHits, _grounderDistance, ~_playerLayer);
-            _ceilingHitCount = Physics2D.CapsuleCastNonAlloc(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _ceilingHits, _grounderDistance, (~_playerLayer & ~_oneWayFloor));
+            _groundHitCount = Physics2D.CapsuleCastNonAlloc(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _groundHits, _grounderDistance, (~_playerLayer & ~_oneWayFloorNoCol & ~_enemyLayer));
+            _ceilingHitCount = Physics2D.CapsuleCastNonAlloc(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _ceilingHits, _grounderDistance, (~_playerLayer & ~_oneWayFloor & ~_oneWayFloorNoCol & ~_enemyLayer));
 
             // Walls and Ladders
             var bounds = GetWallDetectionBounds();
@@ -625,7 +625,10 @@ namespace rene_roid_player
             _ladderHitCount = Physics2D.OverlapBoxNonAlloc(bounds.center, bounds.size, 0, _ladderHits, _ladderLayerMask);
             Physics2D.queriesHitTriggers = _cachedTriggerSetting;
 
+
+            if (!_hasControl) return;
             FallThroughFloor();
+            JumpThroughFloor();
         }
 
         protected virtual bool TryGetGroundNormal(out Vector2 groundNormal)
@@ -665,26 +668,70 @@ namespace rene_roid_player
             }
         }
 
+        // TODO: Make this more efficient
         protected virtual void FallThroughFloor()
         {
-            if (/*_grounded &&*/ _frameInput.Move.y <= -0.65f)
+            if (_frameInput.Move.y <= -0.65f)
             {
                 // Detect if player is on top of _oneWayFloor layer
                 var hit = Physics2D.Raycast(_col.bounds.center, Vector2.down, /*_grounderDistance * 2*/ 2, _oneWayFloor);
                 if (hit.collider != null)
                 {
+                    // From layermask to int
+                    var ignoreLayer = LayerMask.NameToLayer("OneWayFloorNoCol");
+
+                    // Change layer of hit
+                    hit.collider.gameObject.layer = ignoreLayer;
+
                     // If player is on top of _oneWayFloor layer then ignore floor collision and fall through
                     // Activate the collision again after a short delay
-                    hit.collider.enabled = false;
-                    StartCoroutine(EnableColliderAfterDelay(hit.collider, 0.3f));
+                    StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
                 }
             }
         }
 
-        protected IEnumerator EnableColliderAfterDelay(Collider2D collider, float delay)
+        protected virtual void JumpThroughFloor()
+        {
+            if (_speed.y <= 0) return;
+            // Detect if player is on top of _oneWayFloor layer
+            var hit = Physics2D.Raycast(_col.bounds.center, Vector2.up, /*_grounderDistance * 2*/ 2, _oneWayFloor);
+            if (hit.collider != null)
+            {
+                // From layermask to int
+                var ignoreLayer = LayerMask.NameToLayer("OneWayFloorNoCol");
+
+                // Change layer of hit
+                hit.collider.gameObject.layer = ignoreLayer;
+
+                // If player is on top of _oneWayFloor layer then ignore floor collision and fall through
+                // Activate the collision again after a short delay
+                StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
+            }
+        }
+
+        // TODO: Fix bug where player can get stuck on a one way platform
+        protected IEnumerator ChangeLayerAfterDelay(Collider2D collider, float delay)
         {
             yield return Helpers.GetWait(delay);
-            collider.enabled = true;
+            var bound = new Bounds(_rb.position, _col.size); // Player bounds
+            var hit = Physics2D.OverlapBox(bound.center, bound.size, 0, _oneWayFloor); // Check if player is on top of _oneWayFloor layer
+            var hit2 = Physics2D.OverlapBox(bound.center, bound.size, 0, _oneWayFloorNoCol); // Check if player is on top of _oneWayFloorNoCol layer
+
+            if (hit != null || hit2 != null)
+            {
+                StartCoroutine(ChangeLayerAfterDelay(collider, 0.05f));
+
+                print("IN");
+            }
+            else
+            {
+                // From string to layermask int
+                var layer = LayerMask.NameToLayer("OneWayFloor");
+                // Change layer of hit
+                collider.gameObject.layer = layer;
+
+                print("OUT");
+            }
         }
         #endregion
 
@@ -947,6 +994,8 @@ namespace rene_roid_player
         protected float _grounderDistance = 0.1f; // Distance from the player's feet to the ground
         protected Vector2 _wallDetectorSize = new Vector2(0.75f, 1.25f); // Size of the wall detector box
         [SerializeField] protected LayerMask _oneWayFloor; // Layer mask for ground is on
+        [SerializeField] protected LayerMask _oneWayFloorNoCol; // Layer mask for ground is on
+        [SerializeField] protected LayerMask _enemyLayer; // Layer mask for enemies are on
 
 
         // External
@@ -978,6 +1027,16 @@ namespace rene_roid_player
             Gizmos.color = Color.red;
             var down = new Vector2(_col.bounds.center.x, -_col.bounds.center.y + 1);
             Gizmos.DrawLine(_col.bounds.center, down);
+
+            Gizmos.color = Color.blue;
+            var boundF = new Bounds(_rb.position, _col.size / 0.9f); // Player bounds
+            Gizmos.DrawWireCube(boundF.center, boundF.size);
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.up);
+
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.down);
         }
 
         protected void OnValidate()

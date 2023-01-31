@@ -12,7 +12,7 @@ namespace rene_roid_player
         private CapsuleCollider2D _collider;
         private SpriteRenderer _renderer;
 
-        [SerializeField] private LayerMask _enemyLayer;
+        
         #endregion
 
         public override void Start()
