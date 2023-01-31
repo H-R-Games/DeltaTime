@@ -4,6 +4,7 @@ using UnityEngine.Rendering;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -21,6 +22,7 @@ namespace rene_roid
         void Start()
         {
             GraphicAndResulotionStart();
+            LanguageStart();
         }
 
         void Update()
@@ -57,24 +59,28 @@ namespace rene_roid
         {
             _masterVolume = volume;
             _audioMixer.SetFloat("MasterVolume", Helpers.FromPercentageToRange(volume, -80f, 0f, true));
+            PlayerPrefs.SetFloat("MasterVolume", volume);
         }
 
         public void SetMusicVolume(float volume)
         {
             _musicVolume = volume;
             _audioMixer.SetFloat("MusicVolume", Helpers.FromPercentageToRange(volume, -80f, 0f, true));
+            PlayerPrefs.SetFloat("MusicVolume", volume);
         }
 
         public void SetSFXVolume(float volume)
         {
             _sfxVolume = volume;
             _audioMixer.SetFloat("SFXVolume", Helpers.FromPercentageToRange(volume, -80f, 0f, true));
+            PlayerPrefs.SetFloat("SFXVolume", volume);
         }
 
         public void SetMute(bool isMuted)
         {
             _isMuted = isMuted;
             _audioMixer.SetFloat("MasterVolume", _isMuted ? -80 : Helpers.FromPercentageToRange(_masterVolume, -80f, 0f, true));
+            PlayerPrefs.SetInt("IsMuted", _isMuted ? 1 : 0);
         }
         #endregion
 
@@ -134,6 +140,10 @@ namespace rene_roid
             _qualityDropdown.RefreshShownValue();
 
             _fullscreenToggle.isOn = _isFullscreen;
+
+            PlayerPrefs.SetInt("ResolutionIndex", _resolutionIndex);
+            PlayerPrefs.SetInt("QualityIndex", _qualityIndex);
+            PlayerPrefs.SetInt("IsFullscreen", _isFullscreen ? 1 : 0);
         }
 
         public void SetResolution(int resolutionIndex)
@@ -141,23 +151,96 @@ namespace rene_roid
             _resolutionIndex = resolutionIndex;
             Resolution resolution = _resolutions[resolutionIndex];
             Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+
+            PlayerPrefs.SetInt("ResolutionIndex", _resolutionIndex);
         }
 
         public void SetQuality(int qualityIndex)
         {
             _qualityIndex = qualityIndex;
             QualitySettings.SetQualityLevel(qualityIndex);
+
+            PlayerPrefs.SetInt("QualityIndex", _qualityIndex);
         }
 
         public void SetFullscreen(bool isFullscreen)
         {
             _isFullscreen = isFullscreen;
             Screen.fullScreen = isFullscreen;
+
+            PlayerPrefs.SetInt("IsFullscreen", _isFullscreen ? 1 : 0);
         }
         #endregion
 
         #region Keybinds Keyboards
         
         #endregion
+
+        #region Language Settings
+        [Header("Language Settings")]
+        [SerializeField] private TMP_Dropdown _languageDropdown;
+        [SerializeField] private string _language = "English";
+        [SerializeField] private string[] _languages = new string[] { "English", "Spanish" };
+        [SerializeField] private LanguageManager _languageManager;
+
+        private void LanguageStart()
+        {
+            _languageDropdown.ClearOptions();
+
+            List<string> languageOptions = new List<string>();
+            for (int i = 0; i < _languages.Length; i++)
+            {
+                languageOptions.Add(_languages[i]);
+            }
+
+            _languageDropdown.AddOptions(languageOptions);
+            _languageDropdown.value = Array.IndexOf(_languages, _language);
+            _languageDropdown.RefreshShownValue();
+
+            // If player prefs has a language, load it
+            if (PlayerPrefs.HasKey("Language"))
+            {
+                _language = PlayerPrefs.GetString("Language");
+                _languageDropdown.value = Array.IndexOf(_languages, _language);
+                _languageDropdown.RefreshShownValue();
+            } else {
+                // Get default language from system
+                _language = Application.systemLanguage.ToString();
+                _languageDropdown.value = Array.IndexOf(_languages, _language);
+                _languageDropdown.RefreshShownValue();
+
+                PlayerPrefs.SetString("Language", _language);
+            }
+
+            PlayerPrefs.SetString("Language", _language);
+        }
+
+        public void SetLanguage(int languageIndex)
+        {
+            _language = _languages[languageIndex];
+            _languageManager.SetLanguage(_language);
+            PlayerPrefs.SetString("Language", _language);
+        }
+
+        #endregion
+
+        public void SaveSettings()
+        {
+            PlayerPrefs.Save();
+        }
+
+        public void LoadSettings() {
+            _masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
+            _musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
+            _sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
+            _isMuted = PlayerPrefs.GetInt("IsMuted", 0) == 1 ? true : false;
+
+            _resolutionIndex = PlayerPrefs.GetInt("ResolutionIndex", 0);
+            _qualityIndex = PlayerPrefs.GetInt("QualityIndex", 0);
+            _isFullscreen = PlayerPrefs.GetInt("IsFullscreen", 0) == 1 ? true : false;
+
+            AwakeAudioSettings();
+            GraphicAndResulotionStart();
+        }
     }
 }
