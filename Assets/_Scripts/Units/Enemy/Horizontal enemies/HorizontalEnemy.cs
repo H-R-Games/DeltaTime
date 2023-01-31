@@ -30,7 +30,7 @@ namespace rene_roid_enemy
                     break;
                 case EnemyStates.Attack:
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _attackRangeDistance) ChangeState(EnemyStates.Move);
-                    AttackRange();
+                    if (!_isStunned) AttackRange();
                     break;
                 case EnemyStates.Stun:
                     StunUpdate();
