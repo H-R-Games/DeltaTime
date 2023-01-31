@@ -25,12 +25,11 @@ namespace rene_roid_player {
         {
             if (_isInitialized) return;
             _isInitialized = true;
+
+            // Add script component xd
         }
 
-        public virtual void OnUpdate(PlayerBase player)
-        {
-            
-        }
+        // In update case: Add Component to player (script of the item)
 
         public virtual void OnRemove(PlayerBase player)
         {
@@ -70,12 +69,6 @@ namespace rene_roid_player {
             if (ArmorPercentage != 0) player.AddArmorPercentage(ArmorPercentage);
             if (MovementSpeed != 0) player.AddMovementSpeedFlat(MovementSpeed);
             if (MovementSpeedPercentage != 0) player.AddMovementSpeedPercentage(MovementSpeedPercentage);
-        }
-
-        public override void OnUpdate(PlayerBase player)
-        {
-            base.OnUpdate(player);
-            // Update stats... To:Do
         }
 
         public override void OnRemove(PlayerBase player)

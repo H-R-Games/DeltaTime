@@ -80,7 +80,6 @@ namespace rene_roid_player
         public virtual void Update()
         {
             GatherInput();
-            UpdateItems();
             UpdatePlayerStats();
         }
 
@@ -565,7 +564,7 @@ namespace rene_roid_player
             item.Items.ForEach(i => i.OnGet(this));
         }
 
-        protected void UpdateItems() => _items.ForEach(i => i.Items.ForEach(i => i.OnUpdate(this)));
+        // private void UpdateItems() => _items.ForEach(i => i.Items.ForEach(i => i.OnUpdate(this)));
 
         public void RemoveItem(Item item)
         {
