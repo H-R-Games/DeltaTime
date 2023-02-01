@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using rene_roid_player;
 
 namespace rene_roid_enemy {
     public class EnemyBase : MonoBehaviour
@@ -11,14 +12,14 @@ namespace rene_roid_enemy {
         [Header("Internal Variables")]
         [SerializeField] private BoxCollider2D _boxCollider2D;
         [SerializeField] private LayerMask _enemyLayer;
+        private PlayerBase _player;
 
         private int _fixedFrame;
         #endregion
 
-        #region External Variables
-        public event Action<float> OnHit;
-        public event Action OnDeath;
-        #endregion
+        // #region External Variables
+
+        // #endregion
 
         public virtual void Awake()
         {
@@ -28,7 +29,7 @@ namespace rene_roid_enemy {
 
         public virtual void Start()
         {
-            
+            _player = FindObjectOfType<PlayerBase>();
         }
 
         public virtual void Update()
@@ -79,12 +80,16 @@ namespace rene_roid_enemy {
             if (_armor > 0) damage *= 100 / (100 + _armor);
 
             _health -= damage;
-            //OnHit.Invoke(damage);
+            _player.OnEnemyHit(damage, this);
+            // OnHit.Invoke(damage, this);
 
             if (_health <= 0)
             {
                 // DIE();
-                OnDeath?.Invoke();
+                // OnDeath?.Invoke(damage, this);
+                _player.OnEnemyDeath(damage, this);
+
+                Destroy(this.gameObject);
                 return;
             }
         }

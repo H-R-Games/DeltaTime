@@ -1,4 +1,5 @@
 using rene_roid;
+using rene_roid_enemy;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -62,6 +63,11 @@ namespace rene_roid_player
         }
         #endregion
 
+        private void OnEnable() {
+            // EnemyBase.OnHit += OnEnemyHit;
+            // EnemyBase.OnDeath += OnEnemyDeath;
+        }
+
         public virtual void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
@@ -73,7 +79,7 @@ namespace rene_roid_player
 
         public virtual void Start()
         {
-
+            _itemManager = GetComponent<ItemManager>();
         }
 
 
@@ -163,6 +169,15 @@ namespace rene_roid_player
             _maxStats.Damage = (_baseStats.Damage + ((_level - 1) * _baseStats.DamagePerLevel));
             _maxStats.Armor = (_baseStats.Armor + ((_level - 1) * _baseStats.ArmorPerLevel)) * (1 + _extraArmorPercentage) + _extraFlatArmor;
             _maxStats.MovementSpeed = (_baseStats.MovementSpeed + ((_level - 1) * _baseStats.MovementSpeedPerLevel)) * (1 + _extraMovementSpeedPercentage) + _extraFlatMovementSpeed;
+
+            UpdateCurrentStats();
+        }
+
+        protected void UpdateCurrentStats() {
+            _currentHealthRegen = _maxStats.HealthRegen;
+            _currentDamage = _maxStats.Damage;
+            _currentArmor = _maxStats.Armor;
+            _currentMovementSpeed = _maxStats.MovementSpeed;
         }
 
         #region Add Stats
@@ -556,12 +571,13 @@ namespace rene_roid_player
 
         #region Item Management
         [Header("Item Management")]
+        public ItemManager _itemManager;
         public List<Item> _items = new List<Item>();
 
         public void AddItem(Item item)
         {
             _items.Add(item);
-            item.Items.ForEach(i => i.OnGet(this));
+            item.Items.ForEach(i => i.OnGet(this, _itemManager));
         }
 
         // private void UpdateItems() => _items.ForEach(i => i.Items.ForEach(i => i.OnUpdate(this)));
@@ -569,7 +585,19 @@ namespace rene_roid_player
         public void RemoveItem(Item item)
         {
             _items.Remove(item);
-            item.Items.ForEach(i => i.OnRemove(this));
+            item.Items.ForEach(i => i.OnRemove(this, _itemManager));
+        }
+
+        public virtual void OnEnemyHit(float damage, EnemyBase enemy) 
+        {
+            print("Hit enemy for " + damage + " damage!");
+            _itemManager.OnHit(damage, enemy);
+        }
+
+        public virtual void OnEnemyDeath(float damage, EnemyBase enemy)
+        {
+            print("Killed enemy  " + enemy.name + " for " + damage + " damage!");
+            _itemManager.OnKill(damage, enemy);
         }
         #endregion
 
