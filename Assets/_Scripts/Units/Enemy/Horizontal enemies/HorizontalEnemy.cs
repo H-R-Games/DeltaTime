@@ -36,6 +36,7 @@ namespace rene_roid_enemy
                     StunUpdate();
                     break;
                 case EnemyStates.Target:
+                    if (!TargetPlayer()) UnTargetPlayer();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackRangeDistance) ChangeState(EnemyStates.Attack);
                     if (!_isStunned) FollowerPlayer();
@@ -108,19 +109,33 @@ namespace rene_roid_enemy
         [SerializeField] private float _targetDistanceWatchin = 10f;
         [SerializeField] private float _targetDistanceNotWatchin = 5f;
         [SerializeField] private float _targetDistanceUnfollow = 50f;
+        float _timeUnTarget = 0;
 
         private bool TargetPlayer()
         {
             var p = (_targetPlayer.transform.position - this.transform.position).normalized;
             bool watchin = (p.x > 0 && _movementDirection.x > 0) || (p.x < 0 && _movementDirection.x < 0);
-            bool isRange = Vector3.Distance(transform.position, _targetPlayer.transform.position) < (watchin ? _targetDistanceWatchin : _targetDistanceNotWatchin);
-            return isRange;
+            bool isRange = Vector3.Distance(transform.position, _targetPlayer.transform.position) <= (watchin ? _targetDistanceWatchin : _targetDistanceNotWatchin);
+            if (_hitTarget.collider != null && _hitTarget.collider.gameObject.tag == "Player" && isRange) return true;
+            else return false;
+        }
+
+        private void UnTargetPlayer()
+        {
+            _timeUnTarget += Time.deltaTime * 0.5f;
+
+            if (_timeUnTarget < 3)
+            {
+                if (_hitTarget.collider != null && _hitTarget.collider.gameObject.tag == "Player") { _timeUnTarget = 0; return;};
+                if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) { _timeUnTarget = 0; return;};
+            }
+            else if (_timeUnTarget >= 1) { _timeUnTarget = 0; ChangeState(EnemyStates.Move); }
         }
 
         private void FollowerPlayer()
         {
             Vector3 directionX = (_targetPlayer.transform.position.x - this.transform.position.x) > 0 ? Vector3.right : Vector3.left;
-            if (!_isGround && !_walled)transform.Translate(directionX * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
+            if (!_isGround && !_walled) transform.Translate(directionX * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
             _movementDirection = directionX;
             Vertical();
         }
@@ -128,11 +143,6 @@ namespace rene_roid_enemy
         #endregion
 
 #if UNITY_EDITOR
-        private void OnGUI()
-        {
-            
-        }
-
         private void OnDrawGizmos()
         {
             var p = (_targetPlayer.transform.position - this.transform.position).normalized;
@@ -153,7 +163,7 @@ namespace rene_roid_enemy
             Gizmos.color = Color.white;
             Gizmos.DrawRay((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0), Vector2.down * 5);
 
-            Gizmos.color = Color.red;
+            Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(transform.position, _attackRangeDistance);
         }
 #endif

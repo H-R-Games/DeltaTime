@@ -115,7 +115,7 @@ namespace rene_roid_enemy
             if (Time.time <= _attackRangeCooldownTimer) return;
             if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackRangeDistance)
             {
-                _targetPlayer.GetComponent<PlayerBase>().TakeDamage(_attackRageDamage);
+                _targetPlayer.GetComponent<PlayerBase>().TakeDamage(_damage);
                 _attackRangeCooldownTimer = Time.time + _attackRangeCooldown;
             }
         }
@@ -148,6 +148,7 @@ namespace rene_roid_enemy
         private RaycastHit2D _feetRaycast;
         private RaycastHit2D _headRaycast;
         private RaycastHit2D _grounRaycast;
+        protected RaycastHit2D _hitTarget;
 
         public virtual void CheckCollisions()
         {
@@ -159,6 +160,8 @@ namespace rene_roid_enemy
 
             _headRaycast = Physics2D.Raycast((Vector2)transform.position + new Vector2(0, _headLevel), _movementDirection, _boxCollider2D.bounds.extents.y + 1f, _wallLayer);
             _walled = _headRaycast.collider != null;
+
+            _hitTarget = Physics2D.Linecast(this.transform.position, _targetPlayer.transform.position, ~_enemyLayer);
         }
 
         public virtual void GetPlayerDirection()
