@@ -16,6 +16,7 @@ namespace rene_roid_player {
         [ContextMenu(nameof(AddStats))] void AddStats() => Items.Add(new AddStats());
         [ContextMenu(nameof(HealOnKill))] void HealOnKill() => Items.Add(new HealOnKill());
         [ContextMenu(nameof(MoveFastWhenLowHealth))] void MoveFastWhenLowHealth() => Items.Add(new MoveFastWhenLowHealth());
+        [ContextMenu(nameof(ChanceToDealExtraHit))] void ChanceToDealExtraHit() => Items.Add(new ChanceToDealExtraHit());
         #endregion
     }
 
@@ -96,6 +97,7 @@ namespace rene_roid_player {
     [System.Serializable]
     public class HealOnKill : ItemBase {
         public string Name = "HealOnKill";
+        public float HealAmount = 10;
 
         public HealOnKill() { }
 
@@ -117,6 +119,7 @@ namespace rene_roid_player {
     [System.Serializable]
     public class MoveFastWhenLowHealth : ItemBase {
         public string Name = "Move Fast When Low Health";
+        public float SpeedBoost = 20f;
 
         public MoveFastWhenLowHealth() { }
 
@@ -132,6 +135,29 @@ namespace rene_roid_player {
             base.OnRemove(player, itemManager);
             // Deactivate item manager item
             itemManager.MoveFastWhenLowHealthAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class ChanceToDealExtraHit : ItemBase {
+        public string Name = "Chance To Deal Extra Hit";
+        public float Chance = 0.1f; // 10%
+        public float DamageMultiplier = 1.5f; // 50% more damage
+
+        public ChanceToDealExtraHit() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.ChanceToDealExtraHitAmount += 1;
+        }
+        
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.ChanceToDealExtraHitAmount -= 1;  
         }
     }
 }

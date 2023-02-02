@@ -391,6 +391,7 @@ namespace rene_roid_player
 
         #region Player Skills
         [Header("Player Skills")]
+        public float LastSkillProcCoefficient = 1;
         [Header("Cooldowns")]
         public float BasicAttackCooldown = 0.5f;
         public float Skill1Cooldown = 1;
@@ -438,7 +439,7 @@ namespace rene_roid_player
             _ultimateFrameWasPressed = -_ultimateFrames;
         }
 
-        protected void GatherSkillInput()
+        protected void GatherSkillInput() // TODO: Get proc coeficient
         {
             if ((_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld) && _basicAttackReady)
             {
@@ -572,11 +573,11 @@ namespace rene_roid_player
         #region Item Management
         [Header("Item Management")]
         public ItemManager _itemManager;
-        public List<Item> _items = new List<Item>();
+        public List<Item> Items = new List<Item>();
 
         public void AddItem(Item item)
         {
-            _items.Add(item);
+            Items.Add(item);
             item.Items.ForEach(i => i.OnGet(this, _itemManager));
         }
 
@@ -584,7 +585,7 @@ namespace rene_roid_player
 
         public void RemoveItem(Item item)
         {
-            _items.Remove(item);
+            Items.Remove(item);
             item.Items.ForEach(i => i.OnRemove(this, _itemManager));
         }
 
@@ -696,6 +697,8 @@ namespace rene_roid_player
             }
         }
 
+
+        private Coroutine _c;
         // TODO: Make this more efficient
         protected virtual void FallThroughFloor()
         {
@@ -713,7 +716,7 @@ namespace rene_roid_player
 
                     // If player is on top of _oneWayFloor layer then ignore floor collision and fall through
                     // Activate the collision again after a short delay
-                    StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
+                    _c = StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
                 }
             }
         }
@@ -733,7 +736,7 @@ namespace rene_roid_player
 
                 // If player is on top of _oneWayFloor layer then ignore floor collision and fall through
                 // Activate the collision again after a short delay
-                StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
+                _c = StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
             }
         }
 
@@ -747,8 +750,8 @@ namespace rene_roid_player
 
             if (hit != null || hit2 != null)
             {
-                StartCoroutine(ChangeLayerAfterDelay(collider, 0.05f));
-
+                StopCoroutine(_c);
+                _c = StartCoroutine(ChangeLayerAfterDelay(collider, 0.05f));
                 print("IN");
             }
             else
@@ -757,9 +760,10 @@ namespace rene_roid_player
                 var layer = LayerMask.NameToLayer("OneWayFloor");
                 // Change layer of hit
                 collider.gameObject.layer = layer;
-
-                print("OUT");
+                StopCoroutine(_c);
             }
+
+            
         }
         #endregion
 

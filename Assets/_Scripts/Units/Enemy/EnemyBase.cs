@@ -75,6 +75,9 @@ namespace rene_roid_enemy {
         #endregion
 
         #region Health & Damage
+        /// <summary>
+        /// Take damage from player (player --> enemy)
+        /// </summary>
         public void TakeDamage(float damage)
         {
             if (_armor > 0) damage *= 100 / (100 + _armor);
@@ -94,6 +97,9 @@ namespace rene_roid_enemy {
             }
         }
 
+        /// <summary>
+        /// Deal damage to player (enemy --> player)
+        /// </summary>
         public float DealDamage()
         {
             return _damage;

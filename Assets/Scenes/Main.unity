@@ -3342,6 +3342,7 @@ MonoBehaviour:
   _currentDamage: 0
   _currentArmor: 0
   _currentMovementSpeed: 0
+  LastSkillProcCoefficient: 1
   BasicAttackCooldown: 0.4
   Skill1Cooldown: 3
   Skill2Cooldown: 10
@@ -3351,7 +3352,7 @@ MonoBehaviour:
   _skill2TimeLock: 0.5
   _ultimateTimeLock: 0.5
   _itemManager: {fileID: 0}
-  _items: []
+  Items: []
   _wallLayerMask:
     serializedVersion: 2
     m_Bits: 256
@@ -3394,9 +3395,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HealOnKillAmount: 0
-  _healOnKill: 100
   MoveFastWhenLowHealthAmount: 0
-  _moveFastWhenLowHealth: 20
+  ChanceToDealExtraHitAmount: 0
 --- !u!1 &1422251776
 GameObject:
   m_ObjectHideFlags: 0
@@ -4969,7 +4969,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a97b030973be0c44b6568e78adfd5e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Item: {fileID: 11400000, guid: 998cfb6e40f25664584cc773883d1a76, type: 2}
+  Item: {fileID: 11400000, guid: 2eefd8367ae387c4b967657aa964935e, type: 2}
 --- !u!61 &1926819073
 BoxCollider2D:
   m_ObjectHideFlags: 0
