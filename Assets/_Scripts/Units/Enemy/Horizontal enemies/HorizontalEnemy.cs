@@ -1,6 +1,4 @@
-using rene_roid_player;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 namespace rene_roid_enemy
 {
