@@ -110,8 +110,12 @@ namespace rene_roid_enemy
 
         public virtual void AttackRange()
         {
+            var p = (_targetPlayer.transform.position - this.transform.position).normalized;
+            bool watchin = (p.x > 0 && _movementDirection.x > 0) || (p.x < 0 && _movementDirection.x < 0);
+
+            if (!watchin) return;
             if (Time.time <= _attackRangeCooldownTimer) return;
-            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackRangeDistance)
+            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackRangeDistance && watchin)
             {
                 _targetPlayer.GetComponent<PlayerBase>().TakeDamage(_damage);
                 _attackRangeCooldownTimer = Time.time + _attackRangeCooldown;
