@@ -56,8 +56,11 @@ namespace rene_roid_player {
         private HealOnKill _healOnKillItem;
 
         private void HealOnKill() {
+            // If HealOnKillAmount is 0, return
             if (HealOnKillAmount == 0) return;
+            // If _healOnKillItem is null, create a new instance of HealOnKill
             if (_healOnKillItem == null) _healOnKillItem = new HealOnKill();
+            // Calculate heal amount from HealOnKillAmount and _healOnKillItem
             _healOnKill = _healOnKillItem.HealAmount * HealOnKillAmount;
             // Add health to player
             _player.HealAmmount(_healOnKill);
@@ -103,29 +106,38 @@ namespace rene_roid_player {
         private ChanceToDealExtraHit _chanceToDealExtraHitItem;
 
         private void ChanceToDealExtraHit(List<ItemBase> items, float damage, EnemyBase enemy, float procCo = 1f) {
-            if (ChanceToDealExtraHitAmount == 0) return;
-            // Check if items list contains the class
+            // If the ChanceToDealExtraHitAmount is 0, then we don't want to do anything
+            if (ChanceToDealExtraHitAmount == 0) return; 
 
+            // If the items list is not empty, then check if it contains the class
             if (items.Count > 0) {
+                // If the items list contains the class, then we don't want to do anything
                 for (int i = 0; i < items.Count; i++) {
-                    if (items[i].GetType() == typeof(ChanceToDealExtraHit)) return;
+                    if (items[i].GetType() == typeof(ChanceToDealExtraHit)) return; 
                 }
             }
 
-            if (_chanceToDealExtraHitItem == null) _chanceToDealExtraHitItem = new ChanceToDealExtraHit();
+            // If the _chanceToDealExtraHitItem is null, then create a new instance of the class
+            if (_chanceToDealExtraHitItem == null) _chanceToDealExtraHitItem = new ChanceToDealExtraHit(); 
+
+            // Get the chance to deal extra hit
             _chanceToDealExtraHit = _chanceToDealExtraHitItem.Chance * ChanceToDealExtraHitAmount;
 
+            // Print out the chance to deal extra hit
             print("Chance To Deal Extra Hit: " + _chanceToDealExtraHit);
             
             // Chance to deal extra hit
+            // If the chance to deal extra hit is less than the random range, then we don't want to do anything
             if (Random.Range(0f, 1f) > _chanceToDealExtraHit * procCo) return;
             print("YAAAAY: " + _chanceToDealExtraHit);
 
+            // Create a new instance of the class
             ChanceToDealExtraHit chanceToDealExtraHitItem = new ChanceToDealExtraHit();
-
+            // Take damage from enemy
             enemy.TakeDamage(damage * chanceToDealExtraHitItem.DamageMultiplier);
-
+            // Add the class to the items list
             items.Add(chanceToDealExtraHitItem);
+            // Call the ProccItems method
             ProccItems(items, damage, enemy);
         }
         #endregion
