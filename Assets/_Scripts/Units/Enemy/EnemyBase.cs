@@ -8,10 +8,12 @@ namespace rene_roid_enemy
     public class EnemyBase : MonoBehaviour
     {
         public enum EnemyStates { Idle, Move, Attack, Stun, Target, KnockBack }
+        public enum EnemyType { Horizontal, Flying }
 
         [Header("Enemy stats")]
         [SerializeField] private EnemyBaseStats _enemyBaseStats;
         [SerializeField] protected EnemyStates _enemyState;
+        [SerializeField] protected EnemyType _enemyType;
 
         #region Internal Variables
         [Header("Internal Variables")]
