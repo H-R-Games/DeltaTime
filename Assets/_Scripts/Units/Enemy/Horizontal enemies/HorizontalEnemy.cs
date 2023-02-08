@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using rene_roid;
 
 namespace rene_roid_enemy
 {
@@ -7,6 +9,7 @@ namespace rene_roid_enemy
         public override void Start()
         {
             base.Start();
+            _enemyType = EnemyType.Horizontal;
             ChangeState(EnemyStates.Move);
         }
 
@@ -27,13 +30,16 @@ namespace rene_roid_enemy
                     if (TargetPlayer()) ChangeState(EnemyStates.Target);
                     break;
                 case EnemyStates.Attack:
+                    GravityEnemy();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _attackRangeDistance) ChangeState(EnemyStates.Move);
                     if (!_isStunned) AttackRange();
                     break;
                 case EnemyStates.Stun:
+                    GravityEnemy();
                     StunUpdate();
                     break;
                 case EnemyStates.Target:
+                    GravityEnemy();
                     if (!TargetPlayer()) UnTargetPlayer();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackRangeDistance) ChangeState(EnemyStates.Attack);
@@ -80,7 +86,7 @@ namespace rene_roid_enemy
         private void HorizontalEnemyMovement()
         {
             if (!_isStunned) Horizontal();
-            Vertical();
+            GravityEnemy();
         }
 
         #region Horeizontal
@@ -94,8 +100,8 @@ namespace rene_roid_enemy
         }
         #endregion
 
-        #region Verticall
-        private void Vertical()
+        #region Vertical
+        private void GravityEnemy()
         {
             Mathf.Clamp(_gravity, -_gravity, _gravity);
             if (!_grounded) transform.Translate(new Vector3(0, _gravity * Time.deltaTime, 0));
@@ -133,9 +139,9 @@ namespace rene_roid_enemy
         private void FollowerPlayer()
         {
             Vector3 directionX = (_targetPlayer.transform.position.x - this.transform.position.x) > 0 ? Vector3.right : Vector3.left;
+            if (Vector3.Distance(-new Vector3(0, transform.position.y, 0), new Vector3(0, _targetPlayer.transform.position.y, 0)) > 3) Jump();
             if (!_isGround && !_walled) transform.Translate(directionX * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
             _movementDirection = directionX;
-            Vertical();
         }
         #endregion
         #endregion
@@ -163,6 +169,9 @@ namespace rene_roid_enemy
 
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(transform.position, _attackRangeDistance);
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, Vector2.up * 5 + (Vector2)transform.position);
         }
 #endif
     }
