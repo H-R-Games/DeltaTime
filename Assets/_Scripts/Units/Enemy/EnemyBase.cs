@@ -20,10 +20,15 @@ namespace rene_roid_enemy
         [SerializeField] protected BoxCollider2D _boxCollider2D;
         [SerializeField] protected LayerMask _enemyLayer;
         [SerializeField] protected LayerMask _wallLayer;
-
         protected PlayerBase _targetPlayer = null;
-
         protected int _fixedFrame;
+        #endregion
+
+        #region Movement Variables
+        [Header("Movement Variables")]
+        [SerializeField] protected bool _activateJump = false;
+        [SerializeField] protected float _jumpForce = 5;
+        protected bool _isJumping = false;
         #endregion
 
         #region External Variables
@@ -147,11 +152,13 @@ namespace rene_roid_enemy
         protected bool _walled = false;
         protected bool _isStunned = false;
         protected bool _isGround = true;
+        protected bool _isBlockedUp = false;
 
         #region Raycast
         private RaycastHit2D _feetRaycast;
         private RaycastHit2D _headRaycast;
         private RaycastHit2D _grounRaycast;
+        private RaycastHit2D _detectUp;
         protected RaycastHit2D _hitTarget;
 
         public virtual void CheckCollisions()
@@ -164,6 +171,9 @@ namespace rene_roid_enemy
 
             _headRaycast = Physics2D.Raycast((Vector2)transform.position + new Vector2(0, _headLevel), _movementDirection, _boxCollider2D.bounds.extents.y + 1f, _wallLayer);
             _walled = _headRaycast.collider != null;
+
+            _detectUp = Physics2D.Raycast((Vector2)transform.position + new Vector2(0, _headLevel), Vector2.up, _boxCollider2D.bounds.extents.y + 4f,  ~_enemyLayer);
+            _isBlockedUp = _detectUp.collider != null;
 
             _hitTarget = Physics2D.Linecast(this.transform.position, _targetPlayer.transform.position, ~_enemyLayer);
         }
@@ -178,6 +188,31 @@ namespace rene_roid_enemy
         public virtual void KnockBack(float force) {
             _knockBackForce = force;
             ChangeState(EnemyStates.KnockBack);
+        }
+
+        public virtual void Jump()
+        {
+            if(!_activateJump) return;
+
+            if (_grounded && !_isJumping && !_isBlockedUp)
+            {
+                _isJumping = true;
+                _jumpForce = 0.1f;
+            }
+
+            if (_grounded && _jumpForce < 0) 
+            {
+                _isJumping = false;
+                return;
+            } 
+
+            Mathf.Clamp(_jumpForce, -0.05f, 0.1f);
+            
+            _jumpForce -= Time.deltaTime * Mathf.Abs(-0.5f * 0.5f);
+
+            transform.position = new Vector3(transform.position.x, transform.position.y + _jumpForce, transform.position.z);
+
+            if (_grounded) return;
         }
         #endregion
 
