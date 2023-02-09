@@ -99,18 +99,7 @@ namespace rene_roid_enemy
             if (!_isStunned) transform.Translate(direction * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
         }
         #endregion
-
-        #region Vertical
-        /// <summary>
-        /// Function creates gravity for the enemy
-        /// </summary>
-        private void GravityEnemy()
-        {
-            Mathf.Clamp(_gravity, -_gravity, _gravity);
-            if (!_grounded) transform.Translate(new Vector3(0, _gravity * Time.deltaTime, 0));
-        }
-        #endregion
-
+        
         #region Target Player
         [Header("Target Player Settings")]
         [SerializeField] private float _targetDistanceWatchin = 10f;

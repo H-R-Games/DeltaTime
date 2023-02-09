@@ -98,6 +98,7 @@ namespace rene_roid_enemy
         [SerializeField] protected float _attackRangeDistance = 1f;
         [SerializeField] protected float _attackRageDamage = 1f;
         [SerializeField] protected float _attackRangeCooldown = 0.1f;
+        [SerializeField] protected bool _activeAttackRange = false;
         protected float _attackRangeCooldownTimer = 0f;
 
         /// <summary>
@@ -105,6 +106,7 @@ namespace rene_roid_enemy
         /// </summary>
         public virtual void AttackRange()
         {
+            if (!_activeAttackRange) return;
             var p = (_targetPlayer.transform.position - this.transform.position).normalized;
             bool watchin = (p.x > 0 && _movementDirection.x > 0) || (p.x < 0 && _movementDirection.x < 0);
 
@@ -216,6 +218,16 @@ namespace rene_roid_enemy
             transform.position = new Vector3(transform.position.x, transform.position.y + _jumpForce, transform.position.z);
 
             if (_grounded) return;
+        }
+        #endregion
+        #region Vertical
+        /// <summary>
+        /// Function creates gravity for the enemy
+        /// </summary>
+        public virtual void GravityEnemy()
+        {
+            Mathf.Clamp(_gravity, -_gravity, _gravity);
+            if (!_grounded) transform.Translate(new Vector3(0, _gravity * Time.deltaTime, 0));
         }
         #endregion
         #endregion
