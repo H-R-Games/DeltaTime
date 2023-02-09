@@ -3,11 +3,11 @@ using UnityEngine;
 namespace rene_roid_player
 {
     [RequireComponent(typeof(Animator), typeof(SpriteRenderer))]
-    public class MusashiAnimator : PlayerAnimator
+    public class MusashiAnimator : MonoBehaviour
     {
         #region Internal Variables
         [SerializeField] private IPlayerController _player;
-        private PlayerBase _playerBase;
+        private Musashi _playerBase;
         private Animator _anim;
         private SpriteRenderer _renderer;
         private AudioSource _source;
@@ -20,7 +20,7 @@ namespace rene_roid_player
             _source = GetComponent<AudioSource>();
             
             _player = GetComponentInParent<IPlayerController>();
-            _playerBase = GetComponentInParent<PlayerBase>();
+            _playerBase = GetComponentInParent<Musashi>();
         }
 
         private void Start()
@@ -53,11 +53,24 @@ namespace rene_roid_player
         [Header("Skills")]
         [SerializeField] private float _basicAttack1Time;
         [SerializeField] private float _specialAttack1Time, _specialAttack2Time, _ultimateAttackTime;
-        private bool _basicAttack1, _specialAttack1, _specialAttack2, _ultimateAttack;
+        private bool _basicAttack1, _basicAttack2, _basicAttack3, _specialAttack1, _specialAttack2, _ultimateAttack;
 
         private void OnBasicAttack1()
         {
-            _basicAttack1 = true;
+            var i = _playerBase.GetAttackCount();
+
+            if (i == 1)
+            {
+                _basicAttack1 = true;
+            }
+            else if (i == 2)
+            {
+                _basicAttack2 = true;
+            }
+            else if (i == 3)
+            {
+                _basicAttack3 = true;
+            }
         }
 
         private void OnSpecialAttack1()
@@ -206,7 +219,9 @@ namespace rene_roid_player
                 if (_ultimateAttack) return LockState(UltimateAttackAnim, _ultimateAttackTime);
                 if (_specialAttack2) return LockState(SpecialAttack2Anim, _specialAttack2Time);
                 if (_specialAttack1) return LockState(SpecialAttack1Anim, _specialAttack1Time);
-                if (_basicAttack1) return LockState(BasicAttackAnim, _basicAttack1Time);
+                if (_basicAttack3) return LockState(BasicAttackAnim3, _basicAttack1Time);
+                if (_basicAttack2) return LockState(BasicAttackAnim2, _basicAttack1Time);
+                if (_basicAttack1) return LockState(BasicAttackAnim1, _basicAttack1Time);
                 // return LockState(BasicAttackAnim, _basicAttack1Time);
 
                 if (!_grounded)
@@ -234,7 +249,7 @@ namespace rene_roid_player
 
             void ResetFlags()
             {
-                _basicAttack1 = _specialAttack1 = _specialAttack2 = _ultimateAttack = false;
+                _basicAttack1 = _basicAttack2 = _basicAttack3 = _specialAttack1 = _specialAttack2 = _ultimateAttack = false;
 
                 _jumpTriggered = false;
                 _landed = false;
@@ -253,7 +268,9 @@ namespace rene_roid_player
         private static readonly int Jump = Animator.StringToHash("Jump");
         private static readonly int Fall = Animator.StringToHash("Fall");
 
-        private static readonly int BasicAttackAnim = Animator.StringToHash("BasicAttack");
+        private static readonly int BasicAttackAnim1 = Animator.StringToHash("BasicAttack1");
+        private static readonly int BasicAttackAnim2 = Animator.StringToHash("BasicAttack2");
+        private static readonly int BasicAttackAnim3 = Animator.StringToHash("BasicAttack3");
         private static readonly int SpecialAttack1Anim = Animator.StringToHash("SpecialAttack1");
         private static readonly int SpecialAttack2Anim = Animator.StringToHash("SpecialAttack2");
         private static readonly int UltimateAttackAnim = Animator.StringToHash("UltimateAttack");
