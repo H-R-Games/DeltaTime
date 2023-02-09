@@ -24,13 +24,6 @@ namespace rene_roid_enemy
         protected int _fixedFrame;
         #endregion
 
-        #region Movement Variables
-        [Header("Movement Variables")]
-        [SerializeField] protected bool _activateJump = false;
-        [SerializeField] protected float _jumpForce = 5;
-        protected bool _isJumping = false;
-        #endregion
-
         #region External Variables
         public event Action<float> OnHit;
         public event Action OnDeath;
@@ -43,15 +36,9 @@ namespace rene_roid_enemy
             _targetPlayer = FindObjectOfType<PlayerBase>();
         }
 
-        public virtual void Start()
-        {
-            GetPlayerDirection();
-        }
+        public virtual void Start() { GetPlayerDirection(); }
 
-        public virtual void Update()
-        {
-            UpdateState();
-        }
+        public virtual void Update() { UpdateState(); }
 
         public virtual void FixedUpdate()
         {
@@ -67,14 +54,11 @@ namespace rene_roid_enemy
         [SerializeField] protected float _armor;
         [SerializeField] protected float _movementSpeed;
 
-        //private EnemyBaseStats _enemyStats;
+        private void AwakeEnemyStats() { SetEnemyStats(); }
 
-        private void AwakeEnemyStats()
-        {
-            //_enemyStats = Instantiate(_enemyBaseStats);
-            SetEnemyStats();
-        }
-
+        /// <summary>
+        /// Set the enemy stats based on the base stats and the level
+        /// </summary>
         private void SetEnemyStats()
         {
             _health = _enemyBaseStats.Health * _level;
@@ -87,26 +71,27 @@ namespace rene_roid_enemy
         #endregion
 
         #region Health & Damage
+        /// <summary>
+        /// Function to take damage from the player
+        /// </summary>
         public void TakeDamage(float damage)
         {
             if (_armor > 0) damage *= 100 / (100 + _armor);
             if (_armor < 0) damage *= 2 - 100 / (100 - _armor);
 
             _health -= damage;
-            //OnHit.Invoke(damage);
 
             if (_health <= 0)
             {
-                // DIE();
                 OnDeath?.Invoke();
                 return;
             }
         }
 
-        public float DealDamage(float damage)
-        {
-            return damage;
-        }
+        /// <summary>
+        /// Calculate the damage the enemy will deal to the player
+        /// </summary>
+        public float DealDamage(float damage) { return damage; }
 
         #region Attacks
         [Header("Attack Range Settings")]
@@ -115,6 +100,9 @@ namespace rene_roid_enemy
         [SerializeField] protected float _attackRangeCooldown = 0.1f;
         protected float _attackRangeCooldownTimer = 0f;
 
+        /// <summary>
+        /// Function to attack the player in range
+        /// </summary>
         public virtual void AttackRange()
         {
             var p = (_targetPlayer.transform.position - this.transform.position).normalized;
@@ -134,7 +122,6 @@ namespace rene_roid_enemy
 
         #region State Machine
         public virtual void ChangeState(EnemyStates newState) { }
-
         public virtual void UpdateState() { }
         #endregion
 
@@ -144,10 +131,9 @@ namespace rene_roid_enemy
         [SerializeField] protected float _headLevel = 0.5f;
         [SerializeField] protected float _gravity = -9.15f;
         [SerializeField] protected float _timeStun = 0;
+        protected Vector2 _movementDirection = Vector2.right;
         protected float _knockBackForce = 0;
         protected float _knockBackDuration = 1;
-        
-        protected Vector2 _movementDirection = Vector2.right;
         protected bool _grounded = false;
         protected bool _walled = false;
         protected bool _isStunned = false;
@@ -161,6 +147,9 @@ namespace rene_roid_enemy
         private RaycastHit2D _detectUp;
         protected RaycastHit2D _hitTarget;
 
+        /// <summary>
+        /// Check the collisions of the enemy with the environment
+        /// </summary>
         public virtual void CheckCollisions()
         {
             _feetRaycast = Physics2D.Raycast(transform.position, Vector2.down, _boxCollider2D.bounds.extents.y + 0.1f, ~_enemyLayer);
@@ -178,18 +167,32 @@ namespace rene_roid_enemy
             _hitTarget = Physics2D.Linecast(this.transform.position, _targetPlayer.transform.position, ~_enemyLayer);
         }
 
+        /// <summary>
+        /// Get the direction of the player
+        /// </summary>
         public virtual void GetPlayerDirection()
         {
             var player = GameObject.FindGameObjectWithTag("Player");
-
             _movementDirection = (player.transform.position - this.transform.position).normalized;
         }
 
+        /// <summary>
+        /// Move the enemy
+        /// </summary>
         public virtual void KnockBack(float force) {
             _knockBackForce = force;
             ChangeState(EnemyStates.KnockBack);
         }
 
+        #region Jump
+        [Header("Jump Settings")]
+        [SerializeField] protected bool _activateJump = false;
+        [SerializeField] protected float _jumpForce = 5;
+        protected bool _isJumping = false;
+
+        /// <summary>
+        /// Function to make the enemy jump
+        /// </summary>
         public virtual void Jump()
         {
             if(!_activateJump) return;
@@ -215,14 +218,21 @@ namespace rene_roid_enemy
             if (_grounded) return;
         }
         #endregion
+        #endregion
 
         #region Stun
+        /// <summary>
+        /// Function to stun the enemy
+        /// </summary>
         public virtual void StunnStart(int t)
         {
             _timeStun = Time.time + t;
             _isStunned = true;
         }
 
+        /// <summary>
+        /// Function to update the stun
+        /// </summary>
         public virtual void StunUpdate()
         {
             if (Time.time >= _timeStun)
