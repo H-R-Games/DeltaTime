@@ -13,10 +13,7 @@ namespace rene_roid_enemy
             ChangeState(EnemyStates.Move);
         }
 
-        public override void Update()
-        {
-            UpdateState();
-        }
+        public override void Update() { UpdateState(); }
 
         #region State Machine
         public override void UpdateState()
@@ -90,6 +87,9 @@ namespace rene_roid_enemy
         }
 
         #region Horeizontal
+        /// <summary>
+        /// Function that moves the enemy horizontally
+        /// </summary>
         private void Horizontal()
         {
             Vector3 direction = new Vector3(_movementDirection.x, 0, 0);
@@ -101,6 +101,9 @@ namespace rene_roid_enemy
         #endregion
 
         #region Vertical
+        /// <summary>
+        /// Function creates gravity for the enemy
+        /// </summary>
         private void GravityEnemy()
         {
             Mathf.Clamp(_gravity, -_gravity, _gravity);
@@ -113,8 +116,12 @@ namespace rene_roid_enemy
         [SerializeField] private float _targetDistanceWatchin = 10f;
         [SerializeField] private float _targetDistanceNotWatchin = 5f;
         [SerializeField] private float _targetDistanceUnfollow = 50f;
+        [SerializeField] private float _targetTimeUnfollow = 3f;
         float _timeUnTarget = 0;
-
+        
+        /// <summary>
+        /// Function that checks if the player is in the range of the enemy and the enemy is looking at the player
+        /// </summary>
         private bool TargetPlayer()
         {
             var p = (_targetPlayer.transform.position - this.transform.position).normalized;
@@ -124,11 +131,14 @@ namespace rene_roid_enemy
             else return false;
         }
 
+        /// <summary>
+        /// UnTargetPlayer is called when the player is not in the range of the enemy and the enemy is not looking at the player
+        /// </summary>
         private void UnTargetPlayer()
         {
             _timeUnTarget += Time.deltaTime * 0.5f;
 
-            if (_timeUnTarget < 3)
+            if (_timeUnTarget < _targetTimeUnfollow)
             {
                 if (_hitTarget.collider != null && _hitTarget.collider.gameObject.tag == "Player") { _timeUnTarget = 0; return;};
                 if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) { _timeUnTarget = 0; return;};
@@ -136,6 +146,9 @@ namespace rene_roid_enemy
             else if (_timeUnTarget >= 1) { _timeUnTarget = 0; ChangeState(EnemyStates.Move); }
         }
 
+        /// <summary>
+        /// Function that makes the enemy follow the player
+        /// </summary>
         private void FollowerPlayer()
         {
             Vector3 directionX = (_targetPlayer.transform.position.x - this.transform.position.x) > 0 ? Vector3.right : Vector3.left;
