@@ -32,8 +32,8 @@ namespace rene_roid_player {
         {
             if (other.gameObject.tag == "Player")
             {
-                //ItemManager.Instance.AddItem(Item);
-                other.GetComponent<PlayerBase>().AddItem(Item);
+                var player = other.GetComponent<PlayerBase>();
+                player.AddItem(Item);
                 Destroy(gameObject);
             }
         }

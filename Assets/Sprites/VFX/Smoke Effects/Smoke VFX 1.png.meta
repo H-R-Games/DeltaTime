@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 61235287aad7e2948b92e82d4484cbd1
+guid: e4743f4771527cf4dad292b36a4ece89
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -116,127 +116,169 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: attack sword combo_0
+      name: Smoke VFX 1_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 49
-        height: 24
-      alignment: 9
-      pivot: {x: 0.25, y: 0.5}
+        width: 48
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 33b5647e7c05a4b4d8bb04df3be388fd
-      internalID: 325410122
+      spriteID: 6563e80af4858dd4db2573cacfa6c081
+      internalID: -1273831268
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: attack sword combo_1
+      name: Smoke VFX 1_1
       rect:
         serializedVersion: 2
-        x: 49
+        x: 48
         y: 0
-        width: 49
-        height: 24
-      alignment: 9
-      pivot: {x: 0.25, y: 0.5}
+        width: 48
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2499ca674e6c1ce4f83e7b02b4beceac
-      internalID: -1831767842
+      spriteID: 9d034e5cc2180e24db0dbb53cbb1a9f8
+      internalID: 1213640756
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: attack sword combo_2
+      name: Smoke VFX 1_2
       rect:
         serializedVersion: 2
-        x: 98
+        x: 96
         y: 0
-        width: 49
-        height: 24
-      alignment: 9
-      pivot: {x: 0.25, y: 0.5}
+        width: 48
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bc06435173949204c835139a08e34105
-      internalID: 1289162116
+      spriteID: 6bb232ae978739b41ab2a0ada1c9ad3e
+      internalID: 1748597864
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: attack sword combo_3
+      name: Smoke VFX 1_3
       rect:
         serializedVersion: 2
-        x: 147
+        x: 144
         y: 0
-        width: 49
-        height: 24
-      alignment: 9
-      pivot: {x: 0.25, y: 0.5}
+        width: 48
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6f273dca4e52c6049b258f4e466d25ac
-      internalID: 454869387
+      spriteID: a831866ae792db143949b47b40467fc1
+      internalID: 341245399
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: attack sword combo_4
+      name: Smoke VFX 1_4
       rect:
         serializedVersion: 2
-        x: 196
+        x: 192
         y: 0
-        width: 49
-        height: 24
-      alignment: 9
-      pivot: {x: 0.25, y: 0.5}
+        width: 48
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a88c28efc077ef740822d1169f4ce073
-      internalID: -683598009
+      spriteID: 8e8691fefd2a66947bb3c5f92b2da3a3
+      internalID: 1848337630
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: attack sword combo_5
+      name: Smoke VFX 1_5
       rect:
         serializedVersion: 2
-        x: 245
+        x: 240
         y: 0
-        width: 49
-        height: 24
-      alignment: 9
-      pivot: {x: 0.25, y: 0.5}
+        width: 48
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a9fce35c6c5208a46856b740d05b3633
-      internalID: -1022680425
+      spriteID: bdd0fcfeee01f254e92c2e0170ca1f8b
+      internalID: -1120469568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke VFX 1_6
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 0
+        width: 48
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a17c490d203b00843a7cb910de09df1f
+      internalID: 68883578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke VFX 1_7
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 0
+        width: 48
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35759f241a811bd4580d5f6381616f22
+      internalID: -1136979129
       vertices: []
       indices: 
       edges: []
@@ -252,12 +294,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      attack sword combo_0: 325410122
-      attack sword combo_5: -1022680425
-      attack sword combo_4: -683598009
-      attack sword combo_1: -1831767842
-      attack sword combo_3: 454869387
-      attack sword combo_2: 1289162116
+      Smoke VFX 1_0: -1273831268
+      Smoke VFX 1_5: -1120469568
+      Smoke VFX 1_3: 341245399
+      Smoke VFX 1_2: 1748597864
+      Smoke VFX 1_1: 1213640756
+      Smoke VFX 1_6: 68883578
+      Smoke VFX 1_7: -1136979129
+      Smoke VFX 1_4: 1848337630
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using rene_roid_enemy;
 
 namespace rene_roid_player {    
     public class ShadowClone : MonoBehaviour
@@ -8,13 +9,83 @@ namespace rene_roid_player {
         private SpriteRenderer _renderer;
         private Sprite _sprite;
         private Vector2 _direction;
+        private float _damage;
+        private float _proc;
+        private PlayerBase _player;
+        private bool _oni = false;
         #endregion
 
         #region External
         [Header("External")]
-        public Sprite _shadowCloneSprite1;
-        public Sprite _shadowCloneSprite2;
+        public Sprite ShadowCloneSprite1;
+        public Sprite ShadowCloneSprite2;
+
+        public bool Clone = false;
+        public Transform ClonePoint;
         #endregion
+
+        private void Start() {
+            _renderer = GetComponent<SpriteRenderer>();
+
+            if (Clone) {
+                DashClone();
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D other) {
+            if (other.gameObject.CompareTag("Enemy")) {
+                var enemy = other.gameObject.GetComponent<EnemyBase>();
+                if (enemy != null) enemy.TakeDamage(_player.DealDamage(_damage, _proc));
+
+                if (_oni && !Clone && enemy != null) {
+                    OniClone(enemy.transform, _damage, _proc);
+                }
+            }
+        }
+
+        public void OniClone(Transform point, float perc, float proc) {
+            // Instantiate 3 clones in a circle around the point with a radius of 1
+            var clone1 = Instantiate(this, point.position + new Vector3(3, 0, 0), Quaternion.identity);
+            var clone2 = Instantiate(this, point.position + new Vector3(0, 3, 0), Quaternion.identity);
+            var clone3 = Instantiate(this, point.position + new Vector3(-3, 0, 0), Quaternion.identity);
+
+            clone1.Clone = clone2.Clone = clone3.Clone = true;
+            clone1.SetPlayer(_player);
+            clone2.SetPlayer(_player);
+            clone3.SetPlayer(_player);
+
+            ClonePoint = point;
+            clone1.ClonePoint = clone2.ClonePoint = clone3.ClonePoint = point;
+        }
+
+        private void DashClone() {
+            StartCoroutine(IEDashClone(ClonePoint, 10, .5f));
+        }
+
+        private IEnumerator IEDashClone(Transform p, float speed, float fadeTime) {
+            // Rotate the gameobject to face p (gameobject is looking to the right)
+            transform.rotation = Quaternion.LookRotation(Vector3.forward, p.position - transform.position);
+            transform.Rotate(0, 0, 90);
+            
+            _renderer.flipX = false;
+            if (transform.rotation.z == 1) _renderer.flipY = true;
+
+            var dir = (p.position - transform.position).normalized;
+            var rate = 1.0f / fadeTime;
+            var progress = 0.0f;
+            float startAlpha = _renderer.color.a;
+            _renderer.color = new Color(_renderer.color.r, _renderer.color.g, _renderer.color.b, .7f);
+
+            while (progress < 1.0f) {
+                transform.position += (Vector3)dir * speed * Time.deltaTime;
+                _renderer.color = new Color(_renderer.color.r, _renderer.color.g, _renderer.color.b, Mathf.Lerp(startAlpha, 0, progress));
+                progress += rate * Time.deltaTime;
+                yield return null;
+            }
+
+            Destroy(gameObject, 0.1f);
+        }
+        
 
         public void SetFlipX(bool flipX)
         {
@@ -24,10 +95,16 @@ namespace rene_roid_player {
         }
 
         // Dash fast in the direction the player is facing and then fade out
-        public void Dash(float speed, float fadeTime)
+        public void Dash(float speed, float fadeTime, bool oni, PlayerBase player, float perc, float proc)
         {
             _renderer = GetComponent<SpriteRenderer>();
-            _renderer.sprite = _shadowCloneSprite1;
+            _renderer.sprite = ShadowCloneSprite1;
+
+            _player = player;
+            _damage = perc;
+            _proc = proc;
+            _oni = oni;
+
             StartCoroutine(DashAndFade(speed, fadeTime));
         }
 
@@ -48,7 +125,7 @@ namespace rene_roid_player {
             }
 
             // In the end of the dash, change the sprite to the fade out sprite2
-            _renderer.sprite = _shadowCloneSprite2;
+            _renderer.sprite = ShadowCloneSprite2;
             var t = 1f;
             var fadet = 0.3f;
             while (t > 0)
@@ -59,6 +136,11 @@ namespace rene_roid_player {
             }
 
             Destroy(gameObject);
+        }
+
+        public void SetPlayer(PlayerBase player)
+        {
+            _player = player;
         }
     }
 }
