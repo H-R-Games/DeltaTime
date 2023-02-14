@@ -131,16 +131,24 @@ namespace rene_roid_player
         {
             base.Skill2();
 
-            StartCoroutine(RemoveControlAny(.1f));
-            _rb.velocity = new Vector2(0, 0);
+            if (_isOniMode) {
+                var rad = 10;
+                var enemies = Physics2D.OverlapCircleAll(transform.position, rad, _enemyLayer);
 
-            var dist = 10;
-            var ms = _baseStats.MovementSpeed;
-            var cms = _currentMovementSpeed;
+                StartCoroutine(SuperCoolDash(enemies));
+            } else {
+                StartCoroutine(RemoveControlAny(.1f));
+                _rb.velocity = new Vector2(0, 0);
 
-            var c = 1 + ((cms / ms) / ms);
-            print(c);
-            StartCoroutine(Dash(dist * c, 0.1f));
+                var dist = 10;
+                var ms = _baseStats.MovementSpeed;
+                var cms = _currentMovementSpeed;
+
+                var c = 1 + ((cms / ms) / ms);
+                print(c);
+                StartCoroutine(Dash(dist * c, 0.1f));
+            }
+
         }
 
 
@@ -176,6 +184,42 @@ namespace rene_roid_player
             }
         }
 
+        private IEnumerator SuperCoolDash(Collider2D[] enemies) {
+            this.TakeAwayControl(true);
+            _rb.velocity = new Vector2(0, 0);
+            // For each enemy in the collider
+            foreach (var enemy in enemies)
+            {
+                _rb.velocity = new Vector2(0, 0);
+                var enemyBase = enemy.GetComponent<EnemyBase>();
+                if (enemyBase == null) continue;
+
+                var dir = enemyBase.transform.position - transform.position;
+                var pos = transform.position;
+                var speed = 10;
+                dir.Normalize();
+
+                // Move to the enemy
+                while (Vector2.Distance(pos, enemyBase.transform.position) > 0.3f)
+                {
+                    _rb.velocity = new Vector2(0, 0);
+                    // Lerp to the enemy
+                    pos = Vector2.Lerp(pos, enemyBase.transform.position, Time.deltaTime * speed);
+                    transform.position = pos;
+                    yield return null;
+                }
+
+                // Deal damage
+                enemyBase.TakeDamage(DealDamage(_skill2Percentage, _procCoSkill2));
+
+                print("Dash hit to: " + enemyBase.name);
+            }
+
+            ReturnControl();
+            print("Dash finished");
+
+            yield return null;
+        }
 
         [Header("Ultimate")]
         [Tooltip("The damage of the basic attack: 0 = 0% | 1 = 100% | 1.5 = 150%...")]
