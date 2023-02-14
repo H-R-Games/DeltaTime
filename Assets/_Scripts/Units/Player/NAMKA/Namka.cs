@@ -51,7 +51,6 @@ namespace rene_roid_player
             {
                 var enemy = hit.collider.GetComponent<EnemyBase>();
                 if (enemy != null) enemy.TakeDamage(DealDamage(_basicAttackPercentage, _procCoBasic));
-                print("Hit!: " + enemy.gameObject.name);
             }
         }
 

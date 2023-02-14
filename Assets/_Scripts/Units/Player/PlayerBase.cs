@@ -165,6 +165,16 @@ namespace rene_roid_player
             _maxStats.MovementSpeed = (_baseStats.MovementSpeed + ((_level - 1) * _baseStats.MovementSpeedPerLevel)) * (1 + _extraMovementSpeedPercentage) + _extraFlatMovementSpeed;
         }
 
+        /// <summary>
+        /// Updates current stats (cleanse any buffs/debuffs)
+        /// </summary>
+        protected void UpdateCurrentStats() {
+            _currentHealthRegen = _maxStats.HealthRegen;
+            _currentDamage = _maxStats.Damage;
+            _currentArmor = _maxStats.Armor;
+            _currentMovementSpeed = _maxStats.MovementSpeed;
+        }
+
         #region Add Stats
 
         public void AddHealthPercentage(float percentage)
@@ -720,8 +730,6 @@ namespace rene_roid_player
             if (hit != null || hit2 != null)
             {
                 StartCoroutine(ChangeLayerAfterDelay(collider, 0.05f));
-
-                print("IN");
             }
             else
             {
@@ -729,8 +737,6 @@ namespace rene_roid_player
                 var layer = LayerMask.NameToLayer("OneWayFloor");
                 // Change layer of hit
                 collider.gameObject.layer = layer;
-
-                print("OUT");
             }
         }
         #endregion
