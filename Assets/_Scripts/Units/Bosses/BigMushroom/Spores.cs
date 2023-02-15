@@ -12,13 +12,19 @@ namespace rene_roid_enemy
         [SerializeField][Range(0, 100f)] private float _sporesDistance = 1f;
         [SerializeField][Range(0, 100f)] private float _sporesLifeTime = 1f;
         float _timeCurrenLife = 0f;
+        float t = 0f;
 
         void Update()
         {
             _timeCurrenLife += Time.deltaTime * 0.5f;
             if (_timeCurrenLife >= _sporesLifeTime) Destroy(gameObject);
 
-            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _sporesDistance) _targetPlayer.GetComponent<PlayerBase>().TakeDamage(_damage);
+            t += Time.deltaTime * 0.5f;
+            if (t >= 0.5f)
+            {
+                if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _sporesDistance) _targetPlayer.GetComponent<PlayerBase>().TakeDamage(_damage);
+                t = 0f;
+            }
         }
 
         private void OnDrawGizmos()
