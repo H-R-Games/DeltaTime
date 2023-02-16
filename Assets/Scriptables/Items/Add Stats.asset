@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c0153aa0e63baa5499bb722b1317e95c, type: 3}
-  m_Name: Test
+  m_Name: Add Stats
   m_EditorClassIdentifier: 
   Name: Add stats
   Icon: {fileID: 0}
