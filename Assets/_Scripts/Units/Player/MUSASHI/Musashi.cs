@@ -138,14 +138,13 @@ namespace rene_roid_player
                 StartCoroutine(SuperCoolDash(enemies));
             } else {
                 StartCoroutine(RemoveControlAny(.1f));
-                _rb.velocity = new Vector2(0, 0);
+                _rb.velocity = new Vector2(0, _rb.velocity.y);
 
                 var dist = 10;
                 var ms = _baseStats.MovementSpeed;
                 var cms = _currentMovementSpeed;
 
                 var c = 1 + ((cms / ms) / ms);
-                print(c);
                 StartCoroutine(Dash(dist * c, 0.1f));
             }
 
@@ -200,14 +199,18 @@ namespace rene_roid_player
                 dir.Normalize();
 
                 // Move to the enemy
-                while (Vector2.Distance(pos, enemyBase.transform.position) > 0.3f)
-                {
-                    _rb.velocity = new Vector2(0, 0);
-                    // Lerp to the enemy
-                    pos = Vector2.Lerp(pos, enemyBase.transform.position, Time.deltaTime * speed);
-                    transform.position = pos;
-                    yield return null;
-                }
+                // while (Vector2.Distance(pos, enemyBase.transform.position) > 0.3f)
+                // {
+                //     _rb.velocity = new Vector2(0, 0);
+                //     // Lerp to the enemy
+                //     pos = Vector2.Lerp(pos, enemyBase.transform.position, Time.deltaTime * speed);
+                //     transform.position = pos;
+                //     yield return null;
+                // }
+
+                yield return Helpers.GetWait(0.2f);
+
+                transform.position = enemy.transform.position;
 
                 // Deal damage
                 enemyBase.TakeDamage(DealDamage(_skill2Percentage, _procCoSkill2));

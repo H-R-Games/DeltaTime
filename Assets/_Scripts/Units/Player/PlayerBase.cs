@@ -133,6 +133,7 @@ namespace rene_roid_player
         protected void UpdatePlayerStats()
         {
             ConstantHealing();
+            FallDamage();
         }
 
         protected void SetPlayerStats()
@@ -174,6 +175,40 @@ namespace rene_roid_player
             _currentArmor = _maxStats.Armor;
             _currentMovementSpeed = _maxStats.MovementSpeed;
         }
+
+        #region Fall Damage
+        [Header("Fall Damage")]
+        [SerializeField] protected float _fallDamageMultiplier = 5f;
+        private float _maxFallDamagePercentage = 0.95f;
+        private float _fallDamage = 0;
+        private float _fallTime = 0f;
+
+        protected void FallDamage()
+        {
+            if (_speed.y < 0 && !_grounded)
+            {
+                _fallTime += Time.deltaTime;
+
+                if (_fallTime > 0.5f)
+                {
+                    _fallDamage = Mathf.Clamp(_fallTime * _fallDamageMultiplier, 0, _maxFallDamagePercentage * _maxStats.Health);
+                }
+            }
+            else
+            {
+                if (_grounded && _fallDamage > 0)
+                {
+                    print("Fall Damage: " + _fallDamage);
+                    _fallDamage = Mathf.Clamp(_fallDamage, 0, 10);
+                    _fallDamage = Helpers.FromRangeToRange(_fallDamage, 0, 10, 0, _currentHealth * _maxFallDamagePercentage);
+                    TakeDamage(_fallDamage);
+                    _fallDamage = 0;
+                }
+
+                _fallTime = 0f;
+            }
+        }
+        #endregion
 
         #region Add Stats
 
@@ -593,6 +628,7 @@ namespace rene_roid_player
         protected void FixedMovement()
         {
             _fixedFrame++;
+            if (_fixedFrame > int.MaxValue - 100) _fixedFrame = 0;
 
             CheckCollisions();
             HandleCollisions();

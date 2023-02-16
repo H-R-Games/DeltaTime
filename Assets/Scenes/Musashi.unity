@@ -3313,6 +3313,7 @@ MonoBehaviour:
   _currentDamage: 0
   _currentArmor: 0
   _currentMovementSpeed: 0
+  _fallDamageMultiplier: 5
   BasicAttackCooldown: 0.2
   Skill1Cooldown: 1
   Skill2Cooldown: 2
