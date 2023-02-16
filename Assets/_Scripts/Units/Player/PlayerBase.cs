@@ -1,4 +1,5 @@
 using rene_roid;
+using rene_roid_enemy;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -62,6 +63,11 @@ namespace rene_roid_player
         }
         #endregion
 
+        private void OnEnable() {
+            // EnemyBase.OnHit += OnEnemyHit;
+            // EnemyBase.OnDeath += OnEnemyDeath;
+        }
+
         public virtual void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
@@ -73,7 +79,7 @@ namespace rene_roid_player
 
         public virtual void Start()
         {
-
+            _itemManager = GetComponent<ItemManager>();
         }
 
 
@@ -164,6 +170,8 @@ namespace rene_roid_player
             _maxStats.Damage = (_baseStats.Damage + ((_level - 1) * _baseStats.DamagePerLevel));
             _maxStats.Armor = (_baseStats.Armor + ((_level - 1) * _baseStats.ArmorPerLevel)) * (1 + _extraArmorPercentage) + _extraFlatArmor;
             _maxStats.MovementSpeed = (_baseStats.MovementSpeed + ((_level - 1) * _baseStats.MovementSpeedPerLevel)) * (1 + _extraMovementSpeedPercentage) + _extraFlatMovementSpeed;
+
+            UpdateCurrentStats();
         }
 
         /// <summary>
@@ -421,6 +429,7 @@ namespace rene_roid_player
 
         #region Player Skills
         [Header("Player Skills")]
+        public float LastSkillProcCoefficient = 1;
         [Header("Cooldowns")]
         public float BasicAttackCooldown = 0.5f;
         public float Skill1Cooldown = 1;
@@ -468,7 +477,7 @@ namespace rene_roid_player
             _ultimateFrameWasPressed = -_ultimateFrames;
         }
 
-        protected void GatherSkillInput()
+        protected void GatherSkillInput() // TODO: Get proc coeficient
         {
             if ((_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld) && _basicAttackReady)
             {
@@ -601,20 +610,33 @@ namespace rene_roid_player
 
         #region Item Management
         [Header("Item Management")]
-        public List<Item> _items = new List<Item>();
+        public ItemManager _itemManager;
+        public List<Item> Items = new List<Item>();
 
         public void AddItem(Item item)
         {
-            _items.Add(item);
-            item.Items.ForEach(i => i.OnGet(this));
+            Items.Add(item);
+            item.Items.ForEach(i => i.OnGet(this, _itemManager));
         }
 
         // private void UpdateItems() => _items.ForEach(i => i.Items.ForEach(i => i.OnUpdate(this)));
 
         public void RemoveItem(Item item)
         {
-            _items.Remove(item);
-            item.Items.ForEach(i => i.OnRemove(this));
+            Items.Remove(item);
+            item.Items.ForEach(i => i.OnRemove(this, _itemManager));
+        }
+
+        public virtual void OnEnemyHit(float damage, EnemyBase enemy) 
+        {
+            print("Hit enemy for " + damage + " damage!");
+            _itemManager.OnHit(damage, enemy);
+        }
+
+        public virtual void OnEnemyDeath(float damage, EnemyBase enemy)
+        {
+            print("Killed enemy  " + enemy.name + " for " + damage + " damage!");
+            _itemManager.OnKill(damage, enemy);
         }
         #endregion
 
@@ -714,6 +736,8 @@ namespace rene_roid_player
             }
         }
 
+
+        private Coroutine _c;
         // TODO: Make this more efficient
         protected virtual void FallThroughFloor()
         {
@@ -731,7 +755,7 @@ namespace rene_roid_player
 
                     // If player is on top of _oneWayFloor layer then ignore floor collision and fall through
                     // Activate the collision again after a short delay
-                    StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
+                    _c = StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
                 }
             }
         }
@@ -751,7 +775,7 @@ namespace rene_roid_player
 
                 // If player is on top of _oneWayFloor layer then ignore floor collision and fall through
                 // Activate the collision again after a short delay
-                StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
+                _c = StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
             }
         }
 
@@ -774,6 +798,8 @@ namespace rene_roid_player
                 // Change layer of hit
                 collider.gameObject.layer = layer;
             }
+
+            
         }
         #endregion
 
