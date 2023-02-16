@@ -174,13 +174,6 @@ namespace rene_roid_player
             UpdateCurrentStats();
         }
 
-        protected void UpdateCurrentStats() {
-            _currentHealthRegen = _maxStats.HealthRegen;
-            _currentDamage = _maxStats.Damage;
-            _currentArmor = _maxStats.Armor;
-            _currentMovementSpeed = _maxStats.MovementSpeed;
-        }
-
         /// <summary>
         /// Updates current stats (cleanse any buffs/debuffs)
         /// </summary>
@@ -796,13 +789,7 @@ namespace rene_roid_player
 
             if (hit != null || hit2 != null)
             {
-<<<<<<< HEAD
                 StartCoroutine(ChangeLayerAfterDelay(collider, 0.05f));
-=======
-                StopCoroutine(_c);
-                _c = StartCoroutine(ChangeLayerAfterDelay(collider, 0.05f));
-                print("IN");
->>>>>>> feature-items
             }
             else
             {
@@ -810,10 +797,6 @@ namespace rene_roid_player
                 var layer = LayerMask.NameToLayer("OneWayFloor");
                 // Change layer of hit
                 collider.gameObject.layer = layer;
-<<<<<<< HEAD
-=======
-                StopCoroutine(_c);
->>>>>>> feature-items
             }
 
             
