@@ -8,7 +8,7 @@ namespace rene_roid_enemy
     public class EnemyBase : MonoBehaviour
     {
         public enum EnemyStates { Idle, Move, Attack, Stun, Target, KnockBack }
-        public enum EnemyType { Horizontal, Flying }
+        public enum EnemyType { Horizontal, Flying, Boss }
 
         [Header("Enemy stats")]
         [SerializeField] private EnemyBaseStats _enemyBaseStats;
@@ -100,6 +100,7 @@ namespace rene_roid_enemy
         [SerializeField] protected float _attackRangeCooldown = 0.1f;
         [SerializeField] protected bool _activeAttackRange = false;
         protected float _attackRangeCooldownTimer = 0f;
+        public bool _onAttack = false;
 
         /// <summary>
         /// Function to attack the player in range
@@ -114,6 +115,7 @@ namespace rene_roid_enemy
             if (Time.time <= _attackRangeCooldownTimer) return;
             if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackRangeDistance && watchin)
             {
+                _onAttack = true;
                 _targetPlayer.GetComponent<PlayerBase>().TakeDamage(_damage);
                 _attackRangeCooldownTimer = Time.time + _attackRangeCooldown;
             }
