@@ -8,7 +8,7 @@ namespace rene_roid_enemy
     public class EnemyBase : MonoBehaviour
     {
         public enum EnemyStates { Idle, Move, Attack, Stun, Target, KnockBack }
-        public enum EnemyType { Horizontal, Flying }
+        public enum EnemyType { Horizontal, Flying, Boss }
 
         [Header("Enemy stats")]
         [SerializeField] private EnemyBaseStats _enemyBaseStats;
@@ -20,6 +20,7 @@ namespace rene_roid_enemy
         [SerializeField] protected BoxCollider2D _boxCollider2D;
         [SerializeField] protected LayerMask _enemyLayer;
         [SerializeField] protected LayerMask _wallLayer;
+        [SerializeField] protected LayerMask _playerLayer;
         protected PlayerBase _targetPlayer = null;
         protected int _fixedFrame;
         #endregion
@@ -92,32 +93,6 @@ namespace rene_roid_enemy
         /// Calculate the damage the enemy will deal to the player
         /// </summary>
         public float DealDamage(float damage) { return damage; }
-
-        #region Attacks
-        [Header("Attack Range Settings")]
-        [SerializeField] protected float _attackRangeDistance = 1f;
-        [SerializeField] protected float _attackRageDamage = 1f;
-        [SerializeField] protected float _attackRangeCooldown = 0.1f;
-        protected float _attackRangeCooldownTimer = 0f;
-
-        /// <summary>
-        /// Function to attack the player in range
-        /// </summary>
-        public virtual void AttackRange()
-        {
-            var p = (_targetPlayer.transform.position - this.transform.position).normalized;
-            bool watchin = (p.x > 0 && _movementDirection.x > 0) || (p.x < 0 && _movementDirection.x < 0);
-
-            if (!watchin) return;
-            if (Time.time <= _attackRangeCooldownTimer) return;
-            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackRangeDistance && watchin)
-            {
-                _targetPlayer.GetComponent<PlayerBase>().TakeDamage(_damage);
-                _attackRangeCooldownTimer = Time.time + _attackRangeCooldown;
-            }
-        }
-
-        #endregion
         #endregion
 
         #region State Machine
@@ -216,6 +191,16 @@ namespace rene_roid_enemy
             transform.position = new Vector3(transform.position.x, transform.position.y + _jumpForce, transform.position.z);
 
             if (_grounded) return;
+        }
+        #endregion
+        #region Vertical
+        /// <summary>
+        /// Function creates gravity for the enemy
+        /// </summary>
+        public virtual void GravityEnemy()
+        {
+            Mathf.Clamp(_gravity, -_gravity, _gravity);
+            if (!_grounded) transform.Translate(new Vector3(0, _gravity * Time.deltaTime, 0));
         }
         #endregion
         #endregion
