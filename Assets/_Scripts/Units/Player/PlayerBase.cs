@@ -37,6 +37,7 @@ namespace rene_roid_player
         public event Action UltimateAttack;
 
         public PlayerBaseStats PlayerStats => _baseStats;
+        public FrameInput FrameInput => _input.FrameInput;
         public Vector2 Input => _frameInput.Move;
         public Vector2 Speed => _speed;
         public Vector2 GroundNormal => _groundNormal;
@@ -456,6 +457,12 @@ namespace rene_roid_player
         protected int _skill2FrameWasPressed;
         protected int _ultimateFrameWasPressed;
 
+        // Getts
+        public float BasicAttackTimer => _basicAttackTimer;
+        public float Skill1Timer => _skill1Timer;
+        public float Skill2Timer => _skill2Timer;
+        public float UltimateTimer => _ultimateTimer;
+
         [Header("Time Between Skills")]
         public float _basicAttackTimeLock = 0.5f;
         public float _skill1TimeLock = 0.5f;
@@ -610,6 +617,7 @@ namespace rene_roid_player
 
         #region Item Management
         [Header("Item Management")]
+        public float Money = 0;
         public ItemManager _itemManager;
         public List<Item> Items = new List<Item>();
 
