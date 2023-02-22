@@ -31,7 +31,7 @@ namespace rene_roid_enemy
                 case EnemyStates.Attack:
                     GravityEnemy();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _attackRangeDistance) ChangeState(EnemyStates.Move);
-                    if (!_isStunned) AttackRange();
+                    if (!_isStunned) AttackBox();
                     break;
                 case EnemyStates.Stun:
                     GravityEnemy();
@@ -167,14 +167,26 @@ namespace rene_roid_enemy
         #endregion
 
         #region Attack
-        // detectamos la colision del ataque con el player
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.gameObject.tag == "Player")
+        float _timeAttack = 0;
+        [SerializeField] private float _attackCooldown = 1f;
+
+        private void AttackBox()
+        {   
+            if(_timeAttack >= _attackCooldown)
             {
-                _onAttack = true;
-                if (_enemyState == EnemyStates.Attack) other.gameObject.GetComponent<PlayerBase>().TakeDamage(_damage);
-            }
+                var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
+            
+                foreach (var player in players)
+                {
+                    _onAttack = true;
+                    var playerBase = player.GetComponent<PlayerBase>();
+                    if (playerBase != null) playerBase.TakeDamage(_damage);
+                    print("Damage: " + _damage);
+                }
+
+                _timeAttack = 0;
+            } 
+            else _timeAttack += Time.deltaTime * 0.5f;
         }
         #endregion
 

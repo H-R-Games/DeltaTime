@@ -20,6 +20,7 @@ namespace rene_roid_enemy
         [SerializeField] protected BoxCollider2D _boxCollider2D;
         [SerializeField] protected LayerMask _enemyLayer;
         [SerializeField] protected LayerMask _wallLayer;
+        [SerializeField] protected LayerMask _playerLayer;
         protected PlayerBase _targetPlayer = null;
         protected int _fixedFrame;
         #endregion
@@ -120,7 +121,6 @@ namespace rene_roid_enemy
                 _attackRangeCooldownTimer = Time.time + _attackRangeCooldown;
             }
         }
-
         #endregion
         #endregion
 
