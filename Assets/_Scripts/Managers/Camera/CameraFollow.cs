@@ -23,13 +23,8 @@ namespace rene_roid {
             _xOffset = 1;
         }
 
-        private void Update()
-        {
+        private void Update() {
             AdaptiveCamera();
-        }
-
-        private void OnGUI()
-        {
             CameraMovement();
         }
 

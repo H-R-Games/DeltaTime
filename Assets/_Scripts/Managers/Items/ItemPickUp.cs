@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using rene_roid;
 
 namespace rene_roid_player {
     public class ItemPickUp : MonoBehaviour
@@ -10,30 +11,46 @@ namespace rene_roid_player {
         private SpriteRenderer _spriteRenderer;
 
         private Vector2 _initPos;
+
+        private bool _launched = false;
+        private float _timeLaunched = 0;
         #endregion
 
         #region External
         public Item Item;
+        public ShowItemUI ShowItemUI;
         #endregion
 
         void Start()
         {
             _rb = GetComponent<Rigidbody2D>();
             _collider = GetComponent<Collider2D>();
+
+            ShowItemUI = GameObject.FindObjectOfType<ShowItemUI>();
         }
 
         void Update()
         {
-            ItemFloat();
-            ItemGravity();
+            if (!_launched)
+            {
+                _rb.AddForce(new Vector2(Random.Range(-.5f, .5f), Random.Range(.5f, 1f)), ForceMode2D.Impulse);
+                
+                if (_timeLaunched == 0) _timeLaunched = Time.time + 0.075f;
+                if (Time.time > _timeLaunched) _launched = true;
+            } else {
+                ItemFloat();
+                ItemGravity();
+            }
+
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.tag == "Player")
+            if (other.gameObject.tag == "Player" && _launched)
             {
-                //ItemManager.Instance.AddItem(Item);
-                other.GetComponent<PlayerBase>().AddItem(Item);
+                var player = other.GetComponent<PlayerBase>();
+                player.AddItem(Item);
+                ShowItemUI.DisplayItem(Item);
                 Destroy(gameObject);
             }
         }
@@ -51,6 +68,13 @@ namespace rene_roid_player {
             if (_initPos == Vector2.zero) _initPos = transform.position;
 
             transform.position = new Vector2(_initPos.x, _initPos.y + Mathf.Sin(Time.time * 2f) * 0.1f);
+        }
+
+        public void SetItem(Item item)
+        {
+            Item = item;
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+            if (_spriteRenderer != null && item.Icon != null) _spriteRenderer.sprite = item.Icon;
         }
     }
 }

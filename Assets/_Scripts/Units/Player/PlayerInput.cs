@@ -31,7 +31,7 @@ namespace rene_roid_player
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInputActions _inputActions;
-        private InputAction _move, _jump, _basicAttack, _ability1, _ability2, _ultimate;
+        private InputAction _move, _jump, _basicAttack, _ability1, _ability2, _ultimate, _buy;
 
         private void Awake()
         {
@@ -44,6 +44,7 @@ namespace rene_roid_player
             _ability1 = _inputActions.Player.Ability1;
             _ability2 = _inputActions.Player.Ability2;
             _ultimate = _inputActions.Player.Ultimate;
+            _buy = _inputActions.Player.Buy;
         }
 
         private void OnEnable()
@@ -75,6 +76,8 @@ namespace rene_roid_player
 
                 UltimateDown = _ultimate.WasPressedThisFrame(),
                 UltimateHeld = _ultimate.IsPressed(),
+
+
             };
         }
 
@@ -99,6 +102,8 @@ namespace rene_roid_player
 
                 UltimateDown = Input.GetKeyDown(_ultimate),
                 UltimateHeld = Input.GetKey(_ultimate),
+
+                BuyDown = Input.GetKeyDown(_buy);
             };
         }
 #endif
@@ -122,5 +127,7 @@ namespace rene_roid_player
 
         public bool UltimateDown;
         public bool UltimateHeld;
+
+        public bool BuyDown;
     }
 }
