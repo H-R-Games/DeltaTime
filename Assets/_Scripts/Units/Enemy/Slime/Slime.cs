@@ -30,7 +30,7 @@ namespace rene_roid_enemy
                     break;
                 case EnemyStates.Attack:
                     GravityEnemy();
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _attackRangeDistance) ChangeState(EnemyStates.Move);
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 2) ChangeState(EnemyStates.Move);
                     if (!_isStunned) AttackBox();
                     break;
                 case EnemyStates.Stun:
@@ -41,8 +41,9 @@ namespace rene_roid_enemy
                     GravityEnemy();
                     if (!TargetPlayer()) UnTargetPlayer();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackRangeDistance) ChangeState(EnemyStates.Attack);
+                    // if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= 2) ChangeState(EnemyStates.Attack);
                     if (!_isStunned) FollowerPlayer();
+                    if (!_isStunned) AttackBox();
                     break;
             }
 
@@ -167,8 +168,10 @@ namespace rene_roid_enemy
         #endregion
 
         #region Attack
-        float _timeAttack = 0;
+        [Header("Attack Settings")]
         [SerializeField] private float _attackCooldown = 1f;
+        float _timeAttack = 0;
+        bool _onAttack;
 
         private void AttackBox()
         {   
@@ -181,7 +184,6 @@ namespace rene_roid_enemy
                     _onAttack = true;
                     var playerBase = player.GetComponent<PlayerBase>();
                     if (playerBase != null) playerBase.TakeDamage(_damage);
-                    print("Damage: " + _damage);
                 }
 
                 _timeAttack = 0;
@@ -190,50 +192,50 @@ namespace rene_roid_enemy
         }
         #endregion
 
-    #region Animation
-    private Animator _anim;
-        private int _currentAnimation = 0;
-        private float _lockedTill;
-        private static readonly int Idle = Animator.StringToHash("Idle");
-        private static readonly int Run = Animator.StringToHash("Run");
-        private static readonly int Death = Animator.StringToHash("Die");
-        private static readonly int StunnedAnim = Animator.StringToHash("Stunned");
-        private static readonly int AttackAnim = Animator.StringToHash("Attack");
+        #region Animation
+        private Animator _anim;
+            private int _currentAnimation = 0;
+            private float _lockedTill;
+            private static readonly int Idle = Animator.StringToHash("Idle");
+            private static readonly int Run = Animator.StringToHash("Run");
+            private static readonly int Death = Animator.StringToHash("Die");
+            private static readonly int StunnedAnim = Animator.StringToHash("Stunned");
+            private static readonly int AttackAnim = Animator.StringToHash("Attack");
 
-        [SerializeField] private float _attackAnimTime = 0.5f;
+            [SerializeField] private float _attackAnimTime = 0.5f;
 
-        private void HandleAnimations()
-        {
-            var state = GetState();
-            ResetFlags();
-            if (state == _currentAnimation) return;
-
-            _anim.Play(state, 0); //_anim.CrossFade(state, 0, 0);
-            _currentAnimation = state;
-
-            int GetState()
+            private void HandleAnimations()
             {
-                if (Time.time < _lockedTill) return _currentAnimation;
+                var state = GetState();
+                ResetFlags();
+                if (state == _currentAnimation) return;
 
-                // ANY SKILL PRESSED
-                // if (_isStunned) return LockState(UltimateAttackAnim, 5);
-                if (_onAttack) return LockState(AttackAnim, _attackAnimTime);
+                _anim.Play(state, 0); //_anim.CrossFade(state, 0, 0);
+                _currentAnimation = state;
 
-                // NO SKILL PRESSED
-                return Run;
-
-                // State and time to lock
-                int LockState(int s, float t)
+                int GetState()
                 {
-                    _lockedTill = Time.time + t;
-                    return s;
+                    if (Time.time < _lockedTill) return _currentAnimation;
+
+                    // ANY SKILL PRESSED
+                    // if (_isStunned) return LockState(UltimateAttackAnim, 5);
+                    if (_onAttack) return LockState(AttackAnim, _attackAnimTime);
+
+                    // NO SKILL PRESSED
+                    return Run;
+
+                    // State and time to lock
+                    int LockState(int s, float t)
+                    {
+                        _lockedTill = Time.time + t;
+                        return s;
+                    }
+
                 }
 
+                void ResetFlags() { _onAttack = false; }
             }
-
-            void ResetFlags() { _onAttack = false; }
-        }
-    #endregion
+        #endregion
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()
@@ -255,9 +257,6 @@ namespace rene_roid_enemy
 
             Gizmos.color = Color.white;
             Gizmos.DrawRay((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0), Vector2.down * 5);
-
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, _attackRangeDistance);
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(transform.position, Vector2.up * 5 + (Vector2)transform.position);
