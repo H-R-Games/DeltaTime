@@ -30,7 +30,13 @@ namespace rene_roid_enemy
                     break;
                 case EnemyStates.Attack:
                     GravityEnemy();
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 2) ChangeState(EnemyStates.Move);
+
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 0.6f)
+                    {
+                        _inRangeAttack = false;
+                        ChangeState(EnemyStates.Move);
+                    }
+
                     if (!_isStunned) AttackBox();
                     break;
                 case EnemyStates.Stun:
@@ -41,13 +47,14 @@ namespace rene_roid_enemy
                     GravityEnemy();
                     if (!TargetPlayer()) UnTargetPlayer();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
-                    // if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= 2) ChangeState(EnemyStates.Attack);
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= 0.6f) ChangeState(EnemyStates.Attack);
                     if (!_isStunned) FollowerPlayer();
-                    if (!_isStunned) AttackBox();
+                    // if (!_isStunned) AttackBox();
                     break;
             }
 
             HandleAnimations();
+            ResetCooldown();
         }
 
         public override void ChangeState(EnemyStates newState)
@@ -171,10 +178,11 @@ namespace rene_roid_enemy
         [Header("Attack Settings")]
         [SerializeField] private float _attackCooldown = 1f;
         float _timeAttack = 0;
-        bool _onAttack;
+        bool _onAttack, _inRangeAttack;
 
         private void AttackBox()
         {   
+            _inRangeAttack = true;
             if(_timeAttack >= _attackCooldown)
             {
                 var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
@@ -189,6 +197,15 @@ namespace rene_roid_enemy
                 _timeAttack = 0;
             } 
             else _timeAttack += Time.deltaTime * 0.5f;
+        }
+
+        private void ResetCooldown()
+        {
+            if (_enemyState != EnemyStates.Attack) 
+            {
+                if (_timeAttack < 0) _timeAttack = 0; 
+                _timeAttack -= Time.deltaTime * 0.5f;
+            }
         }
         #endregion
 
