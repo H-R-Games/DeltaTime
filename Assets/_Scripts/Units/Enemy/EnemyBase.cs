@@ -93,35 +93,6 @@ namespace rene_roid_enemy
         /// Calculate the damage the enemy will deal to the player
         /// </summary>
         public float DealDamage(float damage) { return damage; }
-
-        #region Attacks
-        [Header("Attack Range Settings")]
-        [SerializeField] protected float _attackRangeDistance = 1f;
-        [SerializeField] protected float _attackRageDamage = 1f;
-        [SerializeField] protected float _attackRangeCooldown = 0.1f;
-        [SerializeField] protected bool _activeAttackRange = false;
-        protected float _attackRangeCooldownTimer = 0f;
-        public bool _onAttack = false;
-
-        /// <summary>
-        /// Function to attack the player in range
-        /// </summary>
-        public virtual void AttackRange()
-        {
-            if (!_activeAttackRange) return;
-            var p = (_targetPlayer.transform.position - this.transform.position).normalized;
-            bool watchin = (p.x > 0 && _movementDirection.x > 0) || (p.x < 0 && _movementDirection.x < 0);
-
-            if (!watchin) return;
-            if (Time.time <= _attackRangeCooldownTimer) return;
-            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackRangeDistance && watchin)
-            {
-                _onAttack = true;
-                _targetPlayer.GetComponent<PlayerBase>().TakeDamage(_damage);
-                _attackRangeCooldownTimer = Time.time + _attackRangeCooldown;
-            }
-        }
-        #endregion
         #endregion
 
         #region State Machine
