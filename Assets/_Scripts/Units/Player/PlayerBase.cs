@@ -219,6 +219,7 @@ namespace rene_roid_player
         }
         #endregion
 
+
         #region Add Stats
 
         public void AddHealthPercentage(float percentage)
@@ -426,6 +427,30 @@ namespace rene_roid_player
         public float CurrentArmor => _currentArmor;
         public float CurrentMovementSpeed => _currentMovementSpeed;
         #endregion
+
+        #region Experience
+        [Header("Experience")]
+        private float _currentExperience = 0;
+        private float _experienceToNextLevel = 100;
+        private float _experienceMultiplier = 1.37f;
+
+        public void AddExperience(float experience)
+        {
+            _currentExperience += experience;
+            if (_currentExperience >= _experienceToNextLevel)
+            {
+                LevelUp();
+
+                // Remove the experience that was used to level up
+                _currentExperience -= _experienceToNextLevel;
+
+                // Increase the experience needed to level up
+                _experienceToNextLevel *= _experienceMultiplier;
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region Player Skills
@@ -621,6 +646,10 @@ namespace rene_roid_player
         public ItemManager _itemManager;
         public List<Item> Items = new List<Item>();
 
+        public void AddMoney(float amount) => Money += amount;
+
+        public void RemoveMoney(float amount) => Money -= amount;
+
         public void AddItem(Item item)
         {
             Items.Add(item);
@@ -645,6 +674,12 @@ namespace rene_roid_player
         {
             print("Killed enemy  " + enemy.name + " for " + damage + " damage!");
             _itemManager.OnKill(damage, enemy);
+
+            // ? Chance to get experience
+            AddMoney(enemy.EnemyBaseStats.MoneyReward);
+
+            // * Add experience
+            AddExperience(enemy.EnemyBaseStats.ExperienceReward);
         }
         #endregion
 

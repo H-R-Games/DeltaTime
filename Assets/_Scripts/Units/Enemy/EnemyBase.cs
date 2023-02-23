@@ -28,6 +28,8 @@ namespace rene_roid_enemy
         #region External Variables
         public event Action<float> OnHit;
         public event Action OnDeath;
+
+        public EnemyBaseStats EnemyBaseStats { get => _enemyBaseStats; }
         #endregion
 
         public virtual void Awake()
@@ -85,6 +87,7 @@ namespace rene_roid_enemy
             if (_health <= 0)
             {
                 OnDeath?.Invoke();
+                print("Enemy died");
                 return;
             }
         }
