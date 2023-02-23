@@ -7,13 +7,17 @@ namespace rene_roid_player {
     public class Item : ScriptableObject
     {
         public string Name;
+        public string Description;
         public Sprite Icon;
-        public int Amount;
+        //public int Amount;
 
         [SerializeReference] public List<ItemBase> Items = new List<ItemBase>();
 
         #region Menu Items
         [ContextMenu(nameof(AddStats))] void AddStats() => Items.Add(new AddStats());
+        [ContextMenu(nameof(HealOnKill))] void HealOnKill() => Items.Add(new HealOnKill());
+        [ContextMenu(nameof(MoveFastWhenLowHealth))] void MoveFastWhenLowHealth() => Items.Add(new MoveFastWhenLowHealth());
+        [ContextMenu(nameof(ChanceToDealExtraHit))] void ChanceToDealExtraHit() => Items.Add(new ChanceToDealExtraHit());
         #endregion
     }
 
@@ -21,26 +25,27 @@ namespace rene_roid_player {
     public class ItemBase
     {
         private bool _isInitialized = false;
-        public virtual void OnGet(PlayerBase player)
+        public virtual void OnGet(PlayerBase player, ItemManager itemManager)
         {
             if (_isInitialized) return;
             _isInitialized = true;
+
+            // Activate item manager item
         }
 
-        public virtual void OnUpdate(PlayerBase player)
-        {
-            
-        }
+        // In update case: Add Component to player (script of the item)
 
-        public virtual void OnRemove(PlayerBase player)
+        public virtual void OnRemove(PlayerBase player, ItemManager itemManager)
         {
-
+            // Deactivate item manager item
         }
     }
 
     [System.Serializable]
     public class AddStats : ItemBase
     {
+        public string Name = "Add Stats";
+
         public float Health;
         public float HealthPercentage;
         public float HealthRegen;
@@ -55,9 +60,9 @@ namespace rene_roid_player {
 
         public AddStats() { }
 
-        public override void OnGet(PlayerBase player)
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
         {
-            base.OnGet(player);
+            base.OnGet(player, itemManager);
             // Add stats to player... To:Do
             if (Health != 0) player.AddHealthFlat(Health);
             if (HealthPercentage != 0) player.AddHealthPercentage(HealthPercentage);
@@ -72,15 +77,9 @@ namespace rene_roid_player {
             if (MovementSpeedPercentage != 0) player.AddMovementSpeedPercentage(MovementSpeedPercentage);
         }
 
-        public override void OnUpdate(PlayerBase player)
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
         {
-            base.OnUpdate(player);
-            // Update stats... To:Do
-        }
-
-        public override void OnRemove(PlayerBase player)
-        {
-            base.OnRemove(player);
+            base.OnRemove(player, itemManager);
             // Remove stats from player... To:Do
             if (Health != 0) player.RemoveHealthFlat(Health);
             if (HealthPercentage != 0) player.RemoveHealthPercentage(HealthPercentage);
@@ -93,6 +92,73 @@ namespace rene_roid_player {
             if (ArmorPercentage != 0) player.RemoveArmorPercentage(ArmorPercentage);
             if (MovementSpeed != 0) player.RemoveMovementSpeedFlat(MovementSpeed);
             if (MovementSpeedPercentage != 0) player.RemoveMovementSpeedPercentage(MovementSpeedPercentage);
+        }
+    }
+
+    [System.Serializable]
+    public class HealOnKill : ItemBase {
+        public string Name = "HealOnKill";
+        public float HealAmount = 10;
+
+        public HealOnKill() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.HealOnKillAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.HealOnKillAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class MoveFastWhenLowHealth : ItemBase {
+        public string Name = "Move Fast When Low Health";
+        public float SpeedBoost = 20f;
+
+        public MoveFastWhenLowHealth() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.MoveFastWhenLowHealthAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.MoveFastWhenLowHealthAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class ChanceToDealExtraHit : ItemBase {
+        public string Name = "Chance To Deal Extra Hit";
+        public float Chance = 0.1f; // 10%
+        public float DamageMultiplier = 1.5f; // 50% more damage
+
+        public ChanceToDealExtraHit() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.ChanceToDealExtraHitAmount += 1;
+        }
+        
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.ChanceToDealExtraHitAmount -= 1;  
         }
     }
 }
