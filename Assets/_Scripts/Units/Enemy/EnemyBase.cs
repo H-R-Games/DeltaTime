@@ -83,11 +83,12 @@ namespace rene_roid_enemy
             if (_armor < 0) damage *= 2 - 100 / (100 - _armor);
 
             _health -= damage;
+            _targetPlayer.OnEnemyHit(damage, this);
 
             if (_health <= 0)
             {
                 OnDeath?.Invoke();
-                print("Enemy died");
+                _targetPlayer.OnEnemyDeath(damage, this);
                 return;
             }
         }
