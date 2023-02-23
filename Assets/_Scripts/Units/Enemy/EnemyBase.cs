@@ -20,7 +20,7 @@ namespace rene_roid_enemy
         [SerializeField] protected BoxCollider2D _boxCollider2D;
         [SerializeField] protected LayerMask _enemyLayer;
         [SerializeField] protected LayerMask _wallLayer;
-        protected PlayerBase _targetPlayer = null;
+        [SerializeField] protected PlayerBase _targetPlayer = null;
         protected int _fixedFrame;
         #endregion
 
