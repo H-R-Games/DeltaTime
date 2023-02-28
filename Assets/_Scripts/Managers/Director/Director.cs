@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using rene_roid_player;
 
 namespace rene_roid
 {
@@ -16,6 +17,7 @@ namespace rene_roid
         private float _weightRange = .2f;
 
         private int _maxNumEnemiesInScene = 400;
+        private PlayerBase _playerBase;
         #endregion
         
         #region External
@@ -29,9 +31,9 @@ namespace rene_roid
         {
             // Order Enemies by cost
             AllEnemies.Sort((x, y) => x.EnemyBaseStats.Cost.CompareTo(y.EnemyBaseStats.Cost));
+            GetCurrentStageEnemies();        
 
-            GetCurrentStageEnemies();
-            
+            _playerBase = FindObjectOfType<PlayerBase>();
         }
 
         void Update()
@@ -181,7 +183,7 @@ namespace rene_roid
         private bool StartSpawning()
         {
             var multiplier = Mathf.RoundToInt(Helpers.FromPercentageToRange(_creditPercentageToStartSpawningPD, 0, CurrentStageEnemies.Count));
-            return CurrentStageEnemies[Mathf.RoundToInt(Helpers.FromPercentageToRange(_creditPercentageToStartSpawningPD, 0, CurrentStageEnemies.Count))].EnemyBaseStats.Cost * multiplier <= _creditsPD;
+            return CurrentStageEnemies[Mathf.RoundToInt(Helpers.FromPercentageToRange(_creditPercentageToStartSpawningPD, 0, CurrentStageEnemies.Count - 1))].EnemyBaseStats.Cost * multiplier <= _creditsPD;
         }
 
 
@@ -197,7 +199,7 @@ namespace rene_roid
             _timeSpawningPD += Time.deltaTime;
             if (_waitBetweenEnemySpawnTimePD + _timeBetweenEnemySpawnPD > Time.time) return; // Wait _timeBetweenEnemiesPD seconds between each enemy spawn
 
-            // Spawn enemy
+            //* Spawn enemy
             _waitBetweenEnemySpawnTimePD = Time.time;
             SpawnEnemy();
 
@@ -225,6 +227,8 @@ namespace rene_roid
             _creditsPD -= enemy2spawn.EnemyBaseStats.Cost;
 
             print($"Spawning enemy: {enemy2spawn.name} | Cost: {enemy2spawn.EnemyBaseStats.Cost} | Credits left: {_creditsPD}");
+
+            var enemy = Instantiate(enemy2spawn, SpawnPosition(), Quaternion.identity);
         }
 
         private EnemyBase ChooseEnemeyToSpawnPD()
@@ -251,7 +255,23 @@ namespace rene_roid
         }
 
         // ----------- Waiting
-        
+
+        private Vector2 SpawnPosition() {
+            // Spawn the enemy in a random position outside the camera view
+            var camera = Helpers.Camera;
+            var cameraPos = camera.transform.position;
+            var cameraSize = camera.orthographicSize;
+            var cameraWidth = cameraSize * camera.aspect;
+
+            var spawnPos = new Vector2(0, _playerBase.transform.position.y + 2);
+            
+            // Get random position outside the camera view in the X axis
+            var randomX = Random.Range(-cameraWidth, cameraWidth);
+            if (randomX > 0) spawnPos.x = cameraPos.x + cameraWidth + 1;
+            else spawnPos.x = cameraPos.x - cameraWidth - 1;
+
+            return spawnPos;
+        }
         #endregion
 
         #region Active Director
@@ -370,7 +390,7 @@ namespace rene_roid
 
             while (_creditsAC > minCost)
             {
-                // Spawn enemy
+                //* Spawn enemy
                 var enemy = enemies[Random.Range(0, enemies.Count)];
                 // Remove credits
                 _creditsAC -= enemy.EnemyBaseStats.Cost;
@@ -509,7 +529,7 @@ namespace rene_roid
             print($"Spawning enemy: {enemy2spawn.name} | Cost: {enemy2spawn.EnemyBaseStats.Cost} | Credits left: {_creditsTED}");
             _enemiesSpawnedPD++;
             _creditsTED -= enemy2spawn.EnemyBaseStats.Cost;
-            // Spawn actual enemy
+            //* Spawn actual enemy
 
             print("Credits left: " + _creditsTED + " | Credits needed: " + CurrentStageEnemies[_minIndexTED].EnemyBaseStats.Cost);
             if (_creditsTED < CurrentStageEnemies[_minIndexTED].EnemyBaseStats.Cost)
