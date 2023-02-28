@@ -1,6 +1,6 @@
 using rene_roid_player;
-using System;
 using UnityEngine;
+using System;
 
 namespace rene_roid_enemy
 {
@@ -23,6 +23,7 @@ namespace rene_roid_enemy
         [SerializeField] protected LayerMask _playerLayer;
         protected PlayerBase _targetPlayer = null;
         protected int _fixedFrame;
+        protected float _rand = 0.1f;
         #endregion
 
         #region External Variables
@@ -37,6 +38,7 @@ namespace rene_roid_enemy
             AwakeEnemyStats();
             _boxCollider2D = GetComponent<BoxCollider2D>();
             _targetPlayer = FindObjectOfType<PlayerBase>();
+            _rand = UnityEngine.Random.Range(-0.2f, 0.2f);
         }
 
         public virtual void Start() { GetPlayerDirection(); }
@@ -67,7 +69,7 @@ namespace rene_roid_enemy
             _health = _enemyBaseStats.Health * _level;
             _damage = _enemyBaseStats.Damage * _level;
             _armor = _enemyBaseStats.Armor * _level;
-            _movementSpeed = _enemyBaseStats.MovementSpeed * _level;
+            _movementSpeed = _enemyBaseStats.MovementSpeed * _level + _rand;
         }
 
         public void LevelUp() { _level++; }

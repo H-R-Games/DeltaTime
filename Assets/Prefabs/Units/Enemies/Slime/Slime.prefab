@@ -179,7 +179,7 @@ MonoBehaviour:
   _targetDistanceNotWatchin: 5
   _targetDistanceUnfollow: 50
   _targetTimeUnfollow: 3
-  _attackCooldown: 1
+  _attackCooldown: 0.5
   _attackAnimTime: 2
 --- !u!61 &3633027455234432501
 BoxCollider2D:

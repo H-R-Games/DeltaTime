@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using rene_roid_player;
+using rene_roid;
 
 namespace rene_roid_enemy
 {
@@ -30,13 +31,7 @@ namespace rene_roid_enemy
                     break;
                 case EnemyStates.Attack:
                     GravityEnemy();
-
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 0.6f)
-                    {
-                        _inRangeAttack = false;
-                        ChangeState(EnemyStates.Move);
-                    }
-
+                    AttackCorrutine();
                     if (!_isStunned) AttackBox();
                     break;
                 case EnemyStates.Stun:
@@ -47,7 +42,7 @@ namespace rene_roid_enemy
                     GravityEnemy();
                     if (!TargetPlayer()) UnTargetPlayer();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= 0.6f) ChangeState(EnemyStates.Attack);
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= 0.6f + _rand) ChangeState(EnemyStates.Attack);
                     if (!_isStunned) FollowerPlayer();
                     // if (!_isStunned) AttackBox();
                     break;
@@ -104,7 +99,7 @@ namespace rene_roid_enemy
         /// </summary>
         private void Horizontal()
         {
-            Vector3 direction = new Vector3(_movementDirection.x, 0, 0);
+            Vector3 direction = new Vector3(_movementDirection.x + _rand, 0, 0);
 
             if (_isGround)
             {
@@ -167,7 +162,7 @@ namespace rene_roid_enemy
         {
             Vector3 directionX = (_targetPlayer.transform.position.x - this.transform.position.x) > 0 ? Vector3.right : Vector3.left;
             if (Vector3.Distance(-new Vector3(0, transform.position.y, 0), new Vector3(0, _targetPlayer.transform.position.y, 0)) > 3) Jump();
-            if (!_isGround && !_walled) transform.Translate(directionX * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
+            if (!_isGround && !_walled) transform.Translate(directionX * _movementSpeed * (_movementSpeedMultiplier + _rand) * Time.deltaTime);
 
             if (_movementDirection.x > 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
             else if (_movementDirection.x < 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
@@ -210,6 +205,22 @@ namespace rene_roid_enemy
                 _timeAttack -= Time.deltaTime * 0.5f;
             }
         }
+
+        IEnumerator AttackCorrutine()
+        {
+            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 0.6f)
+            {
+                ChangeState(EnemyStates.Move);
+                yield break;
+            }
+            ChangeState(EnemyStates.Attack);
+            _lockedTill = Time.time + _attackAnimTime;
+            _onAttack = false;
+            _inRangeAttack = false;
+            yield return Helpers.GetWait(_attackAnimTime);
+            ChangeState(EnemyStates.Move);
+        }
+        
         #endregion
 
         #region Animation
