@@ -103,7 +103,7 @@ namespace hrTeleport
             // Debug.Log("Piesas activas: " + _piecesActivated + " / " + _piecesToActivate);
             if (!_isActive) return;
             if (_isSpwaned && _bossScript == null) _isBossDied = true;
-            if (_timeLoaded >= _timeToFinnishLoad && _isBossDied) _isFinished = true; 
+            if (_timeLoaded >= _timeToFinnishLoad && _isBossDied) _isFinished = true;
             else if (_timeLoaded < _timeToFinnishLoad) _timeLoaded += Time.deltaTime;
         }
     }

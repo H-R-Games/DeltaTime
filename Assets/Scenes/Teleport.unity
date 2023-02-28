@@ -3332,7 +3332,7 @@ MonoBehaviour:
   _playerLayer:
     serializedVersion: 2
     m_Bits: 128
-  _boss: {fileID: 0}
+  _boss: {fileID: 3633027455234432497, guid: 8e1d37a007545f343b365631db614712, type: 3}
   _bossSpawnPoint: {fileID: 855521753}
 --- !u!1 &518986732
 GameObject:
