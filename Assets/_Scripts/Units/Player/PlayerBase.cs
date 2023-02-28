@@ -143,7 +143,7 @@ namespace rene_roid_player
             FallDamage();
         }
 
-        protected void SetPlayerStats()
+        public void SetPlayerStats()
         {
             _currentHealth = _maxStats.Health;
             _currentHealthRegen = _maxStats.HealthRegen;
@@ -198,13 +198,14 @@ namespace rene_roid_player
             {
                 _fallTime += Time.deltaTime;
 
-                if (_fallTime > 0.5f)
+                if (_fallTime > 1f)
                 {
                     _fallDamage = Mathf.Clamp(_fallTime * _fallDamageMultiplier, 0, _maxFallDamagePercentage * _maxStats.Health);
                 }
             }
             else
             {
+                if (_onLadder) _fallDamage = 0;
                 if (_grounded && _fallDamage > 0)
                 {
                     print("Fall Damage: " + _fallDamage);
