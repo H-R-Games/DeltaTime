@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using rene_roid_player;
+using rene_roid_enemy;
 
 namespace hrTeleport
 {
@@ -21,10 +22,12 @@ namespace hrTeleport
         PlayerBase _player;
         BoxCollider2D _collider;
         bool _isBossDied = false;
+        bool _isSpwaned = false;
         bool _isFinished = false;
         bool _isActive = false;
         float _timeLoaded = 0f;
         public static int _piecesActivated = 0;
+        EnemyBase _bossScript;
         List<GameObject> _pieces = new List<GameObject>();
         
         void Start()
@@ -78,6 +81,7 @@ namespace hrTeleport
         {
             ActivateTeleport();
             loadTeleport();
+            Debug.Log(_bossScript);
         }
 
         void ActivateTeleport()
@@ -88,7 +92,9 @@ namespace hrTeleport
             {
                 // Debug.Log("Teleport Activated");
                 _isActive = true;
-                Instantiate(_boss, _bossSpawnPoint.transform.position, Quaternion.identity);
+                var boss = Instantiate(_boss, _bossSpawnPoint.transform.position, Quaternion.identity);
+                _bossScript = boss.GetComponent<EnemyBase>();
+                _isSpwaned = true;
             }
         }
 
@@ -96,6 +102,7 @@ namespace hrTeleport
         {
             // Debug.Log("Piesas activas: " + _piecesActivated + " / " + _piecesToActivate);
             if (!_isActive) return;
+            if (_isSpwaned && _bossScript == null) _isBossDied = true;
             if (_timeLoaded >= _timeToFinnishLoad && _isBossDied) _isFinished = true; 
             else if (_timeLoaded < _timeToFinnishLoad) _timeLoaded += Time.deltaTime;
         }
