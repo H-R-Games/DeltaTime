@@ -1,16 +1,18 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using rene_roid;
+using rene_roid_player;
 
 namespace rene_roid_enemy
 {
-    public class HorizontalEnemy : EnemyBase
+    public class Slime : EnemyBase
     {
-        public override void Start()
+          public override void Start()
         {
             base.Start();
             _enemyType = EnemyType.Horizontal;
             ChangeState(EnemyStates.Move);
+            _anim = GetComponentInChildren<Animator>();
         }
 
         public override void Update() { UpdateState(); }
@@ -28,7 +30,14 @@ namespace rene_roid_enemy
                     break;
                 case EnemyStates.Attack:
                     GravityEnemy();
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceWatchin) ChangeState(EnemyStates.Move);
+
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 0.6f)
+                    {
+                        _inRangeAttack = false;
+                        ChangeState(EnemyStates.Move);
+                    }
+
+                    if (!_isStunned) AttackBox();
                     break;
                 case EnemyStates.Stun:
                     GravityEnemy();
@@ -38,10 +47,14 @@ namespace rene_roid_enemy
                     GravityEnemy();
                     if (!TargetPlayer()) UnTargetPlayer();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _targetDistanceWatchin) ChangeState(EnemyStates.Attack);
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= 0.6f) ChangeState(EnemyStates.Attack);
                     if (!_isStunned) FollowerPlayer();
+                    // if (!_isStunned) AttackBox();
                     break;
             }
+
+            HandleAnimations();
+            ResetCooldown();
         }
 
         public override void ChangeState(EnemyStates newState)
@@ -93,9 +106,22 @@ namespace rene_roid_enemy
         {
             Vector3 direction = new Vector3(_movementDirection.x, 0, 0);
 
-            if (_isGround) _movementDirection = _movementDirection * -1;
-            if (_walled) _movementDirection = _movementDirection * -1;
+            if (_isGround)
+            {
+                this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = _movementDirection.x < 0;
+                _movementDirection = _movementDirection * -1;
+            }
+
+            if (_walled)
+            {
+                this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = _movementDirection.x < 0;
+                _movementDirection = _movementDirection * -1;
+            }
+
             if (!_isStunned) transform.Translate(direction * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
+
+            if (_movementDirection.x > 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
+            else if (_movementDirection.x < 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
         }
         #endregion
         
@@ -142,14 +168,99 @@ namespace rene_roid_enemy
             Vector3 directionX = (_targetPlayer.transform.position.x - this.transform.position.x) > 0 ? Vector3.right : Vector3.left;
             if (Vector3.Distance(-new Vector3(0, transform.position.y, 0), new Vector3(0, _targetPlayer.transform.position.y, 0)) > 3) Jump();
             if (!_isGround && !_walled) transform.Translate(directionX * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
+
+            if (_movementDirection.x > 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
+            else if (_movementDirection.x < 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
+
             _movementDirection = directionX;
         }
         #endregion
         #endregion
 
+        #region Attack
+        [Header("Attack Settings")]
+        [SerializeField] private float _attackCooldown = 1f;
+        float _timeAttack = 0;
+        bool _onAttack, _inRangeAttack;
+
+        private void AttackBox()
+        {   
+            _inRangeAttack = true;
+            if(_timeAttack >= _attackCooldown)
+            {
+                var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
+            
+                foreach (var player in players)
+                {
+                    _onAttack = true;
+                    var playerBase = player.GetComponent<PlayerBase>();
+                    if (playerBase != null) playerBase.TakeDamage(_damage);
+                }
+
+                _timeAttack = 0;
+            } 
+            else _timeAttack += Time.deltaTime * 0.5f;
+        }
+
+        private void ResetCooldown()
+        {
+            if (_enemyState != EnemyStates.Attack) 
+            {
+                if (_timeAttack < 0) _timeAttack = 0; 
+                _timeAttack -= Time.deltaTime * 0.5f;
+            }
+        }
+        #endregion
+
+        #region Animation
+        private Animator _anim;
+            private int _currentAnimation = 0;
+            private float _lockedTill;
+            private static readonly int Idle = Animator.StringToHash("Idle");
+            private static readonly int Run = Animator.StringToHash("Run");
+            private static readonly int Death = Animator.StringToHash("Die");
+            private static readonly int StunnedAnim = Animator.StringToHash("Stunned");
+            private static readonly int AttackAnim = Animator.StringToHash("Attack");
+
+            [SerializeField] private float _attackAnimTime = 0.5f;
+
+            private void HandleAnimations()
+            {
+                var state = GetState();
+                ResetFlags();
+                if (state == _currentAnimation) return;
+
+                _anim.Play(state, 0); //_anim.CrossFade(state, 0, 0);
+                _currentAnimation = state;
+
+                int GetState()
+                {
+                    if (Time.time < _lockedTill) return _currentAnimation;
+
+                    // ANY SKILL PRESSED
+                    // if (_isStunned) return LockState(UltimateAttackAnim, 5);
+                    if (_onAttack) return LockState(AttackAnim, _attackAnimTime);
+
+                    // NO SKILL PRESSED
+                    return Run;
+
+                    // State and time to lock
+                    int LockState(int s, float t)
+                    {
+                        _lockedTill = Time.time + t;
+                        return s;
+                    }
+
+                }
+
+                void ResetFlags() { _onAttack = false; }
+            }
+        #endregion
+
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
+            if (_targetPlayer == null) return;
             var p = (_targetPlayer.transform.position - this.transform.position).normalized;
             bool watchin = (p.x > 0 && _movementDirection.x > 0) || (p.x < 0 && _movementDirection.x < 0);
             bool isRange = Vector3.Distance(transform.position, _targetPlayer.transform.position) < (watchin ? _targetDistanceWatchin : _targetDistanceNotWatchin);
