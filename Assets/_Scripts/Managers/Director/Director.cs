@@ -40,6 +40,7 @@ namespace rene_roid
         {
             if (CurrentStageEnemies.Count < 0) return;
             DirectorsUpdate();
+            LevelUpDirectors();
         }
 
         #region Directors
@@ -311,6 +312,7 @@ namespace rene_roid
                 case ActiveDirectorState.Innactive:
                     break;
                 case ActiveDirectorState.Activate:
+                    _creditsAC += _creditsOnActivateAC;
                     ActiveDirectorChangeState(ActiveDirectorState.Spawning);
                     break;
                 case ActiveDirectorState.Spawning:
@@ -564,6 +566,20 @@ namespace rene_roid
         }
 
         #endregion
+
+        private int _lastLevel = 0;
+        private void LevelUpDirectors() {
+            if (_lastLevel == _directorsLevel) return;
+            _lastLevel = _directorsLevel;
+
+            // Level up directors
+            _creditsPerSecondPD = _creditsPerSecondPD + (_creditsPerSecondPerLevelPD * _directorsLevel);
+            
+            _creditsOnActivateAC = _creditsOnActivateAC + (_creditsOnActivateAC * _directorsLevel);
+
+            _creditsOnActivateTED = _creditsOnActivateTED + (_creditsOnActivateTED * _directorsLevel);
+            _creditsPerSecondTED = _creditsPerSecondTED + (_creditsPerSecondTED * _directorsLevel);
+        }
 
         private void GetWheightRange()
         {
