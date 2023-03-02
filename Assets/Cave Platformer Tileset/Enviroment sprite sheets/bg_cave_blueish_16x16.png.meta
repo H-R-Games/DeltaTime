@@ -500,8 +500,8 @@ TextureImporter:
       name: bg_cave_blueish_16x16_16
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
+        x: 32
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -521,7 +521,7 @@ TextureImporter:
       name: bg_cave_blueish_16x16_17
       rect:
         serializedVersion: 2
-        x: 16
+        x: 0
         y: 0
         width: 16
         height: 16
@@ -542,7 +542,7 @@ TextureImporter:
       name: bg_cave_blueish_16x16_18
       rect:
         serializedVersion: 2
-        x: 32
+        x: 16
         y: 0
         width: 16
         height: 16
@@ -559,10 +559,31 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: bg_cave_blueish_16x16_19
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96340b299b2f4e844ab077283e2bf063
+      internalID: 1958339867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: c65769e8590770643a76571b68776e25
     internalID: 0
     vertices: []
     indices: 
@@ -587,6 +608,7 @@ TextureImporter:
       bg_cave_blueish_16x16_16: 21300032
       bg_cave_blueish_16x16_17: 21300034
       bg_cave_blueish_16x16_10: 21300020
+      bg_cave_blueish_16x16_19: 1958339867
       bg_cave_blueish_16x16_2: 21300004
       bg_cave_blueish_16x16_5: 21300010
   spritePackingTag: 
