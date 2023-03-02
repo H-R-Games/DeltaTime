@@ -8,7 +8,7 @@ namespace rene_roid_enemy
 {
     public class Slime : EnemyBase
     {
-          public override void Start()
+        public override void Start()
         {
             base.Start();
             _enemyType = EnemyType.Horizontal;
@@ -31,8 +31,8 @@ namespace rene_roid_enemy
                     break;
                 case EnemyStates.Attack:
                     GravityEnemy();
-                    AttackCorrutine();
                     if (!_isStunned) AttackBox();
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 0.6f + _rand) ChangeState(EnemyStates.Move);
                     break;
                 case EnemyStates.Stun:
                     GravityEnemy();
@@ -44,12 +44,11 @@ namespace rene_roid_enemy
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= 0.6f + _rand) ChangeState(EnemyStates.Attack);
                     if (!_isStunned) FollowerPlayer();
-                    // if (!_isStunned) AttackBox();
                     break;
             }
 
             HandleAnimations();
-            ResetCooldown();
+            // ResetCooldown();
         }
 
         public override void ChangeState(EnemyStates newState)
@@ -174,53 +173,42 @@ namespace rene_roid_enemy
 
         #region Attack
         [Header("Attack Settings")]
-        [SerializeField] private float _attackCooldown = 1f;
-        float _timeAttack = 0;
-        bool _onAttack, _inRangeAttack;
+        [SerializeField] private float _attackCooldown = 0.1f;
+        // float _timeAttack = 0;
+        bool _onAttack;
 
         private void AttackBox()
         {   
-            _inRangeAttack = true;
-            if(_timeAttack >= _attackCooldown)
+            if (_enemyState == EnemyStates.Attack && !_onAttack)
             {
-                var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
-            
-                foreach (var player in players)
-                {
-                    _onAttack = true;
-                    var playerBase = player.GetComponent<PlayerBase>();
-                    if (playerBase != null) playerBase.TakeDamage(_damage);
-                }
-
-                _timeAttack = 0;
-            } 
-            else _timeAttack += Time.deltaTime * 0.5f;
-        }
-
-        private void ResetCooldown()
-        {
-            if (_enemyState != EnemyStates.Attack) 
-            {
-                if (_timeAttack < 0) _timeAttack = 0; 
-                _timeAttack -= Time.deltaTime * 0.5f;
+                _onAttack = true;
+                StartCoroutine(Attack());
+                // _timeAttack = _attackCooldown;
             }
         }
 
-        IEnumerator AttackCorrutine()
+        IEnumerator Attack()
         {
-            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 0.6f)
-            {
-                ChangeState(EnemyStates.Move);
-                yield break;
-            }
-            ChangeState(EnemyStates.Attack);
-            _lockedTill = Time.time + _attackAnimTime;
-            _onAttack = false;
-            _inRangeAttack = false;
-            yield return Helpers.GetWait(_attackAnimTime);
-            ChangeState(EnemyStates.Move);
-        }
+            yield return Helpers.GetWait(_attackCooldown);
+            var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
         
+            foreach (var player in players)
+            {
+                _onAttack = true;
+                var playerBase = player.GetComponent<PlayerBase>();
+                if (playerBase != null) playerBase.TakeDamage(_damage);
+            }
+            _onAttack = false;
+        }
+
+        // private void ResetCooldown()
+        // {
+        //     if (_enemyState != EnemyStates.Attack) 
+        //     {
+        //         if (_timeAttack < 0) _timeAttack = 0; 
+        //         _timeAttack -= Time.deltaTime * 0.5f;
+        //     }
+        // }        
         #endregion
 
         #region Animation

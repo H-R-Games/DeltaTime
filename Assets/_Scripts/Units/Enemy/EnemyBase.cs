@@ -7,7 +7,7 @@ namespace rene_roid_enemy
     [RequireComponent(typeof(BoxCollider2D))]
     public class EnemyBase : MonoBehaviour
     {
-        public enum EnemyStates { Idle, Move, Attack, Stun, Target, KnockBack }
+        public enum EnemyStates { Idle, Move, Attack, Stun, Target, KnockBack, Dead, Attack2 }
         public enum EnemyType { Horizontal, Flying, Boss }
 
         [Header("Enemy stats")]
@@ -28,7 +28,6 @@ namespace rene_roid_enemy
 
         #region External Variables
         public event Action<float> OnHit;
-        public event Action OnDeath;
 
         public EnemyBaseStats EnemyBaseStats { get => _enemyBaseStats; }
         #endregion
@@ -87,9 +86,13 @@ namespace rene_roid_enemy
             _health -= damage;
             _targetPlayer.OnEnemyHit(damage, this);
 
+            Debug.Log("Enemy health: " + _health);
+
             if (_health <= 0)
             {
-                OnDeath?.Invoke();
+                _health = 0;
+                // this.gameObject.SetActive(false);
+                Destroy(this.gameObject);
                 _targetPlayer.OnEnemyDeath(damage, this);
                 return;
             }
