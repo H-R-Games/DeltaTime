@@ -1,4 +1,5 @@
 using rene_roid;
+using rene_roid_enemy;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,6 +37,7 @@ namespace rene_roid_player
         public event Action UltimateAttack;
 
         public PlayerBaseStats PlayerStats => _baseStats;
+        public FrameInput FrameInput => _input.FrameInput;
         public Vector2 Input => _frameInput.Move;
         public Vector2 Speed => _speed;
         public Vector2 GroundNormal => _groundNormal;
@@ -62,6 +64,11 @@ namespace rene_roid_player
         }
         #endregion
 
+        private void OnEnable() {
+            // EnemyBase.OnHit += OnEnemyHit;
+            // EnemyBase.OnDeath += OnEnemyDeath;
+        }
+
         public virtual void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
@@ -73,7 +80,7 @@ namespace rene_roid_player
 
         public virtual void Start()
         {
-
+            _itemManager = GetComponent<ItemManager>();
         }
 
 
@@ -133,6 +140,7 @@ namespace rene_roid_player
         protected void UpdatePlayerStats()
         {
             ConstantHealing();
+            FallDamage();
         }
 
         protected void SetPlayerStats()
@@ -163,7 +171,54 @@ namespace rene_roid_player
             _maxStats.Damage = (_baseStats.Damage + ((_level - 1) * _baseStats.DamagePerLevel));
             _maxStats.Armor = (_baseStats.Armor + ((_level - 1) * _baseStats.ArmorPerLevel)) * (1 + _extraArmorPercentage) + _extraFlatArmor;
             _maxStats.MovementSpeed = (_baseStats.MovementSpeed + ((_level - 1) * _baseStats.MovementSpeedPerLevel)) * (1 + _extraMovementSpeedPercentage) + _extraFlatMovementSpeed;
+
+            UpdateCurrentStats();
         }
+
+        /// <summary>
+        /// Updates current stats (cleanse any buffs/debuffs)
+        /// </summary>
+        protected void UpdateCurrentStats() {
+            _currentHealthRegen = _maxStats.HealthRegen;
+            _currentDamage = _maxStats.Damage;
+            _currentArmor = _maxStats.Armor;
+            _currentMovementSpeed = _maxStats.MovementSpeed;
+        }
+
+        #region Fall Damage
+        [Header("Fall Damage")]
+        [SerializeField] protected float _fallDamageMultiplier = 5f;
+        private float _maxFallDamagePercentage = 0.95f;
+        private float _fallDamage = 0;
+        private float _fallTime = 0f;
+
+        protected void FallDamage()
+        {
+            if (_speed.y < 0 && !_grounded)
+            {
+                _fallTime += Time.deltaTime;
+
+                if (_fallTime > 0.5f)
+                {
+                    _fallDamage = Mathf.Clamp(_fallTime * _fallDamageMultiplier, 0, _maxFallDamagePercentage * _maxStats.Health);
+                }
+            }
+            else
+            {
+                if (_grounded && _fallDamage > 0)
+                {
+                    print("Fall Damage: " + _fallDamage);
+                    _fallDamage = Mathf.Clamp(_fallDamage, 0, 10);
+                    _fallDamage = Helpers.FromRangeToRange(_fallDamage, 0, 10, 0, _currentHealth * _maxFallDamagePercentage);
+                    TakeDamage(_fallDamage);
+                    _fallDamage = 0;
+                }
+
+                _fallTime = 0f;
+            }
+        }
+        #endregion
+
 
         #region Add Stats
 
@@ -372,10 +427,35 @@ namespace rene_roid_player
         public float CurrentArmor => _currentArmor;
         public float CurrentMovementSpeed => _currentMovementSpeed;
         #endregion
+
+        #region Experience
+        [Header("Experience")]
+        private float _currentExperience = 0;
+        private float _experienceToNextLevel = 100;
+        private float _experienceMultiplier = 1.37f;
+
+        public void AddExperience(float experience)
+        {
+            _currentExperience += experience;
+            if (_currentExperience >= _experienceToNextLevel)
+            {
+                LevelUp();
+
+                // Remove the experience that was used to level up
+                _currentExperience -= _experienceToNextLevel;
+
+                // Increase the experience needed to level up
+                _experienceToNextLevel *= _experienceMultiplier;
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region Player Skills
         [Header("Player Skills")]
+        public float LastSkillProcCoefficient = 1;
         [Header("Cooldowns")]
         public float BasicAttackCooldown = 0.5f;
         public float Skill1Cooldown = 1;
@@ -402,6 +482,12 @@ namespace rene_roid_player
         protected int _skill2FrameWasPressed;
         protected int _ultimateFrameWasPressed;
 
+        // Getts
+        public float BasicAttackTimer => _basicAttackTimer;
+        public float Skill1Timer => _skill1Timer;
+        public float Skill2Timer => _skill2Timer;
+        public float UltimateTimer => _ultimateTimer;
+
         [Header("Time Between Skills")]
         public float _basicAttackTimeLock = 0.5f;
         public float _skill1TimeLock = 0.5f;
@@ -423,7 +509,7 @@ namespace rene_roid_player
             _ultimateFrameWasPressed = -_ultimateFrames;
         }
 
-        protected void GatherSkillInput()
+        protected void GatherSkillInput() // TODO: Get proc coeficient
         {
             if ((_frameInput.BasicAttackDown || _frameInput.BasicAttackHeld) && _basicAttackReady)
             {
@@ -556,20 +642,44 @@ namespace rene_roid_player
 
         #region Item Management
         [Header("Item Management")]
-        public List<Item> _items = new List<Item>();
+        public float Money = 0;
+        public ItemManager _itemManager;
+        public List<Item> Items = new List<Item>();
+
+        public void AddMoney(float amount) => Money += amount;
+
+        public void RemoveMoney(float amount) => Money -= amount;
 
         public void AddItem(Item item)
         {
-            _items.Add(item);
-            item.Items.ForEach(i => i.OnGet(this));
+            Items.Add(item);
+            item.Items.ForEach(i => i.OnGet(this, _itemManager));
         }
 
         // private void UpdateItems() => _items.ForEach(i => i.Items.ForEach(i => i.OnUpdate(this)));
 
         public void RemoveItem(Item item)
         {
-            _items.Remove(item);
-            item.Items.ForEach(i => i.OnRemove(this));
+            Items.Remove(item);
+            item.Items.ForEach(i => i.OnRemove(this, _itemManager));
+        }
+
+        public virtual void OnEnemyHit(float damage, EnemyBase enemy) 
+        {
+            print("Hit enemy for " + damage + " damage!");
+            _itemManager.OnHit(damage, enemy);
+        }
+
+        public virtual void OnEnemyDeath(float damage, EnemyBase enemy)
+        {
+            print("Killed enemy  " + enemy.name + " for " + damage + " damage!");
+            _itemManager.OnKill(damage, enemy);
+
+            // ? Chance to get experience
+            AddMoney(enemy.EnemyBaseStats.MoneyReward);
+
+            // * Add experience
+            AddExperience(enemy.EnemyBaseStats.ExperienceReward);
         }
         #endregion
 
@@ -583,6 +693,7 @@ namespace rene_roid_player
         protected void FixedMovement()
         {
             _fixedFrame++;
+            if (_fixedFrame > int.MaxValue - 100) _fixedFrame = 0;
 
             CheckCollisions();
             HandleCollisions();
@@ -668,6 +779,8 @@ namespace rene_roid_player
             }
         }
 
+
+        private Coroutine _c;
         // TODO: Make this more efficient
         protected virtual void FallThroughFloor()
         {
@@ -685,7 +798,7 @@ namespace rene_roid_player
 
                     // If player is on top of _oneWayFloor layer then ignore floor collision and fall through
                     // Activate the collision again after a short delay
-                    StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
+                    _c = StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
                 }
             }
         }
@@ -705,7 +818,7 @@ namespace rene_roid_player
 
                 // If player is on top of _oneWayFloor layer then ignore floor collision and fall through
                 // Activate the collision again after a short delay
-                StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
+                _c = StartCoroutine(ChangeLayerAfterDelay(hit.collider, 0.1f));
             }
         }
 
@@ -720,8 +833,6 @@ namespace rene_roid_player
             if (hit != null || hit2 != null)
             {
                 StartCoroutine(ChangeLayerAfterDelay(collider, 0.05f));
-
-                print("IN");
             }
             else
             {
@@ -729,9 +840,9 @@ namespace rene_roid_player
                 var layer = LayerMask.NameToLayer("OneWayFloor");
                 // Change layer of hit
                 collider.gameObject.layer = layer;
-
-                print("OUT");
             }
+
+            
         }
         #endregion
 

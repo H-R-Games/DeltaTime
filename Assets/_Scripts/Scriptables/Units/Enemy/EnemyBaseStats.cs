@@ -20,6 +20,12 @@ namespace rene_roid_enemy {
         [Tooltip("The enemy's base movement speed")]
         public float MovementSpeed = 6f;
 
+        [Tooltip("The enemy's money reward")]
+        public int MoneyReward = 10;
+
+        [Tooltip("The enemy's experience reward")]
+        public int ExperienceReward = 10;
+
 
         [Header("Leveling stats")]
         [Tooltip("The enemy's health per level")]
@@ -33,5 +39,11 @@ namespace rene_roid_enemy {
 
         [Tooltip("The enemy's movement speed per level")]
         public float MovementSpeedPerLevel = 0f;
+
+        [Tooltip("The enemy's money reward per level")]
+        public int MoneyRewardPerLevel = 2;
+
+        [Tooltip("The enemy's experience reward per level")]
+        public int ExperienceRewardPerLevel = 2;
     }
 }

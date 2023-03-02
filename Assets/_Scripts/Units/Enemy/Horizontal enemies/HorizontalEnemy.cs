@@ -28,8 +28,7 @@ namespace rene_roid_enemy
                     break;
                 case EnemyStates.Attack:
                     GravityEnemy();
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _attackRangeDistance) ChangeState(EnemyStates.Move);
-                    if (!_isStunned) AttackRange();
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceWatchin) ChangeState(EnemyStates.Move);
                     break;
                 case EnemyStates.Stun:
                     GravityEnemy();
@@ -39,7 +38,7 @@ namespace rene_roid_enemy
                     GravityEnemy();
                     if (!TargetPlayer()) UnTargetPlayer();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackRangeDistance) ChangeState(EnemyStates.Attack);
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _targetDistanceWatchin) ChangeState(EnemyStates.Attack);
                     if (!_isStunned) FollowerPlayer();
                     break;
             }
@@ -99,18 +98,7 @@ namespace rene_roid_enemy
             if (!_isStunned) transform.Translate(direction * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
         }
         #endregion
-
-        #region Vertical
-        /// <summary>
-        /// Function creates gravity for the enemy
-        /// </summary>
-        private void GravityEnemy()
-        {
-            Mathf.Clamp(_gravity, -_gravity, _gravity);
-            if (!_grounded) transform.Translate(new Vector3(0, _gravity * Time.deltaTime, 0));
-        }
-        #endregion
-
+        
         #region Target Player
         [Header("Target Player Settings")]
         [SerializeField] private float _targetDistanceWatchin = 10f;
@@ -179,9 +167,6 @@ namespace rene_roid_enemy
 
             Gizmos.color = Color.white;
             Gizmos.DrawRay((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0), Vector2.down * 5);
-
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, _attackRangeDistance);
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(transform.position, Vector2.up * 5 + (Vector2)transform.position);
