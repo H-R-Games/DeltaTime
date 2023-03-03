@@ -48,7 +48,6 @@ namespace rene_roid_enemy
             }
 
             HandleAnimations();
-            // ResetCooldown();
         }
 
         public override void ChangeState(EnemyStates newState)
@@ -173,8 +172,9 @@ namespace rene_roid_enemy
 
         #region Attack
         [Header("Attack Settings")]
-        [SerializeField] private float _attackCooldown = 0.1f;
-        // float _timeAttack = 0;
+        [SerializeField] private float _attackStop = 2f;
+        [SerializeField] private float _cooldownAttack = 1f;
+        float _timeAttack = 0;
         bool _onAttack;
 
         private void AttackBox()
@@ -183,15 +183,16 @@ namespace rene_roid_enemy
             {
                 _onAttack = true;
                 StartCoroutine(Attack());
-                // _timeAttack = _attackCooldown;
             }
         }
 
         IEnumerator Attack()
         {
-            yield return Helpers.GetWait(_attackCooldown);
+            ChangeState(EnemyStates.Idle);
+            yield return Helpers.GetWait(_attackStop);
+
             var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
-        
+
             foreach (var player in players)
             {
                 _onAttack = true;
@@ -199,16 +200,9 @@ namespace rene_roid_enemy
                 if (playerBase != null) playerBase.TakeDamage(_damage);
             }
             _onAttack = false;
-        }
-
-        // private void ResetCooldown()
-        // {
-        //     if (_enemyState != EnemyStates.Attack) 
-        //     {
-        //         if (_timeAttack < 0) _timeAttack = 0; 
-        //         _timeAttack -= Time.deltaTime * 0.5f;
-        //     }
-        // }        
+            _timeAttack = 0;
+            ChangeState(EnemyStates.Target);
+        }      
         #endregion
 
         #region Animation
