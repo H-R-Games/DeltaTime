@@ -3784,7 +3784,7 @@ BoxCollider2D:
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -0.5}
   m_SpriteTilingProperty:
@@ -3842,8 +3842,11 @@ MonoBehaviour:
   _boundsMax: {x: 23.9, y: 18.6}
   _wormBodyPrefab: {fileID: 1850729202}
   _bodyParts: 10
-  _bodyPartDistance: 1
+  _bodyPartDistance: 0
   _wormPastPositions: []
+  _wormPastPositionsTime: []
+  _bodyFollowDelay: 0.15
+  _bodyFirstFollowDelay: 0.15
 --- !u!1001 &659571085
 PrefabInstance:
   m_ObjectHideFlags: 0

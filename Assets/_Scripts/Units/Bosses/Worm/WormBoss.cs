@@ -67,6 +67,10 @@ namespace rene_roid_enemy
             // Fill array of worm last positions
             _wormPastPositions.Insert(0, transform.position);
             if (_wormPastPositions.Count > _bodyParts) _wormPastPositions.RemoveAt(1000);
+
+            // Fill array of worm last positions time
+            _wormPastPositionsTime.Insert(0, Time.deltaTime);
+            if (_wormPastPositionsTime.Count > _bodyParts) _wormPastPositionsTime.RemoveAt(1000);
             BodyFollow();
 
             // Check if the enemy is in bounds
@@ -175,6 +179,9 @@ namespace rene_roid_enemy
         [SerializeField] private float _bodyPartDistance = 1;
         private List<GameObject> _wormBodyParts = new List<GameObject>();
         [SerializeField] private List<Vector2> _wormPastPositions = new List<Vector2>();
+        [SerializeField] private List<float> _wormPastPositionsTime = new List<float>();
+        [SerializeField] private float _bodyFollowDelay = 0.15f;
+        [SerializeField] private float _bodyFirstFollowDelay = 0.15f;
 
         private void CreateWormBody()
         {
@@ -190,22 +197,53 @@ namespace rene_roid_enemy
             for (var i = 0; i < 1000; i++)
             {
                 _wormPastPositions.Add(transform.position);
+                _wormPastPositionsTime.Add(Time.deltaTime);
             }
 
         }
 
         private void BodyFollow() {
+            // for (int i = 0; i < _wormBodyParts.Count; i++)
+            // {
+            //     var n = i * 2;
+            //     print(n);
+            //     var bodyPart = _wormBodyParts[i];
+            //     var pastPosition = _wormPastPositions[i + n];
+
+            //     bodyPart.transform.position = Vector2.MoveTowards(bodyPart.transform.position, pastPosition, _movementSpeed * Time.deltaTime);
+
+            //     // Get direction
+            //     var dir = pastPosition - _wormPastPositions[i + n + 1];
+            //     dir.Normalize();
+
+            //     // Rotate body part
+            //     bodyPart.transform.rotation = Quaternion.LookRotation(Vector3.forward, dir);
+            // }
+
             for (int i = 0; i < _wormBodyParts.Count; i++)
             {
-                var n = i * 2;
-                print(n);
                 var bodyPart = _wormBodyParts[i];
-                var pastPosition = _wormPastPositions[i + n];
+                var time_diff = _bodyFollowDelay * i + _bodyFirstFollowDelay;
+
+                var time_pos = 0;
+                var t_calc = 0f;
+                for (int j = 0; j < _wormPastPositionsTime.Count; j++)
+                {
+                    t_calc += _wormPastPositionsTime[j];
+
+                    if (t_calc > time_diff)
+                    {
+                        time_pos = j;
+                        break;
+                    }
+                }
+
+                var pastPosition = _wormPastPositions[(int)time_pos];
 
                 bodyPart.transform.position = Vector2.MoveTowards(bodyPart.transform.position, pastPosition, _movementSpeed * Time.deltaTime);
 
                 // Get direction
-                var dir = pastPosition - _wormPastPositions[i + n + 1];
+                var dir = pastPosition - _wormPastPositions[(int)time_pos + 1];
                 dir.Normalize();
 
                 // Rotate body part
