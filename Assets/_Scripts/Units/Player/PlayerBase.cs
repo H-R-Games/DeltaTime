@@ -1067,7 +1067,7 @@ namespace rene_roid_player
 
 
         // Jump
-        protected int _maxAirJumps = 100; // Max amount of jumps the player can do in the air. 0 = No air jumps
+        protected int _maxAirJumps = 1; // Max amount of jumps the player can do in the air. 0 = No air jumps
         protected float _jumpForce = 36; // Inmediate force applied to the player when jumping
         protected float _maxFallSpeed = 40; // Max speed the player can fall at
         protected float _fallAcceleration = 100; // Acceleration applied to the player when falling
