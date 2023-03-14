@@ -6,7 +6,7 @@ using rene_roid;
 
 namespace rene_roid_enemy
 {
-    public class Baby : EnemyBase
+    public class BlackPlague : EnemyBase
     {
         public override void Start()
         {
