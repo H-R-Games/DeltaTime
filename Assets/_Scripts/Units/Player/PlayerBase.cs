@@ -37,6 +37,7 @@ namespace rene_roid_player
         public event Action UltimateAttack;
 
         public PlayerBaseStats PlayerStats => _baseStats;
+        public FrameInput FrameInput => _input.FrameInput;
         public Vector2 Input => _frameInput.Move;
         public Vector2 Speed => _speed;
         public Vector2 GroundNormal => _groundNormal;
@@ -217,6 +218,7 @@ namespace rene_roid_player
             }
         }
         #endregion
+
 
         #region Add Stats
 
@@ -425,6 +427,30 @@ namespace rene_roid_player
         public float CurrentArmor => _currentArmor;
         public float CurrentMovementSpeed => _currentMovementSpeed;
         #endregion
+
+        #region Experience
+        [Header("Experience")]
+        private float _currentExperience = 0;
+        private float _experienceToNextLevel = 100;
+        private float _experienceMultiplier = 1.37f;
+
+        public void AddExperience(float experience)
+        {
+            _currentExperience += experience;
+            if (_currentExperience >= _experienceToNextLevel)
+            {
+                LevelUp();
+
+                // Remove the experience that was used to level up
+                _currentExperience -= _experienceToNextLevel;
+
+                // Increase the experience needed to level up
+                _experienceToNextLevel *= _experienceMultiplier;
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region Player Skills
@@ -455,6 +481,12 @@ namespace rene_roid_player
         protected int _skill1FrameWasPressed;
         protected int _skill2FrameWasPressed;
         protected int _ultimateFrameWasPressed;
+
+        // Getts
+        public float BasicAttackTimer => _basicAttackTimer;
+        public float Skill1Timer => _skill1Timer;
+        public float Skill2Timer => _skill2Timer;
+        public float UltimateTimer => _ultimateTimer;
 
         [Header("Time Between Skills")]
         public float _basicAttackTimeLock = 0.5f;
@@ -610,8 +642,13 @@ namespace rene_roid_player
 
         #region Item Management
         [Header("Item Management")]
+        public float Money = 0;
         public ItemManager _itemManager;
         public List<Item> Items = new List<Item>();
+
+        public void AddMoney(float amount) => Money += amount;
+
+        public void RemoveMoney(float amount) => Money -= amount;
 
         public void AddItem(Item item)
         {
@@ -637,6 +674,12 @@ namespace rene_roid_player
         {
             print("Killed enemy  " + enemy.name + " for " + damage + " damage!");
             _itemManager.OnKill(damage, enemy);
+
+            // ? Chance to get experience
+            AddMoney(enemy.EnemyBaseStats.MoneyReward);
+
+            // * Add experience
+            AddExperience(enemy.EnemyBaseStats.ExperienceReward);
         }
         #endregion
 
@@ -1084,27 +1127,27 @@ namespace rene_roid_player
 #if UNITY_EDITOR
         protected void OnDrawGizmos()
         {
-            Gizmos.color = Color.white;
-            var bounds = GetWallDetectionBounds();
-            Gizmos.DrawWireCube(bounds.center, bounds.size);
+            // Gizmos.color = Color.white;
+            // var bounds = GetWallDetectionBounds();
+            // Gizmos.DrawWireCube(bounds.center, bounds.size);
 
-            Gizmos.color = Color.green;
-            var bound = new Bounds(_rb.position, _col.size);
-            Gizmos.DrawWireCube(bound.center, bound.size);
+            // Gizmos.color = Color.green;
+            // var bound = new Bounds(_rb.position, _col.size);
+            // Gizmos.DrawWireCube(bound.center, bound.size);
 
-            Gizmos.color = Color.red;
-            var down = new Vector2(_col.bounds.center.x, -_col.bounds.center.y + 1);
-            Gizmos.DrawLine(_col.bounds.center, down);
+            // Gizmos.color = Color.red;
+            // var down = new Vector2(_col.bounds.center.x, -_col.bounds.center.y + 1);
+            // Gizmos.DrawLine(_col.bounds.center, down);
 
-            Gizmos.color = Color.blue;
-            var boundF = new Bounds(_rb.position, _col.size / 0.9f); // Player bounds
-            Gizmos.DrawWireCube(boundF.center, boundF.size);
+            // Gizmos.color = Color.blue;
+            // var boundF = new Bounds(_rb.position, _col.size / 0.9f); // Player bounds
+            // Gizmos.DrawWireCube(boundF.center, boundF.size);
 
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.up);
+            // Gizmos.color = Color.yellow;
+            // Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.up);
 
-            Gizmos.color = Color.magenta;
-            Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.down);
+            // Gizmos.color = Color.magenta;
+            // Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.down);
         }
 
         protected void OnValidate()

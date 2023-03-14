@@ -1,13 +1,13 @@
 using rene_roid_player;
-using System;
 using UnityEngine;
+using System;
 
 namespace rene_roid_enemy
 {
     [RequireComponent(typeof(BoxCollider2D))]
     public class EnemyBase : MonoBehaviour
     {
-        public enum EnemyStates { Idle, Move, Attack, Stun, Target, KnockBack }
+        public enum EnemyStates { Idle, Move, Attack, Stun, Target, KnockBack, Dead, Attack2 }
         public enum EnemyType { Horizontal, Flying, Boss }
 
         [Header("Enemy stats")]
@@ -23,11 +23,13 @@ namespace rene_roid_enemy
         [SerializeField] protected LayerMask _playerLayer;
         protected PlayerBase _targetPlayer = null;
         protected int _fixedFrame;
+        protected float _rand = 0.1f;
         #endregion
 
         #region External Variables
         public event Action<float> OnHit;
-        public event Action OnDeath;
+
+        public EnemyBaseStats EnemyBaseStats { get => _enemyBaseStats; }
         #endregion
 
         public virtual void Awake()
@@ -35,6 +37,7 @@ namespace rene_roid_enemy
             AwakeEnemyStats();
             _boxCollider2D = GetComponent<BoxCollider2D>();
             _targetPlayer = FindObjectOfType<PlayerBase>();
+            _rand = UnityEngine.Random.Range(-0.2f, 0.2f);
         }
 
         public virtual void Start() { GetPlayerDirection(); }
@@ -65,7 +68,7 @@ namespace rene_roid_enemy
             _health = _enemyBaseStats.Health * _level;
             _damage = _enemyBaseStats.Damage * _level;
             _armor = _enemyBaseStats.Armor * _level;
-            _movementSpeed = _enemyBaseStats.MovementSpeed * _level;
+            _movementSpeed = _enemyBaseStats.MovementSpeed * _level + _rand;
         }
 
         public void LevelUp() { _level++; }
@@ -81,10 +84,16 @@ namespace rene_roid_enemy
             if (_armor < 0) damage *= 2 - 100 / (100 - _armor);
 
             _health -= damage;
+            _targetPlayer.OnEnemyHit(damage, this);
+
+            Debug.Log("Enemy health: " + _health);
 
             if (_health <= 0)
             {
-                OnDeath?.Invoke();
+                _health = 0;
+                // this.gameObject.SetActive(false);
+                Destroy(this.gameObject);
+                _targetPlayer.OnEnemyDeath(damage, this);
                 return;
             }
         }
