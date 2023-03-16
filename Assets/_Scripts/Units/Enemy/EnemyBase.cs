@@ -118,11 +118,13 @@ namespace rene_roid_enemy
         protected Vector2 _movementDirection = Vector2.right;
         protected float _knockBackForce = 0;
         protected float _knockBackDuration = 1;
+        protected float _onHitRange = 0.5f;
         protected bool _grounded = false;
         protected bool _walled = false;
         protected bool _isStunned = false;
         protected bool _isGround = true;
         protected bool _isBlockedUp = false;
+        protected bool _onHit = false;
 
         #region Raycast
         private RaycastHit2D _feetRaycast;
@@ -130,6 +132,7 @@ namespace rene_roid_enemy
         private RaycastHit2D _grounRaycast;
         private RaycastHit2D _detectUp;
         protected RaycastHit2D _hitTarget;
+        protected RaycastHit2D _hitPlayer;
 
         /// <summary>
         /// Check the collisions of the enemy with the environment
@@ -149,6 +152,9 @@ namespace rene_roid_enemy
             _isBlockedUp = _detectUp.collider != null;
 
             _hitTarget = Physics2D.Linecast(this.transform.position, _targetPlayer.transform.position, ~_enemyLayer);
+
+            _hitPlayer = Physics2D.Raycast(transform.position, _movementDirection, _boxCollider2D.bounds.extents.y + _onHitRange, _playerLayer);
+            _onHit = _hitPlayer.collider != null;
         }
 
         /// <summary>
