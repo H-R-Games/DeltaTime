@@ -17,6 +17,11 @@ namespace rene_roid_enemy
             base.Start();
         }
 
+        public override void Update()
+        {
+            base.Update();
+        }
+
         public override void UpdateState()
         {
             FireballAttack();
@@ -41,9 +46,7 @@ namespace rene_roid_enemy
                     fireball.GetComponent<Fireball>().FireballStats = new Fireball.FireballStatsStruct(_fireballSpeed, _fireballDamage);
                     fireball.GetComponent<Fireball>().PlayerTransform = _targetPlayer.transform;
                     _fireballCooldownTimer = _fireballCooldown;
-
                 }
-                    StartCoroutine(FireBreath());
             }
             else
             {
@@ -80,5 +83,59 @@ namespace rene_roid_enemy
         }
 
         #endregion
+
+        #region Tail Slam!
+        [Header("Tail Slam!")]
+        [SerializeField] private GameObject _tailSlamPrefab;
+        [SerializeField] private GameObject _tailSlamSprite;
+        [SerializeField] private float _tailSlamTime;
+        [SerializeField] private float _tailStartRot;
+
+        private float _tailSlamCooldownTimer = 0;
+        private float _tailSlamCooldown = 5;
+
+        private void TailSlam() {
+            if (_tailSlamCooldownTimer <= 0) {
+                StartCoroutine(TailSlamAttack());
+                _tailSlamCooldownTimer = _tailSlamCooldown;
+            }
+            else {
+                _tailSlamCooldownTimer -= Time.deltaTime;
+            }
+        }
+
+        private IEnumerator TailSlamAttack() {
+            var t = .0f;
+
+            var rotT = 90;
+            var rot =_tailStartRot;
+            while (t < _tailSlamTime) {
+                t += Time.deltaTime;
+                // Rotate tail
+                rot = Mathf.Lerp(_tailStartRot, rotT, t / _tailSlamTime);
+                // Move tail
+                _tailSlamPrefab.transform.rotation = Quaternion.Euler(0, 0, rot);
+                _tailSlamSprite.transform.rotation = Quaternion.Euler(0, 0, rot);
+                yield return null;
+            }
+
+            yield return Helpers.GetWait(1);
+
+            // Return tail to start position
+            t = .0f;
+            var rotS = 90;
+            while (t < _tailSlamTime) {
+                t += Time.deltaTime;
+                // Rotate tail
+                rot = Mathf.Lerp(rotS, _tailStartRot, t / _tailSlamTime);
+                // Move tail
+                _tailSlamPrefab.transform.rotation = Quaternion.Euler(0, 0, rot);
+                _tailSlamSprite.transform.rotation = Quaternion.Euler(0, 0, rot);
+                yield return null;
+            }
+
+            yield return null;
+        }
+        #endregion    
     }
 }
