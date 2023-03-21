@@ -122,7 +122,11 @@ namespace rene_roid_enemy
             switch (num)
             {
                 case 0:
-                    StartCoroutine(SporesAttack());
+                    if (_timerSpores > Time.deltaTime) 
+                    {
+                        _timerSpores = 0;
+                        StartCoroutine(SporesAttack());
+                    } else  _timerSpores += Time.deltaTime * 0.5f;
                     break;
                 case 1:
                     StartCoroutine(ClapAttack());
