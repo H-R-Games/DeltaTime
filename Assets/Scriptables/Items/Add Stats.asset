@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Add stats
   Icon: {fileID: 0}
-  Amount: 0
   Items:
   - rid: 5796726606670069760
   references:
@@ -23,6 +22,7 @@ MonoBehaviour:
     - rid: 5796726606670069760
       type: {class: AddStats, ns: rene_roid_player, asm: Assembly-CSharp}
       data:
+        Name: Add Stats
         Health: 0
         HealthPercentage: 0.5
         HealthRegen: 0
