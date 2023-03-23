@@ -651,8 +651,8 @@ MonoBehaviour:
   _attackDistance: 5
   _attackTime: 1
   _proyectileSpawn: {fileID: 81032336}
-  _proyectile: {fileID: 5132182661232465902, guid: 76165ae0e47182343a1eb16abd6a8068, type: 3}
-  _attackCooldown: 1
+  _proyectile: {fileID: 8567508084927154936, guid: 76165ae0e47182343a1eb16abd6a8068, type: 3}
+  _attackCooldown: 2
 --- !u!61 &242640730
 BoxCollider2D:
   m_ObjectHideFlags: 0

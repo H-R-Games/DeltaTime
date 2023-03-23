@@ -39,7 +39,7 @@ namespace rene_roid_enemy
                     GravityEnemy();
                     if (!TargetPlayer()) UnTargetPlayer();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= 0.6f + _rand) ChangeState(EnemyStates.Attack);
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackDistance + _rand) ChangeState(EnemyStates.Attack);
                     if (!_isStunned) FollowerPlayer();
                     break;
             }
@@ -179,17 +179,29 @@ namespace rene_roid_enemy
 
         private void Attack()
         {
-            _timeAttack += Time.deltaTime;
+            _timeAttack += Time.deltaTime * 0.5f;
+
+            Debug.Log(_timeAttack);
+
             if (_timeAttack >= _attackTime)
             {
                 if (_proyectileSpawn == null || _proyectile == null) return;
 
                 _timeAttack = 0;
                 _attackCooldown = 0;
-                
-                Instantiate(_proyectile, _proyectileSpawn.position, Quaternion.identity);
-                ChangeState(EnemyStates.Move);
+
+                if(Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) < 3f) return;
+
+                StartCoroutine(AttackCoroutine());
             }
+        }
+
+        IEnumerator AttackCoroutine()
+        {
+            var proyectil = Instantiate(_proyectile, _proyectileSpawn.position, Quaternion.identity);
+            proyectil.GetComponent<ProyectilContreoller>().SetValues(_damage, _movementDirection);
+            yield return Helpers.GetWait(0.5f);
+            ChangeState(EnemyStates.Target);
         }
 
         #endregion
@@ -200,8 +212,8 @@ namespace rene_roid_enemy
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            // if (_targetPlayer == null) return;
-            // var p = (_targetPlayer.transform.position - this.transform.position).normalized;
+            if (_targetPlayer == null) return;
+            var p = (_targetPlayer.transform.position - this.transform.position).normalized;
             // bool watchin = (p.x > 0 && _movementDirection.x > 0) || (p.x < 0 && _movementDirection.x < 0);
             // bool isRange = Vector3.Distance(transform.position, _targetPlayer.transform.position) < (watchin ? _targetDistanceWatchin : _targetDistanceNotWatchin);
 
@@ -209,11 +221,11 @@ namespace rene_roid_enemy
             // Gizmos.DrawWireSphere(transform.position, _targetDistanceNotWatchin);
             // Gizmos.DrawWireSphere(transform.position, (isRange ? _targetDistanceWatchin : _targetDistanceNotWatchin));
 
-            // Vector2 dir = _movementDirection;
+            Vector2 dir = _movementDirection;
             // Vector2 dir2 = p;
 
             // Gizmos.color = isRange ? Color.blue : Color.green;
-            // Gizmos.DrawLine((Vector2)transform.position, (dir) * (isRange ? _targetDistanceWatchin : _targetDistanceNotWatchin) + (Vector2)transform.position);
+            // Gizmos.DrawLine((Vector2)transform.position, (dir) + (Vector2)transform.position);
             // Gizmos.DrawLine((Vector2)transform.position, (dir2) * (isRange ? _targetDistanceWatchin : _targetDistanceNotWatchin) + (Vector2)transform.position);
 
             // Gizmos.color = Color.white;
@@ -222,8 +234,11 @@ namespace rene_roid_enemy
             // Gizmos.color = Color.yellow;
             // Gizmos.DrawLine(transform.position, Vector2.up * 5 + (Vector2)transform.position);
 
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, 3f);
+
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, new Vector3(transform.position.x + _attackDistance, transform.position.y, transform.position.z));
+            // Gizmos.DrawLine((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0) + Vector2.left, _boxCollider2D.bounds.extents.x + 5);
         }
 #endif
     }

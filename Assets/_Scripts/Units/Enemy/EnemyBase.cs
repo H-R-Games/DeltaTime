@@ -153,7 +153,8 @@ namespace rene_roid_enemy
 
             _hitTarget = Physics2D.Linecast(this.transform.position, _targetPlayer.transform.position, ~_enemyLayer);
 
-            _hitPlayer = Physics2D.Raycast(transform.position, _movementDirection, _boxCollider2D.bounds.extents.y + _onHitRange, _playerLayer);
+            // _hitPlayer = Physics2D.Raycast(transform.position, _movementDirection, _boxCollider2D.bounds.extents.y + _onHitRange, _playerLayer);
+            _hitPlayer = Physics2D.Raycast((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0) + Vector2.left, new Vector2(_onHitRange + _boxCollider2D.bounds.extents.x , 0), _playerLayer);
             _onHit = _hitPlayer.collider != null;
         }
 
