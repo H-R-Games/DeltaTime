@@ -9322,6 +9322,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _directorsLevel: 1
   _currentStage: 1
+  _wallLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  _groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
   AllEnemies:
   - {fileID: 3633027455234432500, guid: 8e1d37a007545f343b365631db614712, type: 3}
   - {fileID: 3633027455234432500, guid: 8e1d37a007545f343b365631db614712, type: 3}
@@ -9329,7 +9335,7 @@ MonoBehaviour:
   - {fileID: 3633027455234432500, guid: 8e1d37a007545f343b365631db614712, type: 3}
   - {fileID: 3633027455234432500, guid: 8e1d37a007545f343b365631db614712, type: 3}
   CurrentEnemiesInSceneCount: 0
-  _passiveDirectorState: 0
+  _passiveDirectorState: 1
   _creditsPD: 120
   _creditsPerSecondPD: 0.2
   _creditsPerSecondPerLevelPD: 0.2
@@ -13733,7 +13739,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2009023804
 Transform:
   m_ObjectHideFlags: 0

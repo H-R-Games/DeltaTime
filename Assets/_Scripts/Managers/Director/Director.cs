@@ -18,6 +18,8 @@ namespace rene_roid
 
         private int _maxNumEnemiesInScene = 400;
         private PlayerBase _playerBase;
+        [SerializeField] private LayerMask _wallLayerMask;
+        [SerializeField] private LayerMask _groundLayerMask;
         #endregion
         
         #region External
@@ -269,6 +271,25 @@ namespace rene_roid
             var randomX = Random.Range(-cameraWidth, cameraWidth);
             if (randomX > 0) spawnPos.x = cameraPos.x + cameraWidth + 1;
             else spawnPos.x = cameraPos.x - cameraWidth - 1;
+
+            var validPos = false;
+            while (!validPos) {
+                // Linecast to check if there is a wall collider from the player to the spawn position
+                var hit = Physics2D.Linecast(_playerBase.transform.position, spawnPos, _wallLayerMask);
+
+                if (hit.collider != null) {
+                    // If there is a wall collider try changing the position to a nearer one
+                    if (randomX > 0) spawnPos.x -= 1;
+                    else spawnPos.x += 1;
+                }
+                else validPos = true;
+            }
+
+            // Linecast to the ground and spawn the enemy on the ground + 1
+            var hit2 = Physics2D.Linecast(spawnPos, spawnPos + Vector2.down * 100, 
+            _groundLayerMask
+            );
+            if (hit2.collider != null) spawnPos.y = hit2.point.y + 1;
 
             return spawnPos;
         }
