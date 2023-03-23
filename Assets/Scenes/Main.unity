@@ -3265,6 +3265,7 @@ MonoBehaviour:
   _skill1TimeLock: 0.5
   _skill2TimeLock: 0.5
   _ultimateTimeLock: 0.5
+  Money: 0
   _itemManager: {fileID: 0}
   Items: []
   _wallLayerMask:
@@ -3686,7 +3687,7 @@ MonoBehaviour:
   _basicAttack1Time: 0.2
   _specialAttack1Time: 1
   _specialAttack2Time: 10
-  _ultimateAttackTime: 0
+  _ultimateAttackTime: 3.5
   _footstepClips: []
   _tiltChangeSpeed: 0.05
   _ladderClips: []
@@ -3735,9 +3736,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 1706718068}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 356f6085b2cb4f74d979691bc950ba5e, type: 3}
+  m_Script: {fileID: 11500000, guid: a31fafec0a158374d8c7bda01223491c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemyBaseStats: {fileID: 11400000, guid: 8b55b99e437c4004a83b9d9e809aa472, type: 2}
+  _enemyState: 0
+  _enemyType: 0
+  _boxCollider2D: {fileID: 1706718072}
+  _enemyLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  _level: 1
+  _health: 0
+  _damage: 0
+  _armor: 0
+  _movementSpeed: 0
+  _movementSpeedMultiplier: 1
+  _headLevel: 0.5
+  _gravity: -9.15
+  _timeStun: 0
+  _activateJump: 0
+  _jumpForce: 5
 --- !u!212 &1706718071
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4390,9 +4415,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 1894865537}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 356f6085b2cb4f74d979691bc950ba5e, type: 3}
+  m_Script: {fileID: 11500000, guid: a31fafec0a158374d8c7bda01223491c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemyBaseStats: {fileID: 11400000, guid: 8b55b99e437c4004a83b9d9e809aa472, type: 2}
+  _enemyState: 0
+  _enemyType: 0
+  _boxCollider2D: {fileID: 1894865540}
+  _enemyLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  _level: 1
+  _health: 0
+  _damage: 0
+  _armor: 0
+  _movementSpeed: 0
+  _movementSpeedMultiplier: 1
+  _headLevel: 0.5
+  _gravity: -9.15
+  _timeStun: 0
+  _activateJump: 0
+  _jumpForce: 5
 --- !u!212 &1894865542
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4536,9 +4585,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 1904942044}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 356f6085b2cb4f74d979691bc950ba5e, type: 3}
+  m_Script: {fileID: 11500000, guid: a31fafec0a158374d8c7bda01223491c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemyBaseStats: {fileID: 11400000, guid: 8b55b99e437c4004a83b9d9e809aa472, type: 2}
+  _enemyState: 0
+  _enemyType: 0
+  _boxCollider2D: {fileID: 1904942047}
+  _enemyLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  _level: 1
+  _health: 0
+  _damage: 0
+  _armor: 0
+  _movementSpeed: 0
+  _movementSpeedMultiplier: 1
+  _headLevel: 0.5
+  _gravity: -9.15
+  _timeStun: 0
+  _activateJump: 0
+  _jumpForce: 5
 --- !u!212 &1904942049
 SpriteRenderer:
   m_ObjectHideFlags: 0
