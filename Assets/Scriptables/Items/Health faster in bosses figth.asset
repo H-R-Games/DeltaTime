@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0153aa0e63baa5499bb722b1317e95c, type: 3}
+  m_Name: Health faster in bosses figth
+  m_EditorClassIdentifier: 
+  Name: First aid kit
+  Icon: {fileID: 1710866707, guid: 74491201a3887bf4d8f8e8828aa746d9, type: 3}
+  Items: []
+  references:
+    version: 2
+    RefIds: []
