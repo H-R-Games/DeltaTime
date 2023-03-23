@@ -172,6 +172,9 @@ namespace rene_roid_player
             transform.position = target;
 
             // Detect enemies in the collider
+            var playerdir = _renderer.flipX ? -1 : 1;
+            // If the player is facing left, then we want to flip the collider
+            _dashCollider.transform.localScale = new Vector3(playerdir, 1, 1);
             var enemies = Physics2D.OverlapBoxAll(_dashCollider.transform.position, _dashCollider.size, 0, _enemyLayer);
             yield return Helpers.GetWait(0.1f);
             foreach (var enemy in enemies)
