@@ -40,13 +40,16 @@ namespace rene_roid_enemy
         {
             if (_fireballCooldownTimer <= 0)
             {
-                for (int i = 0; i < 3; i++)
-                {
-                    var fireball = Instantiate(_fireballPrefab, _fireballSpawnPoint.position, Quaternion.identity);
-                    fireball.GetComponent<Fireball>().FireballStats = new Fireball.FireballStatsStruct(_fireballSpeed, _fireballDamage);
-                    fireball.GetComponent<Fireball>().PlayerTransform = _targetPlayer.transform;
-                    _fireballCooldownTimer = _fireballCooldown;
-                }
+                // for (int i = 0; i < 3; i++)
+                // {
+                //     var fireball = Instantiate(_fireballPrefab, _fireballSpawnPoint.position, Quaternion.identity);
+                //     fireball.GetComponent<Fireball>().FireballStats = new Fireball.FireballStatsStruct(_fireballSpeed, _fireballDamage);
+                //     fireball.GetComponent<Fireball>().PlayerTransform = _targetPlayer.transform;
+                //     _fireballCooldownTimer = _fireballCooldown;
+                // }
+
+                StartCoroutine(FireBreath());
+                _fireballCooldownTimer = _fireballCooldown;
             }
             else
             {
@@ -69,6 +72,7 @@ namespace rene_roid_enemy
 
             var dist = Vector3.Distance(_firebreathStartPosition.position, _firebreathEndPosition.position);
             var t = 0f;
+            firebreath.transform.localScale = new Vector2(0, 1);
             while (t < 1) {
                 t += Time.deltaTime / _firebreathSpeed;
                 
