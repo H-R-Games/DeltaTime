@@ -78,7 +78,7 @@ namespace rene_roid_enemy
         /// <summary>
         /// Function to take damage from the player
         /// </summary>
-        public void TakeDamage(float damage)
+        public virtual void TakeDamage(float damage)
         {
             if (_armor > 0) damage *= 100 / (100 + _armor);
             if (_armor < 0) damage *= 2 - 100 / (100 - _armor);
