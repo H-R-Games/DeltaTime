@@ -131,13 +131,17 @@ namespace rene_roid_player
         {
             base.Skill2();
 
-            if (_isOniMode) {
+            if (_isOniMode)
+            {
                 var rad = 10;
                 var enemies = Physics2D.OverlapCircleAll(transform.position, rad, _enemyLayer);
 
                 StartCoroutine(SuperCoolDash(enemies));
-            } else {
-                StartCoroutine(RemoveControlAny(.1f));
+            }
+            else
+            {
+                //StartCoroutine(RemoveControlAny(.1f));
+                this.TakeAwayControl();
                 _rb.velocity = new Vector2(0, _rb.velocity.y);
 
                 var dist = 10;
@@ -145,9 +149,61 @@ namespace rene_roid_player
                 var cms = _currentMovementSpeed;
 
                 var c = 1 + ((cms / ms) / ms);
-                StartCoroutine(Dash(dist * c, 0.1f));
+                var final = dist * c;
+                StartCoroutine(SpeedDash(final, 0.1f));
+                //StartCoroutine(Dash(final, 0.1f));
+            }
+        }
+
+        public float ESPIID = 100f;
+        private IEnumerator SpeedDash(float dist, float t)
+        {
+            var dir = _renderer.flipX ? -1 : 1;
+            var pos = transform.position;
+            var target = new Vector2(pos.x + (dist *dir), pos.y);
+            print(pos.x+" "+target);
+            var ray = Physics2D.Linecast(pos, target, _wallLayerMask);
+            if (ray.collider != null)
+            {
+                target = ray.point;
             }
 
+            yield return Helpers.GetWait(t);
+            var smoke = Instantiate(_smokePrefab, transform.position, Quaternion.identity);
+            var render = smoke.GetComponent<SpriteRenderer>();
+            render.flipX = _renderer.flipX;
+
+            Destroy(smoke, 1f);
+
+            // Get player direction in vector 2
+            var playerdirvec = new Vector2(dir, 0);
+            //var ms = playerdirvec * ESPIID;
+            //target.x *= dir;
+            print(target);
+
+            while (Vector2.Distance(transform.position, target) > 0.1f)
+            {
+                transform.position = (Vector2.MoveTowards(transform.position, target, ESPIID * Time.deltaTime));
+                yield return null;
+            }
+
+            ReturnControl();
+
+            // Detect enemies in the collider
+            var playerdir = _renderer.flipX ? -1 : 1;
+            // If the player is facing left, then we want to flip the collider
+            _dashCollider.transform.localScale = new Vector3(playerdir, 1, 1);
+            var enemies = Physics2D.OverlapBoxAll(_dashCollider.transform.position, _dashCollider.size, 0, _enemyLayer);
+            yield return Helpers.GetWait(0.1f);
+            foreach (var enemy in enemies)
+            {
+                var enemyBase = enemy.GetComponent<EnemyBase>();
+                if (enemyBase == null) continue;
+                enemyBase.TakeDamage(DealDamage(_skill2Percentage, _procCoSkill2));
+                print("Dash hit to: " + enemyBase.name);
+            }
+
+            yield return null;
         }
 
 
@@ -186,7 +242,8 @@ namespace rene_roid_player
             }
         }
 
-        private IEnumerator SuperCoolDash(Collider2D[] enemies) {
+        private IEnumerator SuperCoolDash(Collider2D[] enemies)
+        {
             this.TakeAwayControl(true);
             _rb.velocity = new Vector2(0, 0);
             // For each enemy in the collider

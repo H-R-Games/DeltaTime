@@ -5985,14 +5985,14 @@ MonoBehaviour:
   _wallLayer:
     serializedVersion: 2
     m_Bits: 256
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
   _level: 1
   _health: 0
   _damage: 0
   _armor: 0
   _movementSpeed: 0
-  _attackRangeDistance: 1
-  _attackRageDamage: 1
-  _attackRangeCooldown: 0.1
   _movementSpeedMultiplier: 1
   _headLevel: 0.5
   _gravity: -9.15
@@ -7346,14 +7346,14 @@ MonoBehaviour:
   _wallLayer:
     serializedVersion: 2
     m_Bits: 256
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
   _level: 1
   _health: 0
   _damage: 0
   _armor: 0
   _movementSpeed: 0
-  _attackRangeDistance: 1
-  _attackRageDamage: 1
-  _attackRangeCooldown: 0.1
   _movementSpeedMultiplier: 1
   _headLevel: 0.5
   _gravity: -9.15
@@ -8718,14 +8718,14 @@ MonoBehaviour:
   _wallLayer:
     serializedVersion: 2
     m_Bits: 256
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
   _level: 1
   _health: 0
   _damage: 0
   _armor: 0
   _movementSpeed: 0
-  _attackRangeDistance: 1
-  _attackRageDamage: 1
-  _attackRangeCooldown: 0.1
   _movementSpeedMultiplier: 1
   _headLevel: 0.5
   _gravity: -9.15
@@ -9916,6 +9916,7 @@ MonoBehaviour:
   _procCoSkill2: 1
   _smokePrefab: {fileID: 3114603624422194117, guid: 4ad024df4afa2594aaafc31823be1328, type: 3}
   _dashCollider: {fileID: 1834788825}
+  ESPIID: 250
   _ultimatePercentage: 5
   _procCoUltimate: 2
 --- !u!114 &1394134800
@@ -11801,14 +11802,14 @@ MonoBehaviour:
   _wallLayer:
     serializedVersion: 2
     m_Bits: 256
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
   _level: 1
   _health: 0
   _damage: 0
   _armor: 0
   _movementSpeed: 0
-  _attackRangeDistance: 1
-  _attackRageDamage: 1
-  _attackRangeCooldown: 0.1
   _movementSpeedMultiplier: 1
   _headLevel: 0.5
   _gravity: -9.15
