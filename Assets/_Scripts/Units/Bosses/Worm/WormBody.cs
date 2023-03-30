@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace rene_roid_enemy {    
-    public class WormBody : MonoBehaviour
+    public class WormBody : EnemyBase
     {
         public Transform Target;
         private Transform _head;
@@ -12,11 +12,11 @@ namespace rene_roid_enemy {
             Target = target;
         }
 
-        private void Start() {
+        public override void Start() {
             _head = transform.GetChild(1);
         }
 
-        private void Update() {
+        public override void Update() {
             if (Target == null) return;
 
             var rot = Quaternion.Lerp(_head.rotation, Target.rotation, Time.deltaTime * ((Worm.GetWormSpeed() / 3) * 2));
@@ -32,6 +32,11 @@ namespace rene_roid_enemy {
             pos -= dist;
             transform.position = pos;
 
+        }
+
+        public override void TakeDamage(float damage)
+        {
+            Worm.TakeDamage(damage);
         }
     }
 }
