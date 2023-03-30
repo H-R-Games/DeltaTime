@@ -80,13 +80,13 @@ namespace rene_roid_enemy
         /// </summary>
         public void TakeDamage(float damage)
         {
+            print("Enemy took damage: " + damage);
+
             if (_armor > 0) damage *= 100 / (100 + _armor);
             if (_armor < 0) damage *= 2 - 100 / (100 - _armor);
 
             _health -= damage;
             _targetPlayer.OnEnemyHit(damage, this);
-
-            Debug.Log("Enemy health: " + _health);
 
             if (_health <= 0)
             {
