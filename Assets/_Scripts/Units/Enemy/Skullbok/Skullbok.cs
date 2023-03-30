@@ -14,6 +14,7 @@ public override void Start()
             _enemyType = EnemyType.Horizontal;
             ChangeState(EnemyStates.Move);
             _anim = GetComponentInChildren<Animator>();
+            _attaclCollider.enabled = false;
         }
 
         public override void Update() { UpdateState(); }
@@ -113,8 +114,8 @@ public override void Start()
 
             if (!_isStunned) transform.Translate(direction * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
 
-            if (_movementDirection.x > 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
-            else if (_movementDirection.x < 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
+            if (_movementDirection.x > 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) transform.localScale = new Vector3(1, 1, 1);
+            else if (_movementDirection.x < 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) transform.localScale = new Vector3(-1, 1, 1);
         }
         #endregion
         
@@ -162,8 +163,8 @@ public override void Start()
             if (Vector3.Distance(-new Vector3(0, transform.position.y, 0), new Vector3(0, _targetPlayer.transform.position.y, 0)) > 3) Jump();
             if (!_isGround && !_walled) transform.Translate(directionX * _movementSpeed * (_movementSpeedMultiplier + _rand) * Time.deltaTime);
 
-            if (_movementDirection.x > 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
-            else if (_movementDirection.x < 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
+            if (_movementDirection.x > 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) transform.localScale = new Vector3(1, 1, 1);
+            else if (_movementDirection.x < 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) transform.localScale = new Vector3(-1, 1, 1);
 
             _movementDirection = directionX;
         }
@@ -174,6 +175,7 @@ public override void Start()
         [Header("Attack Settings")]
         [SerializeField] private float _attackStop = 2f;
         [SerializeField] private float _cooldownAttack = 1f;
+        [SerializeField] private BoxCollider2D _attaclCollider;
         float _timeAttack = 0;
         bool _onAttack;
 
@@ -191,14 +193,17 @@ public override void Start()
             ChangeState(EnemyStates.Idle);
             yield return Helpers.GetWait(_attackStop);
 
-            var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
+            var players = Physics2D.OverlapBoxAll(_attaclCollider.bounds.center, _attaclCollider.bounds.size, 0, _playerLayer);
 
             foreach (var player in players)
             {
                 _onAttack = true;
+                _attaclCollider.enabled = true;
                 var playerBase = player.GetComponent<PlayerBase>();
                 if (playerBase != null) playerBase.TakeDamage(_damage);
             }
+
+            _attaclCollider.enabled = false;
             _onAttack = false;
             _timeAttack = 0;
             ChangeState(EnemyStates.Target);
