@@ -155,7 +155,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!251 &49733165
 PlatformEffector2D:
@@ -507,7 +507,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &298882581
 BoxCollider2D:
@@ -652,7 +652,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 17
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!251 &381557618
 PlatformEffector2D:
@@ -1263,7 +1263,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!251 &795245600
 PlatformEffector2D:
@@ -1394,7 +1394,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!251 &821796037
 PlatformEffector2D:
@@ -1974,7 +1974,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1028132528
 BoxCollider2D:
@@ -2229,7 +2229,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1233043771
 BoxCollider2D:
@@ -2341,7 +2341,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!251 &1238992790
 PlatformEffector2D:
@@ -2472,7 +2472,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!251 &1239783195
 PlatformEffector2D:
@@ -2782,7 +2782,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 18
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1261913397
 BoxCollider2D:
@@ -3268,7 +3268,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!251 &1438876735
 PlatformEffector2D:
@@ -3399,7 +3399,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!251 &1454094421
 PlatformEffector2D:
@@ -3896,7 +3896,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 1
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1706718070
 MonoBehaviour:
@@ -3907,19 +3907,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 1706718068}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 356f6085b2cb4f74d979691bc950ba5e, type: 3}
+  m_Script: {fileID: 11500000, guid: a31fafec0a158374d8c7bda01223491c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyBaseStats: {fileID: 11400000, guid: 8b55b99e437c4004a83b9d9e809aa472, type: 2}
-  _boxCollider2D: {fileID: 0}
+  _enemyState: 0
+  _enemyType: 0
+  _boxCollider2D: {fileID: 1706718072}
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
   _level: 1
   _health: 0
   _damage: 0
   _armor: 0
   _movementSpeed: 0
+  _attackRangeDistance: 1
+  _attackRageDamage: 1
+  _attackRangeCooldown: 0.1
+  _movementSpeedMultiplier: 1
+  _headLevel: 0.5
+  _gravity: -9.15
+  _timeStun: 0
+  _activateJump: 0
+  _jumpForce: 5
 --- !u!212 &1706718071
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4051,7 +4065,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1726357853
 BoxCollider2D:
@@ -4179,7 +4193,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1394134794}
-  - {fileID: 1706718069}
   - {fileID: 1926819070}
   - {fileID: 1848060103}
   - {fileID: 1028132527}
@@ -4197,6 +4210,7 @@ Transform:
   - {fileID: 1788597262}
   - {fileID: 381557617}
   - {fileID: 1261913395}
+  - {fileID: 1706718069}
   - {fileID: 1894865538}
   - {fileID: 1904942045}
   m_Father: {fileID: 0}
@@ -4234,7 +4248,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!251 &1788597263
 PlatformEffector2D:
@@ -4364,7 +4378,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1848060104
 SpriteRenderer:
@@ -4535,19 +4549,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 1894865537}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 356f6085b2cb4f74d979691bc950ba5e, type: 3}
+  m_Script: {fileID: 11500000, guid: a31fafec0a158374d8c7bda01223491c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyBaseStats: {fileID: 11400000, guid: 8b55b99e437c4004a83b9d9e809aa472, type: 2}
-  _boxCollider2D: {fileID: 0}
+  _enemyState: 0
+  _enemyType: 0
+  _boxCollider2D: {fileID: 1894865540}
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
   _level: 1
   _health: 0
   _damage: 0
   _armor: 0
   _movementSpeed: 0
+  _attackRangeDistance: 1
+  _attackRageDamage: 1
+  _attackRangeCooldown: 0.1
+  _movementSpeedMultiplier: 1
+  _headLevel: 0.5
+  _gravity: -9.15
+  _timeStun: 0
+  _activateJump: 0
+  _jumpForce: 5
 --- !u!212 &1894865542
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4691,19 +4719,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 1904942044}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 356f6085b2cb4f74d979691bc950ba5e, type: 3}
+  m_Script: {fileID: 11500000, guid: a31fafec0a158374d8c7bda01223491c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyBaseStats: {fileID: 11400000, guid: 8b55b99e437c4004a83b9d9e809aa472, type: 2}
-  _boxCollider2D: {fileID: 0}
+  _enemyState: 0
+  _enemyType: 0
+  _boxCollider2D: {fileID: 1904942047}
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
   _level: 1
   _health: 0
   _damage: 0
   _armor: 0
   _movementSpeed: 0
+  _attackRangeDistance: 1
+  _attackRageDamage: 1
+  _attackRangeCooldown: 0.1
+  _movementSpeedMultiplier: 1
+  _headLevel: 0.5
+  _gravity: -9.15
+  _timeStun: 0
+  _activateJump: 0
+  _jumpForce: 5
 --- !u!212 &1904942049
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4789,7 +4831,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1926819071
 SpriteRenderer:
@@ -4968,7 +5010,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1727938693}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!251 &2104105366
 PlatformEffector2D:
