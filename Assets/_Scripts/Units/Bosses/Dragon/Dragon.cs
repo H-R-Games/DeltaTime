@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using rene_roid;
+using rene_roid_player;
 
 namespace rene_roid_enemy
 {
@@ -32,7 +33,7 @@ namespace rene_roid_enemy
         [SerializeField] private GameObject _fireballPrefab;
         [SerializeField] private Transform _fireballSpawnPoint;
         [SerializeField] private float _fireballSpeed;
-        [SerializeField] private float _fireballDamage;
+        [SerializeField] private float _fireballDamageMultiplier = 0.5f;
         [SerializeField] private float _fireballCooldown;
         private float _fireballCooldownTimer = 0;
 
@@ -40,16 +41,16 @@ namespace rene_roid_enemy
         {
             if (_fireballCooldownTimer <= 0)
             {
-                // for (int i = 0; i < 3; i++)
-                // {
-                //     var fireball = Instantiate(_fireballPrefab, _fireballSpawnPoint.position, Quaternion.identity);
-                //     fireball.GetComponent<Fireball>().FireballStats = new Fireball.FireballStatsStruct(_fireballSpeed, _fireballDamage);
-                //     fireball.GetComponent<Fireball>().PlayerTransform = _targetPlayer.transform;
-                //     _fireballCooldownTimer = _fireballCooldown;
-                // }
+                for (int i = 0; i < 3; i++)
+                {
+                    var fireball = Instantiate(_fireballPrefab, _fireballSpawnPoint.position, Quaternion.identity);
+                    fireball.GetComponent<Fireball>().FireballStats = new Fireball.FireballStatsStruct(_fireballSpeed, _damage * _fireballDamageMultiplier);
+                    fireball.GetComponent<Fireball>().PlayerTransform = _targetPlayer.transform;
+                    _fireballCooldownTimer = _fireballCooldown;
+                }
 
                 // StartCoroutine(FireBreath());
-                PetrifiedEnemy();
+                // PetrifiedEnemy();
                 _fireballCooldownTimer = _fireballCooldown;
             }
             else
@@ -64,7 +65,7 @@ namespace rene_roid_enemy
         [SerializeField] private Transform _firebreathStartPosition;
         [SerializeField] private Transform _firebreathEndPosition;
         [SerializeField] private float _firebreathSpeed;
-        [SerializeField] private float _firebreathDamage;
+        [SerializeField] private float _firebreathDamageMultiplier = 0.8f;
         [SerializeField] private float _firebreathCooldown;
         private float _firebreathCooldownTimer = 0;
 
@@ -72,7 +73,7 @@ namespace rene_roid_enemy
             var firebreath = Instantiate(_firebreathPrefab, _firebreathStartPosition.position, Quaternion.identity);
 
             var script = firebreath.GetComponentInChildren<Firebreath>();
-            script.Damage = _firebreathDamage;
+            script.Damage = _damage * _firebreathDamageMultiplier;
 
             var dist = Vector3.Distance(_firebreathStartPosition.position, _firebreathEndPosition.position);
             var t = 0f;
@@ -98,6 +99,7 @@ namespace rene_roid_enemy
         [SerializeField] private GameObject _tailSlamSprite;
         [SerializeField] private float _tailSlamTime;
         [SerializeField] private float _tailStartRot;
+        [SerializeField] private float _tailDamageMultiplier = 2;
 
         private float _tailSlamCooldownTimer = 0;
         private float _tailSlamCooldown = 5;
@@ -115,6 +117,8 @@ namespace rene_roid_enemy
         private IEnumerator TailSlamAttack() {
             var t = .0f;
 
+            var col = _tailSlamPrefab.GetComponent<Collider2D>();
+
             var rotT = 90;
             var rot =_tailStartRot;
             while (t < _tailSlamTime) {
@@ -124,6 +128,16 @@ namespace rene_roid_enemy
                 // Move tail
                 _tailSlamPrefab.transform.rotation = Quaternion.Euler(0, 0, rot);
                 _tailSlamSprite.transform.rotation = Quaternion.Euler(0, 0, rot);
+
+                var player = Physics2D.OverlapBoxAll(_tailSlamPrefab.transform.position, col.bounds.size, 0, _playerLayer);
+                if (player.Length > 0) {
+                    var p = player[0].GetComponent<PlayerBase>();
+
+                    if (p != null) {
+                        p.TakeDamage(_damage * _tailDamageMultiplier);
+                    }
+                }
+                
                 yield return null;
             }
 
