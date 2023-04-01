@@ -9916,6 +9916,7 @@ MonoBehaviour:
   _procCoSkill2: 1
   _smokePrefab: {fileID: 3114603624422194117, guid: 4ad024df4afa2594aaafc31823be1328, type: 3}
   _dashCollider: {fileID: 1834788825}
+  ESPIID: 250
   _ultimatePercentage: 5
   _procCoUltimate: 2
 --- !u!114 &1394134800
