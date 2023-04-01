@@ -1,4 +1,5 @@
 using UnityEngine;
+using rene_roid_player;
 
 namespace rene_roid_enemy {
     [RequireComponent(typeof(BoxCollider2D))]
@@ -35,7 +36,16 @@ namespace rene_roid_enemy {
             _finalPos = _playerTransform.position + new Vector3(0, 0.5f, 0) + new Vector3(randomness, 0, 0);
             _middlePoint = (_startPos + _finalPos) / 2;
             _middlePoint.y += 15+ randomness;
-            _time = Vector2.Distance(_startPos, _finalPos) / FireballStats.speed;
+            // _time = Vector2.Distance(_startPos, _finalPos) / FireballStats.speed;
+
+            Destroy(gameObject, 3);
+        }
+
+        private void OnTriggerEnter2D(Collider2D other) {
+            if (other.CompareTag("Player")) {
+                other.GetComponent<PlayerBase>().TakeDamage(FireballStats.damage);
+                Destroy(gameObject);
+            }
         }
         
         void Update()

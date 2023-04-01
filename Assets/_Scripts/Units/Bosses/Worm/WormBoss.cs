@@ -26,6 +26,15 @@ namespace rene_roid_enemy
         public override void UpdateState()
         {
             WormMovement();
+
+            RaycastHit2D ray = Physics2D.Raycast(transform.position, Vector2.up, 1f);
+            if (ray != null && ray.collider != null) {
+                if (ray.collider.tag == "Untagged")
+                {
+                    // Deactivate istrigger
+                    this.GetComponent<BoxCollider2D>().isTrigger = true;
+                }
+            }
         }
 
         #region Movement
@@ -190,5 +199,35 @@ namespace rene_roid_enemy
             return _movementSpeed;
         }
 
+        private void OnTriggerExit2D(Collider2D other) {
+            if (other.gameObject.tag == "Untagged") {
+                // Deactivate is trigger
+                this.GetComponent<BoxCollider2D>().isTrigger = false;
+            }
+        }
+
+        public override void TakeDamage(float damage)
+        {
+            if (_armor > 0) damage *= 100 / (100 + _armor);
+            if (_armor < 0) damage *= 2 - 100 / (100 - _armor);
+
+            _health -= damage;
+            _targetPlayer.OnEnemyHit(damage, this);
+
+            Debug.Log("Enemy health: " + _health);
+
+            if (_health <= 0)
+            {
+                for (int i = 0; i < _wormBodyParts.Count; i++)
+                {
+                    Destroy(_wormBodyParts[i].gameObject);
+                }
+                _health = 0;
+                // this.gameObject.SetActive(false);
+                Destroy(this.gameObject);
+                _targetPlayer.OnEnemyDeath(damage, this);
+                return;
+            }
+        }
     }
 }

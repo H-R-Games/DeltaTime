@@ -48,7 +48,8 @@ namespace rene_roid_enemy
                 //     _fireballCooldownTimer = _fireballCooldown;
                 // }
 
-                StartCoroutine(FireBreath());
+                // StartCoroutine(FireBreath());
+                PetrifiedEnemy();
                 _fireballCooldownTimer = _fireballCooldown;
             }
             else
@@ -69,6 +70,9 @@ namespace rene_roid_enemy
 
         private IEnumerator FireBreath() {
             var firebreath = Instantiate(_firebreathPrefab, _firebreathStartPosition.position, Quaternion.identity);
+
+            var script = firebreath.GetComponentInChildren<Firebreath>();
+            script.Damage = _firebreathDamage;
 
             var dist = Vector3.Distance(_firebreathStartPosition.position, _firebreathEndPosition.position);
             var t = 0f;
@@ -141,5 +145,25 @@ namespace rene_roid_enemy
             yield return null;
         }
         #endregion    
+
+        #region Petrified enemy
+        [Header("Petrified enemy")]
+        [SerializeField] private GameObject _petrifiedEnemyPrefab;
+
+        private void PetrifiedEnemy() {
+            var petrifiedEnemy = Instantiate(_petrifiedEnemyPrefab, _fireballSpawnPoint.position, Quaternion.identity);
+            var rb = petrifiedEnemy.GetComponent<Rigidbody2D>();
+
+            // Add force to petrified enemy up and to the right
+            rb.AddForce(new Vector2(1, 1) * Random.Range(100, 200));
+
+            StartCoroutine(DeactivateTrigger(petrifiedEnemy));
+        }
+
+        private IEnumerator DeactivateTrigger(GameObject petrifiedEnemy) {
+            yield return Helpers.GetWait(0.3f);
+            petrifiedEnemy.GetComponent<Collider2D>().isTrigger = false;
+        }
+        #endregion
     }
 }
