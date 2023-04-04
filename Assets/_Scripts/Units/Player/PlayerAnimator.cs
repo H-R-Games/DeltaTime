@@ -37,7 +37,7 @@ namespace rene_roid_player
 
         private void Update()
         {
-            HandleSpriteFlipping();d
+            HandleSpriteFlipping();
             HandleGroundEffects();
             HandleWallSlideEffects();
             HandleAnimations();
@@ -55,7 +55,7 @@ namespace rene_roid_player
         [SerializeField] private float _specialAttack1Time, _specialAttack2Time, _ultimateAttackTime;
         private bool _basicAttack1, _specialAttack1, _specialAttack2, _ultimateAttack;
 
-        [SerializeField] private AudioClip _basicAttackClip;
+        [SerializeField] private AudioClip _basicAttackClip, _specialAttack1Clip, _specialAttack2Clip, _ultimateAttackClip;
 
         private void OnBasicAttack1()
         {
@@ -66,16 +66,19 @@ namespace rene_roid_player
         private void OnSpecialAttack1()
         {
             _specialAttack1 = true;
+            PlaySound(_specialAttack1Clip, 0.1f, Random.Range(0.97f, 1.03f));
         }
 
         private void OnSpecialAttack2()
         {
             _specialAttack2 = true;
+            PlaySound(_specialAttack2Clip, 0.1f, Random.Range(0.97f, 1.03f));
         }
 
         private void OnUltimateAttack()
         {
             _ultimateAttack = true;
+            PlaySound(_ultimateAttackClip, 0.1f, Random.Range(0.97f, 1.03f));
         }
         #endregion
 
