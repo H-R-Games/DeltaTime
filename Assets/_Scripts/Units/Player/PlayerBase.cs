@@ -746,7 +746,7 @@ namespace rene_roid_player
         protected virtual bool TryGetGroundNormal(out Vector2 groundNormal)
         {
             Physics2D.queriesHitTriggers = false;
-            var hit = Physics2D.Raycast(_rb.position, Vector2.down, _grounderDistance * 2, ~_playerLayer);
+            var hit = Physics2D.Raycast(_rb.position, Vector2.down, _grounderDistance * 2 + 0.5f, ~_playerLayer);
             Physics2D.queriesHitTriggers = _cachedTriggerSetting;
             groundNormal = hit.normal;
             return hit.collider != null;
