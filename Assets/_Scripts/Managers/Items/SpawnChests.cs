@@ -6,8 +6,8 @@ namespace rene_roid_player {
         #region Internal
         [Header("Internal")]
         private PlayerBase _player;
-        private Transform[] _chestSpawnPoints;
-        private Transform[] _specialChestSpawnPoints;
+        [SerializeField] private Transform[] _chestSpawnPoints;
+        [SerializeField] private Transform[] _specialChestSpawnPoints;
         [SerializeField] private float _chestSpawnPercentage = 0.8f;
         #endregion
 
