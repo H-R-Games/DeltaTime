@@ -2449,6 +2449,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 592764627}
+        m_TargetAssemblyTypeName: rene_roid.MainMenuUI, Assembly-CSharp
+        m_MethodName: SelectCharacter
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &349260991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5573,6 +5585,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 592764622}
+  - component: {fileID: 592764627}
   - component: {fileID: 592764626}
   - component: {fileID: 592764625}
   - component: {fileID: 592764624}
@@ -5681,6 +5694,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf2b0bb987b5c5b42a74ea844abf78ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &592764627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592764621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abfc1ecf342ccd9429a440f2aa35ab90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _selectCharacterParent: {fileID: 388979918}
 --- !u!1 &613928014
 GameObject:
   m_ObjectHideFlags: 0
@@ -14494,6 +14520,18 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 592764627}
+        m_TargetAssemblyTypeName: rene_roid.MainMenuUI, Assembly-CSharp
+        m_MethodName: SelectCharacter
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0

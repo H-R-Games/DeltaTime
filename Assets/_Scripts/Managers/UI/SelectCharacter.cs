@@ -10,7 +10,7 @@ namespace rene_roid {
         Musashi,
     }
 
-    public class SelectCharacter : PersistentSingleton<SelectCharacter>
+    public class SelectCharacter : PersistentStaticInstance<SelectCharacter>
     {
         public void LoadScene(int sceneIndex) {
             if (_character == Characters.None) return;
