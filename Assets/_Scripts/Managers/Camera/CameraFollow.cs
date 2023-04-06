@@ -19,6 +19,7 @@ namespace rene_roid {
 
         private void Start()
         {
+            if (_target == null) _target = FindObjectOfType<PlayerBase>().transform;
             if (_target != null) _player = _target.GetComponent<PlayerBase>();
             _xOffset = 1;
         }

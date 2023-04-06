@@ -32,10 +32,10 @@ namespace rene_roid
 
         private void Awake()
         {
-            if (_player == null) _player = GameObject.FindObjectOfType<PlayerBase>().gameObject;
         }
 
         private void Start() {
+            if (_player == null) _player = GameObject.FindObjectOfType<PlayerBase>().gameObject;
             _playerScript = _player.GetComponent<PlayerBase>();
         }
 
