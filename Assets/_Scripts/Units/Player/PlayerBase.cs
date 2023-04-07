@@ -398,7 +398,12 @@ namespace rene_roid_player
 
             if (_currentHealth <= 0)
             {
-                //Die();
+                Die();
+            }
+
+            void Die() {
+                var death = FindObjectOfType<Death>();
+                death.OnDeath();
             }
         }
 
