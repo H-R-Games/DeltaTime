@@ -194,13 +194,15 @@ namespace rene_roid_player
 
         protected void FallDamage()
         {
-            if (_speed.y < 0 && !_grounded)
+            if (_speed.y < 0 && !_grounded && !_onLadder && !_isOnWall)
             {
                 _fallTime += Time.deltaTime;
 
-                if (_fallTime > 0.5f)
+                if (_fallTime > 0.6f)
                 {
                     _fallDamage = Mathf.Clamp(_fallTime * _fallDamageMultiplier, 0, _maxFallDamagePercentage * _maxStats.Health);
+                    // float fib = Fibonacci(_fallTime);
+                    // _fallDamage = CalculateFallDamage(_fallTime);
                 }
             }
             else
@@ -215,7 +217,25 @@ namespace rene_roid_player
                 }
 
                 _fallTime = 0f;
+                _fallDamage = 0;
             }
+
+            float CalculateFallDamage(float time) {
+                float baseDamage = 1.0f; // a constant base damage
+                float timeScaling = 1.5f; // a scaling factor for the time component
+                float timeDamage = Mathf.Pow(time, timeScaling); // time component of the damage
+                float fibonacci = Fibonacci((float)time); // Fibonacci component of the damage
+                float fibonacciScaling = 5.0f; // a scaling factor for the Fibonacci component
+                float fibonacciDamage = fibonacci * fibonacciScaling;
+                float totalDamage = baseDamage + timeDamage + fibonacciDamage;
+                return totalDamage;
+            }
+
+            float Fibonacci(double time) {
+                if (time <= 1) return 1;
+                return Fibonacci(time - 1) + Fibonacci(time - 2);
+            }
+
         }
         #endregion
 
@@ -613,28 +633,28 @@ namespace rene_roid_player
 
         public virtual void BasicAttack()
         {
-            print("Basic attack!");
+            // print("Basic attack!");
             _basicAttackReady = false;
             BasicAttack1.Invoke();
         }
 
         public virtual void Skill1()
         {
-            print("Skill 1!");
+            //// print("Skill 1!");
             _skill1Ready = false;
             SpecialAttack1.Invoke();
         }
 
         public virtual void Skill2()
         {
-            print("Skill 2!");
+            //// print("Skill 2!");
             _skill2Ready = false;
             SpecialAttack2.Invoke();
         }
 
         public virtual void Ultimate()
         {
-            print("ULTIMATE!");
+            //// print("ULTIMATE!");
             _ultimateReady = false;
             UltimateAttack.Invoke();
         }
