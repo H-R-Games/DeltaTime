@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using rene_roid;
 
 namespace rene_roid_player {
     public class ItemPickUp : MonoBehaviour
@@ -17,12 +18,15 @@ namespace rene_roid_player {
 
         #region External
         public Item Item;
+        public ShowItemUI ShowItemUI;
         #endregion
 
         void Start()
         {
             _rb = GetComponent<Rigidbody2D>();
             _collider = GetComponent<Collider2D>();
+
+            ShowItemUI = GameObject.FindObjectOfType<ShowItemUI>();
         }
 
         void Update()
@@ -44,8 +48,9 @@ namespace rene_roid_player {
         {
             if (other.gameObject.tag == "Player" && _launched)
             {
-                //ItemManager.Instance.AddItem(Item);
-                other.GetComponent<PlayerBase>().AddItem(Item);
+                var player = other.GetComponent<PlayerBase>();
+                player.AddItem(Item);
+                ShowItemUI.DisplayItem(Item);
                 Destroy(gameObject);
             }
         }

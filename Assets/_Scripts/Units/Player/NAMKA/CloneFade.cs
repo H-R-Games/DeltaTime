@@ -28,6 +28,12 @@ namespace rene_roid {
             }
             Destroy(gameObject);
         }
+        
+        public void SetFade(float fade)
+        {
+            _renderer = GetComponent<SpriteRenderer>();
+            _renderer.color = new Color(_renderer.color.r, _renderer.color.g, _renderer.color.b, fade);
+        }
 
         public void SetFadeTime(float fadeTime)
         {

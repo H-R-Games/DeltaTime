@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Add Stats
   m_EditorClassIdentifier: 
   Name: Add stats
+  Description: 
   Icon: {fileID: 0}
   Items:
   - rid: 5796726606670069760

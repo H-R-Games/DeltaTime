@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using rene_roid_enemy;
 using rene_roid_player;
 
@@ -14,6 +15,8 @@ namespace rene_roid {
         [SerializeField] private float _speed = 10f;
         [SerializeField] private float _lifeTime = 2f;
         [SerializeField] private int _maxHits = 3;
+        private BoxCollider2D _boxCollider2D;
+        private List<GameObject> _enemiesHit = new List<GameObject>();
 
         private bool _xFlip;
 
@@ -22,11 +25,32 @@ namespace rene_roid {
             // Destroy the slash after a certain amount of time
             Destroy(gameObject, _lifeTime);
             _xFlip = this.GetComponent<SpriteRenderer>().flipX;
+            _boxCollider2D = GetComponent<BoxCollider2D>();
         }
 
         void Update()
         {
             Move();
+        }
+
+        private void FixedUpdate() {
+            if (_boxCollider2D == null) return;
+            if (_namka == null) return;
+            if (_maxHits <= 0) return;
+            var enemies = Physics2D.OverlapBoxAll(transform.position, _boxCollider2D.size, 0, _enemyLayer);
+
+            foreach (var enemy in enemies) {
+                if (!_enemiesHit.Contains(enemy.gameObject)) {
+                    var enemyBase = enemy.GetComponent<EnemyBase>();
+                    if (enemyBase != null) enemyBase.TakeDamage(_namka.DealDamage(_damagePercentage, _procCo));
+                    print("Hit!: " + enemy.gameObject.name);
+                    _enemiesHit.Add(enemy.gameObject);
+
+                    // Destroy the slash after a certain amount of hits
+                    _maxHits--;
+                    if (_maxHits <= 0) Destroy(gameObject, .25f);
+                }
+            }
         }
         
         void OnTriggerEnter2D(Collider2D other)

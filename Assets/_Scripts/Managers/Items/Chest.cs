@@ -10,6 +10,7 @@ namespace rene_roid_player
         [SerializeField] private Sprite _closedChest;
         [SerializeField] private Sprite _openedChest;
         private Transform _player;
+        private PlayerBase _playerBase;
         private bool _isOpened = false;
         #endregion
 
@@ -44,15 +45,22 @@ namespace rene_roid_player
                 float diff = 100 - sum;
                 CommonChance += diff;
             }
+
+            _playerBase = _player.GetComponent<PlayerBase>();
         }
 
         private void Update()
         {
             if (Vector2.Distance(transform.position, _player.position) < 1.5f && !_isOpened)
             {
-                _isOpened = true;
-                _spriteRenderer.sprite = _openedChest;
-                OpenChest();
+                print("Press F to open chest");
+                if ( _playerBase.Money >= 100) {
+                    _isOpened = true;
+                    _spriteRenderer.sprite = _openedChest;
+                    OpenChest();
+
+                    _player.GetComponent<PlayerBase>().Money -= 100;
+                }
             }
         }
 
