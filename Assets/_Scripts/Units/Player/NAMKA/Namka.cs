@@ -40,6 +40,7 @@ namespace rene_roid_player
 
         public override void BasicAttack()
         {
+            LastSkillProcCoefficient = _procCoBasic;
             base.BasicAttack();
 
             if (!_skill2Active) StartCoroutine(RemoveControl(.3f));
@@ -51,7 +52,6 @@ namespace rene_roid_player
             {
                 var enemy = hit.collider.GetComponent<EnemyBase>();
                 if (enemy != null) enemy.TakeDamage(DealDamage(_basicAttackPercentage, _procCoBasic));
-                print("Hit!: " + enemy.gameObject.name);
             }
         }
 
@@ -69,8 +69,8 @@ namespace rene_roid_player
 
         public override void Skill1()
         {
-            if (!IsGrounded()) return;
-
+           if (!IsGrounded()) return;
+           LastSkillProcCoefficient = _procCoSkill1;
             base.Skill1();
 
             StartCoroutine(RemoveControl(1f));
@@ -211,10 +211,11 @@ namespace rene_roid_player
         public override void Ultimate()
         {
             if (!IsGrounded()) return;
+            LastSkillProcCoefficient = _procCoUltimate;
 
             base.Ultimate();
 
-            StartCoroutine(RemoveControl(_ultimateChargeTime));
+            StartCoroutine(RemoveControl(_ultimateChargeTime + 1.5f));
 
             _rb.velocity = new Vector2(0, 0);
 
