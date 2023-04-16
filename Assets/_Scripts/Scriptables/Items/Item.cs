@@ -18,6 +18,14 @@ namespace rene_roid_player {
         [ContextMenu(nameof(HealOnKill))] void HealOnKill() => Items.Add(new HealOnKill());
         [ContextMenu(nameof(MoveFastWhenLowHealth))] void MoveFastWhenLowHealth() => Items.Add(new MoveFastWhenLowHealth());
         [ContextMenu(nameof(ChanceToDealExtraHit))] void ChanceToDealExtraHit() => Items.Add(new ChanceToDealExtraHit());
+
+        // Game Items
+        [ContextMenu(nameof(LionEmblem))] void LionEmblem() => Items.Add(new LionEmblem());
+        [ContextMenu(nameof(Dopamine))] void Dopamine() => Items.Add(new Dopamine());
+        [ContextMenu(nameof(MarcaShoes))] void MarcaShoes() => Items.Add(new MarcaShoes());
+        [ContextMenu(nameof(Rock))] void Rock() => Items.Add(new Rock());
+        [ContextMenu(nameof(Aspirin))] void Aspirin() => Items.Add(new Aspirin());
+        [ContextMenu(nameof(SpringShoes))] void SpringShoes() => Items.Add(new SpringShoes());
         #endregion
     }
 
@@ -159,6 +167,143 @@ namespace rene_roid_player {
             base.OnRemove(player, itemManager);
             // Deactivate item manager item
             itemManager.ChanceToDealExtraHitAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class LionEmblem : ItemBase {
+        public string Name = "Lion Emblem";
+        public float DefenceIncrease = 5f;
+
+        public LionEmblem() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.LionEmblemAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.LionEmblemAmount -= 1;  
+        }
+
+    }
+
+    [System.Serializable]
+    public class Dopamine : ItemBase {
+        public string Name = "Dopamine";
+        public float AttackMoveSpeedIncrease = 0.045f;
+
+        public Dopamine() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.DopamineAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.DopamineAmount -= 1;  
+        }
+    }
+
+    
+    [System.Serializable]
+    public class MarcaShoes : ItemBase {
+        public string Name = "Marca Shoes";
+        public float MovementSpeedIncrease = 0.08f;
+
+        public MarcaShoes() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.MarcaShoesAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.MarcaShoesAmount -= 1;  
+        }
+    }
+
+    
+    [System.Serializable]
+    public class Rock : ItemBase {
+        public string Name = "Rock";
+        public float Armor = 5f;
+
+        public Rock() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.RockAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.RockAmount -= 1;  
+        }
+    }
+
+
+    [System.Serializable]
+    public class Aspirin : ItemBase {
+        public string Name = "Aspirin";
+        public float HealthRegen = 0.5f;
+
+        public Aspirin() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.AspirinAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.AspirinAmount -= 1;  
+        }
+    }
+
+    
+    [System.Serializable]
+    public class SpringShoes : ItemBase {
+        public string Name = "Spring Shoes";
+        public float JumpHeightIncrease = 0.1f;
+
+        public SpringShoes() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.SpringShoesAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.SpringShoesAmount -= 1;  
         }
     }
 }

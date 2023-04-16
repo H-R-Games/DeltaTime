@@ -17,10 +17,17 @@ namespace rene_roid_player {
         void Update()
         {
             MoveFastWhenLowHealth();
+
+            // Game Items
+            LionEmblem();
+            Aspirin();
         }
         
         public void OnPickUp() {
-
+            // Game Items
+            GetDopamine();
+            GetMarcaShoes();
+            GetRock();
         }
 
         public void OnRemove(float damage, EnemyBase enemy) {
@@ -139,6 +146,118 @@ namespace rene_roid_player {
             items.Add(chanceToDealExtraHitItem);
             // Call the ProccItems method
             ProccItems(items, damage, enemy);
+        }
+        #endregion
+    
+        /// GAME ITEMS
+
+        #region Lion Emblem
+        [Header("Lion Emblem")]
+        public int LionEmblemAmount = 0; // Amount of items
+        private float _lionEmblem = 0f; // Lion Emblem (Stack with other items)
+        private LionEmblem _lionEmblemItem;
+        private bool _lionEmblemInEffect = false;
+
+        private void LionEmblem() {
+            if (LionEmblemAmount == 0) return;
+            if (_lionEmblemItem == null) _lionEmblemItem = new LionEmblem();
+
+            _lionEmblem = _lionEmblemItem.DefenceIncrease * LionEmblemAmount;
+
+            if (_player.CurrentHealth <= _player.MaxStats.Health * 0.30f) {
+                if (!_lionEmblemInEffect) {
+                    _lionEmblemInEffect = true;
+                    _player.AddArmorFlat(_lionEmblem);
+                }
+            } else {
+                if (_lionEmblemInEffect) {
+                    _lionEmblemInEffect = false;
+                    _player.AddArmorFlat(_lionEmblem);
+                }
+            }
+        }
+        #endregion
+        #region Dopamine
+        [Header("Dopamine")]
+        public int DopamineAmount = 0; // Amount of items
+        private float _dopamine = 0f; // Dopamine (Stack with other items)
+        private Dopamine _dopamineItem;
+
+        private void GetDopamine() {
+            if (DopamineAmount == 0) return;
+            if (_dopamineItem == null) _dopamineItem = new Dopamine();
+
+            _dopamine = _dopamineItem.AttackMoveSpeedIncrease * DopamineAmount;
+
+            _player.AddMovementSpeedPercentage(_dopamine);
+            _player.AddPercentageDamageBonus(_dopamine);
+        }
+        #endregion    
+        #region Marca Shoes
+        [Header("Marca Shoes")]
+        public int MarcaShoesAmount = 0; // Amount of items
+        private float _marcaShoes = 0f; // Marca Shoes (Stack with other items)
+        private MarcaShoes _marcaShoesItem;
+
+        private void GetMarcaShoes() {
+            if (MarcaShoesAmount == 0) return;
+            if (_marcaShoesItem == null) _marcaShoesItem = new MarcaShoes();
+
+            _marcaShoes = _marcaShoesItem.MovementSpeedIncrease * MarcaShoesAmount;
+
+            _player.AddMovementSpeedPercentage(_marcaShoes);
+        }
+        #endregion
+        #region Rock
+        [Header("Rock")]
+        public int RockAmount = 0; // Amount of items
+        private float _rock = 0f; // Rock (Stack with other items)
+        private Rock _rockItem;
+
+        private void GetRock() {
+            if (RockAmount == 0) return;
+            if (_rockItem == null) _rockItem = new Rock();
+
+            _rock = _rockItem.Armor * RockAmount;
+
+            _player.AddArmorFlat(_rock);
+        }
+        #endregion
+        #region Aspirin
+        [Header("Aspirin")]
+        public int AspirinAmount = 0; // Amount of items
+        private float _aspirin = 0f; // Aspirin (Stack with other items)
+        private Aspirin _aspirinItem;
+
+        private void Aspirin() {
+            if (AspirinAmount == 0) return;
+            if (_aspirinItem == null) _aspirinItem = new Aspirin();
+
+            _aspirin = _aspirinItem.HealthRegen * AspirinAmount;
+
+            // TODO: Detect if player is in combat
+
+            if (_player.CurrentHealth <= _player.MaxStats.Health * 0.30f) {
+                _player.AddHealthRegenPercentage(_aspirin);
+            } else {
+                _player.AddHealthRegenPercentage(_aspirin);
+            }
+        }
+        #endregion
+        #region Spring Shoes
+        [Header("Spring Shoes")]
+        public int SpringShoesAmount = 0; // Amount of items
+        private float _springShoes = 0f; // Spring Shoes (Stack with other items)
+        private SpringShoes _springShoesItem;
+
+        private void GetSpringShoes() {
+            if (SpringShoesAmount == 0) return;
+            if (_springShoesItem == null) _springShoesItem = new SpringShoes();
+
+            _springShoes = _player.JumpForce + _springShoesItem.JumpHeightIncrease * SpringShoesAmount;
+
+            // TODO: Set the jump force to the new value
+            // _player.JumpForce = _springShoes;
         }
         #endregion
     }
