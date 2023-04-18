@@ -26,6 +26,7 @@ namespace rene_roid_player {
         [ContextMenu(nameof(Rock))] void Rock() => Items.Add(new Rock());
         [ContextMenu(nameof(Aspirin))] void Aspirin() => Items.Add(new Aspirin());
         [ContextMenu(nameof(SpringShoes))] void SpringShoes() => Items.Add(new SpringShoes());
+        [ContextMenu(nameof(ImmovableSword))] void ImmovableSword() => Items.Add(new ImmovableSword());
         #endregion
     }
 
@@ -304,6 +305,30 @@ namespace rene_roid_player {
             base.OnRemove(player, itemManager);
             // Deactivate item manager item
             itemManager.SpringShoesAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class ImmovableSword : ItemBase {
+        public string Name = "Immovable Sword";
+        public float DamagePorcen = 0.15f;
+        public float TimeToActive = 5f;
+        public float TimeToDesactive = 7f;
+
+        public ImmovableSword() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.ImmovableSwordAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.ImmovableSwordAmount -= 1;  
         }
     }
 }

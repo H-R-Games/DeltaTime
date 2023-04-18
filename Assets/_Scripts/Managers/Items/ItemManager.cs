@@ -21,6 +21,7 @@ namespace rene_roid_player {
             // Game Items
             LionEmblem();
             Aspirin();
+            GetImmovableSword();
         }
         
         public void OnPickUp() {
@@ -258,6 +259,45 @@ namespace rene_roid_player {
 
             // TODO: Set the jump force to the new value
             // _player.JumpForce = _springShoes;
+        }
+        #endregion
+        #region Immovable sword
+        [Header("Immovable sword")]
+        public int ImmovableSwordAmount = 0; // Amount of items
+        private ImmovableSword _immovableSwordItem;
+        float timerToAplic = 0;
+        float timerToEnd = 0;
+        bool _immovableSwordInEffect = false;
+
+        private void GetImmovableSword() {
+            if (ImmovableSwordAmount == 0) return;
+            if (_immovableSwordItem == null) _immovableSwordItem = new ImmovableSword();
+            if (ImmovableSwordAmount >= 5) ImmovableSwordAmount = 5;
+
+            // TODO: Detect if player velocity is 0
+
+            if (_player.GetComponent<Rigidbody2D>().velocity == Vector2.zero) {
+                timerToAplic += Time.deltaTime * 0.5f;
+
+                if (timerToAplic >= _immovableSwordItem.TimeToActive) {
+                    if (!_immovableSwordInEffect) {
+                        _immovableSwordInEffect = true;
+                        _player.AddPercentageDamageBonus(_immovableSwordItem.DamagePorcen);
+                        timerToEnd = 0;
+                    }
+                }
+            } else {
+                timerToAplic = 0;
+            }
+
+            if (_immovableSwordInEffect) {
+                timerToEnd += Time.deltaTime * 0.5f;
+                if (timerToEnd >= _immovableSwordItem.TimeToDesactive) {
+                    _immovableSwordInEffect = false;
+                    _player.RemovePercentageDamageBonus(_immovableSwordItem.DamagePorcen);
+                    timerToAplic = 0;
+                }
+            }
         }
         #endregion
     }
