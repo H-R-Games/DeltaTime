@@ -357,6 +357,7 @@ namespace rene_roid_player
         private bool _inCombat = false;
         public bool InCombat => _inCombat;
         private float _lastDamageTaken = 0f;
+
         protected void ConstantHealing()
         {
             // If has not taken damage in 5 seconds, _inCombat = false
@@ -420,7 +421,6 @@ namespace rene_roid_player
                 death.OnDeath();
             }
         }
-
 
         public float DealDamage(float percentage, float proc)
         {
