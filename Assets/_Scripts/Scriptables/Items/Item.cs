@@ -29,6 +29,7 @@ namespace rene_roid_player {
         [ContextMenu(nameof(ImmovableSword))] void ImmovableSword() => Items.Add(new ImmovableSword());
         [ContextMenu(nameof(WingedShoes))] void WingedShoes() => Items.Add(new WingedShoes());
         [ContextMenu(nameof(FashionEars))] void FashionEars() => Items.Add(new FashionEars());
+        [ContextMenu(nameof(MonsterWheights))] void MonsterWheights() => Items.Add(new MonsterWheights());
         #endregion
     }
 
@@ -335,10 +336,25 @@ namespace rene_roid_player {
     }
 
     [System.Serializable]
-    public class MonsterWeights : ItemBase {
+    public class MonsterWheights : ItemBase {
         public string Name = "Monster Weights";
         public float SpeedRedux = 0.1f;
         
+        public MonsterWheights() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.MonsterWheightsAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.MonsterWheightsAmount -= 1;  
+        }
     }
 
     [System.Serializable]

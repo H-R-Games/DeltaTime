@@ -56,6 +56,8 @@ namespace rene_roid_enemy
         [SerializeField] protected float _damage;
         [SerializeField] protected float _armor;
         [SerializeField] protected float _movementSpeed;
+        public float GetMoveSpeed() { return _movementSpeed; }
+        public void SetMoveSpeed(float speed) { _movementSpeed = speed; }
 
         private void AwakeEnemyStats() { SetEnemyStats(); }
 

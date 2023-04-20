@@ -453,6 +453,10 @@ namespace rene_roid_player
         private float _currentExperience = 0;
         private float _experienceToNextLevel = 100;
         private float _experienceMultiplier = 1.37f;
+        public void AddExperienceMultiplier(float multiplier)
+        {
+            _experienceMultiplier += multiplier;
+        }
 
         public void AddExperience(float experience)
         {

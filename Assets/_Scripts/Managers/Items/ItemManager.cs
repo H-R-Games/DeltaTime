@@ -44,6 +44,8 @@ namespace rene_roid_player {
             print("On Hit");
             ProccItems(items, damage, enemy, procCo);
 
+            // Game Items 100% proc
+            DealMonsterWheights(damage, enemy);
         }
 
         public void OnKill(float damage, EnemyBase enemy) {
@@ -363,6 +365,23 @@ namespace rene_roid_player {
                 }
             }
         }
+        #endregion
+        #region Monster Wheights
+        [Header("Monster Wheights")]
+        public int MonsterWheightsAmount = 0; // Amount of items
+        private MonsterWheights _monsterWheightsItem;
+        private float _movementRedux = 0f;
+
+        private void DealMonsterWheights(float damage, EnemyBase enemy) {
+            if (MonsterWheightsAmount == 0) return;
+            if (_monsterWheightsItem == null) _monsterWheightsItem = new MonsterWheights();
+
+            _movementRedux = _monsterWheightsItem.SpeedRedux * MonsterWheightsAmount;
+
+            var removeSpeed = enemy.GetMoveSpeed() * _movementRedux;
+            enemy.SetMoveSpeed(enemy.GetMoveSpeed() - removeSpeed);
+        }
+        
         #endregion
     }
 }
