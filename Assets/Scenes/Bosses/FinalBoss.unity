@@ -9925,6 +9925,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6217724633966689329, guid: 4d776c1f5aff4f840b23c6769f834c17, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6217724633966689329, guid: 4d776c1f5aff4f840b23c6769f834c17, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6217724633966689329, guid: 4d776c1f5aff4f840b23c6769f834c17, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6217724634034246109, guid: 4d776c1f5aff4f840b23c6769f834c17, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -9995,6 +10007,7 @@ GameObject:
   - component: {fileID: 1684606924}
   - component: {fileID: 1684606925}
   - component: {fileID: 1684606922}
+  - component: {fileID: 1684606926}
   m_Layer: 10
   m_Name: Final Boss
   m_TagString: Enemy
@@ -10056,7 +10069,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978721e0a484b084fb7852f43577955d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyBaseStats: {fileID: 11400000, guid: 8b55b99e437c4004a83b9d9e809aa472, type: 2}
+  _enemyBaseStats: {fileID: 11400000, guid: 5a9de450e1a54a44fbbe42420383b113, type: 2}
   _enemyState: 0
   _enemyType: 0
   _boxCollider2D: {fileID: 1684606922}
@@ -10080,6 +10093,36 @@ MonoBehaviour:
   _timeStun: 0
   _activateJump: 0
   _jumpForce: 5
+  _dodgeDuration: 5
+  _dodgeCooldown: 10
+  _dodgeyDamage: 1
+  _groingStuff: {fileID: 1687861492197497207, guid: 43ded21c212cd9c4ba7dad04c4f24042, type: 3}
+  _groingStuffCooldown: 5
+  _groingStuffQuantity: 7
+  _playerTimeTravelCooldown: 10
+  _playerTimeTravelDuration: 5
+  _stompPrefab: {fileID: 4331525143387382638, guid: b8515f9c8ca5e274aab2dd123afeaf3a, type: 3}
+--- !u!50 &1684606926
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1684606921}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1687698486
 GameObject:
   m_ObjectHideFlags: 0
