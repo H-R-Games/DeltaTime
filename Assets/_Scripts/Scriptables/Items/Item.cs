@@ -335,6 +335,13 @@ namespace rene_roid_player {
     }
 
     [System.Serializable]
+    public class MonsterWeights : ItemBase {
+        public string Name = "Monster Weights";
+        public float SpeedRedux = 0.1f;
+        
+    }
+
+    [System.Serializable]
     public class WingedShoes : ItemBase {
         public string Name = "Winged Shoes";
 

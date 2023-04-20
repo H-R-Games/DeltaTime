@@ -31,6 +31,7 @@ namespace rene_roid_player {
             GetMarcaShoes();
             GetRock();
             GetWingedShoes();
+            GetSpringShoes();
         }
 
         public void OnRemove(float damage, EnemyBase enemy) {
@@ -51,6 +52,10 @@ namespace rene_roid_player {
         }  
         
         public void OnDeath() {
+
+        }
+
+        public void OnDamageTaken(float damage) {
 
         }
 
@@ -204,11 +209,13 @@ namespace rene_roid_player {
         public int MarcaShoesAmount = 0; // Amount of items
         private float _marcaShoes = 0f; // Marca Shoes (Stack with other items)
         private MarcaShoes _marcaShoesItem;
+        private int _lastMarcaShoesAmmount = 0;
 
         private void GetMarcaShoes() {
             if (MarcaShoesAmount == 0) return;
+            if (_lastMarcaShoesAmmount == MarcaShoesAmount) return;
             if (_marcaShoesItem == null) _marcaShoesItem = new MarcaShoes();
-
+            _lastMarcaShoesAmmount = MarcaShoesAmount;
             _marcaShoes = _marcaShoesItem.MovementSpeedIncrease * MarcaShoesAmount;
 
             _player.AddMovementSpeedPercentage(_marcaShoes);
@@ -219,11 +226,13 @@ namespace rene_roid_player {
         public int RockAmount = 0; // Amount of items
         private float _rock = 0f; // Rock (Stack with other items)
         private Rock _rockItem;
+        private int _lastRockAmmount = 0;
 
         private void GetRock() {
             if (RockAmount == 0) return;
+            if (_lastRockAmmount == RockAmount) return;
             if (_rockItem == null) _rockItem = new Rock();
-
+            _lastRockAmmount = RockAmount;
             _rock = _rockItem.Armor * RockAmount;
 
             _player.AddArmorFlat(_rock);
@@ -242,6 +251,7 @@ namespace rene_roid_player {
             _aspirin = _aspirinItem.HealthRegen * AspirinAmount;
 
             // TODO: Detect if player is in combat
+            if (_player.InCombat) return;
 
             if (_player.CurrentHealth <= _player.MaxStats.Health * 0.30f) {
                 _player.AddHealthRegenPercentage(_aspirin);
@@ -255,15 +265,16 @@ namespace rene_roid_player {
         public int SpringShoesAmount = 0; // Amount of items
         private float _springShoes = 0f; // Spring Shoes (Stack with other items)
         private SpringShoes _springShoesItem;
+        private int _lastSpringShoesAmmount = 0;
 
         private void GetSpringShoes() {
             if (SpringShoesAmount == 0) return;
+            if (_lastSpringShoesAmmount == SpringShoesAmount) return;
             if (_springShoesItem == null) _springShoesItem = new SpringShoes();
-
+            _lastSpringShoesAmmount = SpringShoesAmount;
             _springShoes = _player.JumpForce + _springShoesItem.JumpHeightIncrease * SpringShoesAmount;
 
-            // TODO: Set the jump force to the new value
-            // _player.JumpForce = _springShoes;
+            _player.SetJumpForce(_springShoes);
         }
         #endregion
         #region Immovable sword

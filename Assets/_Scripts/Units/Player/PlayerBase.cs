@@ -354,8 +354,17 @@ namespace rene_roid_player
         #endregion
 
         #region Health
+        private bool _inCombat = false;
+        public bool InCombat => _inCombat;
+        private float _lastDamageTaken = 0f;
         protected void ConstantHealing()
         {
+            // If has not taken damage in 5 seconds, _inCombat = false
+            if (_inCombat && Time.time - _lastDamageTaken > 5f)
+            {
+                _inCombat = false;
+            }
+
             // Heal the player every second
             if (_currentHealth >= _maxStats.Health) return;
             HealAmmount(_currentHealthRegen * Time.deltaTime);
@@ -389,6 +398,11 @@ namespace rene_roid_player
 
         public void TakeDamage(float damage)
         {
+            _inCombat = true;
+            _lastDamageTaken = Time.time;
+
+            _itemManager.OnDamageTaken(damage);
+
             if (_currentArmor > 0)
             {
                 damage *= 100 / (100 + _currentArmor);
@@ -1077,7 +1091,8 @@ namespace rene_roid_player
         // Jump
         protected int _maxAirJumps = 0; // Max amount of jumps the player can do in the air. 0 = No air jumps
         protected float _jumpForce = 36; // Inmediate force applied to the player when jumping
-        public float JumpForce => _jumpForce; // Inmediate force applied to the player when jumping
+        public float JumpForce => _jumpForce;
+        public void SetJumpForce(float jumpForce) => _jumpForce = jumpForce;
         protected float _maxFallSpeed = 40; // Max speed the player can fall at
         protected float _fallAcceleration = 100; // Acceleration applied to the player when falling
         protected float _jumpEndEarlyGravityModifier = 3; // Gravity modifier applied to the player when ending a jump early
