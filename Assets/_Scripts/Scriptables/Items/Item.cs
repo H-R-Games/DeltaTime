@@ -331,4 +331,11 @@ namespace rene_roid_player {
             itemManager.ImmovableSwordAmount -= 1;  
         }
     }
+
+    [System.Serializable]
+    public class MonsterWeights : ItemBase {
+        public string Name = "Monster Weights";
+        public float SpeedRedux = 0.1f;
+        
+    }
 }
