@@ -183,10 +183,13 @@ namespace rene_roid_player {
         public int DopamineAmount = 0; // Amount of items
         private float _dopamine = 0f; // Dopamine (Stack with other items)
         private Dopamine _dopamineItem;
+        private int _lastDopamineAmmount = 0;
 
         private void GetDopamine() {
             if (DopamineAmount == 0) return;
+            if (_lastDopamineAmmount == DopamineAmount) return;
             if (_dopamineItem == null) _dopamineItem = new Dopamine();
+            _lastDopamineAmmount = DopamineAmount;
 
             _dopamine = _dopamineItem.AttackMoveSpeedIncrease * DopamineAmount;
 

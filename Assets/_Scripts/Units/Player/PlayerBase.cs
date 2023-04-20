@@ -660,6 +660,7 @@ namespace rene_roid_player
         {
             Items.Add(item);
             item.Items.ForEach(i => i.OnGet(this, _itemManager));
+            _itemManager.OnPickUp();
         }
 
         // private void UpdateItems() => _items.ForEach(i => i.Items.ForEach(i => i.OnUpdate(this)));
