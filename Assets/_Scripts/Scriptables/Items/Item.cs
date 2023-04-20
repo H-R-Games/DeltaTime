@@ -27,6 +27,8 @@ namespace rene_roid_player {
         [ContextMenu(nameof(Aspirin))] void Aspirin() => Items.Add(new Aspirin());
         [ContextMenu(nameof(SpringShoes))] void SpringShoes() => Items.Add(new SpringShoes());
         [ContextMenu(nameof(ImmovableSword))] void ImmovableSword() => Items.Add(new ImmovableSword());
+        [ContextMenu(nameof(WingedShoes))] void WingedShoes() => Items.Add(new WingedShoes());
+        [ContextMenu(nameof(FashionEars))] void FashionEars() => Items.Add(new FashionEars());
         #endregion
     }
 
@@ -329,6 +331,50 @@ namespace rene_roid_player {
             base.OnRemove(player, itemManager);
             // Deactivate item manager item
             itemManager.ImmovableSwordAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class WingedShoes : ItemBase {
+        public string Name = "Winged Shoes";
+
+        public WingedShoes() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.WingedShoesAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.WingedShoesAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class FashionEars : ItemBase {
+        public string Name = "Fashion Ears";
+        public float SpeedIncrease = 0.15f;
+        public float TimeToDesactive = 3f;
+
+        public FashionEars() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.FashionEarsAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.FashionEarsAmount -= 1;  
         }
     }
 }

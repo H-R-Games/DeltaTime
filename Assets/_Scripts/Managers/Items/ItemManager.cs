@@ -22,6 +22,7 @@ namespace rene_roid_player {
             LionEmblem();
             Aspirin();
             GetImmovableSword();
+            GetFashionEars();
         }
         
         public void OnPickUp() {
@@ -29,6 +30,7 @@ namespace rene_roid_player {
             GetDopamine();
             GetMarcaShoes();
             GetRock();
+            GetWingedShoes();
         }
 
         public void OnRemove(float damage, EnemyBase enemy) {
@@ -268,8 +270,8 @@ namespace rene_roid_player {
         [Header("Immovable sword")]
         public int ImmovableSwordAmount = 0; // Amount of items
         private ImmovableSword _immovableSwordItem;
-        float timerToAplic = 0;
-        float timerToEnd = 0;
+        float timerToAplicImmovableSword = 0;
+        float timerToEndImmovableSword = 0;
         bool _immovableSwordInEffect = false;
 
         private void GetImmovableSword() {
@@ -280,25 +282,73 @@ namespace rene_roid_player {
             // TODO: Detect if player velocity is 0
 
             if (_player.GetComponent<Rigidbody2D>().velocity == Vector2.zero) {
-                timerToAplic += Time.deltaTime * 0.5f;
+                timerToAplicImmovableSword += Time.deltaTime * 0.5f;
 
-                if (timerToAplic >= _immovableSwordItem.TimeToActive) {
+                if (timerToAplicImmovableSword >= _immovableSwordItem.TimeToActive) {
                     if (!_immovableSwordInEffect) {
                         _immovableSwordInEffect = true;
                         _player.AddPercentageDamageBonus(_immovableSwordItem.DamagePorcen);
-                        timerToEnd = 0;
+                        timerToEndImmovableSword = 0;
                     }
                 }
             } else {
-                timerToAplic = 0;
+                timerToAplicImmovableSword = 0;
             }
 
             if (_immovableSwordInEffect) {
-                timerToEnd += Time.deltaTime * 0.5f;
-                if (timerToEnd >= _immovableSwordItem.TimeToDesactive) {
+                timerToEndImmovableSword += Time.deltaTime * 0.5f;
+                if (timerToEndImmovableSword >= _immovableSwordItem.TimeToDesactive) {
                     _immovableSwordInEffect = false;
                     _player.RemovePercentageDamageBonus(_immovableSwordItem.DamagePorcen);
-                    timerToAplic = 0;
+                    timerToAplicImmovableSword = 0;
+                }
+            }
+        }
+        #endregion
+        #region Winged Shoes
+        [Header("Winged Shoes")]
+        public int WingedShoesAmount = 0; // Amount of items
+        private WingedShoes _wingedShoesItem;
+        private int _lastWingedShoesAmmount = 0;
+
+        private void GetWingedShoes() {
+            if (WingedShoesAmount == 0) return;
+            if (_lastWingedShoesAmmount == WingedShoesAmount) return;
+            if (_wingedShoesItem == null) _wingedShoesItem = new WingedShoes();
+            _lastWingedShoesAmmount = WingedShoesAmount;
+
+            // TODO: We add one more jump to the player depending on the number of items
+
+            _player.AddAirJump();
+        }
+        #endregion
+        #region Fashion Ears
+        [Header("Fashion Ears")]
+        public int FashionEarsAmount = 0; // Amount of items
+        private FashionEars _FashionEarsItem;
+        float timerToEndFashionEars = 0;
+        bool _FashionEarsInEffect = false;
+        
+        private void GetFashionEars() {
+            if (FashionEarsAmount == 0) return;
+            if (_FashionEarsItem == null) _FashionEarsItem = new FashionEars();
+
+            // TODO: When the player is hit, he runs faster for 3 seconds
+
+            // we increase the statistics with respect to the number of items
+            var f = _FashionEarsItem.SpeedIncrease * FashionEarsAmount;
+
+            if (_player) {
+                _player.AddMovementSpeedPercentage(f);
+                _FashionEarsInEffect = true;
+                timerToEndFashionEars = 0;
+            }
+
+            if (_FashionEarsInEffect) {
+                timerToEndFashionEars += Time.deltaTime * 0.5f;
+                if (timerToEndFashionEars >= _FashionEarsItem.TimeToDesactive) {
+                    _FashionEarsInEffect = false;
+                    _player.RemoveMovementSpeedPercentage(f);
                 }
             }
         }

@@ -13179,7 +13179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a97b030973be0c44b6568e78adfd5e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Item: {fileID: 11400000, guid: bf23e6ebf53609e489979780cf4e5f7f, type: 2}
+  Item: {fileID: 11400000, guid: ade0ba907f907704fab97bbb88cc007e, type: 2}
   ShowItemUI: {fileID: 0}
 --- !u!61 &1926819073
 BoxCollider2D:
@@ -14545,7 +14545,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a97b030973be0c44b6568e78adfd5e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Item: {fileID: 11400000, guid: bf23e6ebf53609e489979780cf4e5f7f, type: 2}
+  Item: {fileID: 11400000, guid: ade0ba907f907704fab97bbb88cc007e, type: 2}
   ShowItemUI: {fileID: 0}
 --- !u!212 &2142453149
 SpriteRenderer:

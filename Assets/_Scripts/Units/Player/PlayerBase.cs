@@ -990,6 +990,7 @@ namespace rene_roid_player
             ResetAirJumps();
         }
 
+        public void AddAirJump() => _maxAirJumps++;
         protected virtual void ResetAirJumps() => _airJumpsRemaining = _maxAirJumps;
         #endregion
 
@@ -1076,7 +1077,7 @@ namespace rene_roid_player
         // Jump
         protected int _maxAirJumps = 0; // Max amount of jumps the player can do in the air. 0 = No air jumps
         protected float _jumpForce = 36; // Inmediate force applied to the player when jumping
-        public float JumpForce => _jumpForce;
+        public float JumpForce => _jumpForce; // Inmediate force applied to the player when jumping
         protected float _maxFallSpeed = 40; // Max speed the player can fall at
         protected float _fallAcceleration = 100; // Acceleration applied to the player when falling
         protected float _jumpEndEarlyGravityModifier = 3; // Gravity modifier applied to the player when ending a jump early
