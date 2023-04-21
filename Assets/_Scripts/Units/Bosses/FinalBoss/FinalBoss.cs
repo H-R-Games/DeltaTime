@@ -5,6 +5,8 @@ using UnityEngine;
 namespace rene_roid_enemy {
     public class FinalBoss : EnemyBase
     {
+        private int _phase = 1;
+
         public override void Start() {
             base.Start();
             _lastHP = _health;
@@ -19,13 +21,34 @@ namespace rene_roid_enemy {
         public override void UpdateState()
         {
             base.UpdateState();
+
             FinalBossAI();
         }
 
 
         private void FinalBossAI() {
+            if (_phase < 3 && _health <= EnemyBaseStats.Health * 0.05f) {
+                _health = EnemyBaseStats.Health;
+                _phase++;
+            } 
+
+            switch (_phase)
+            {
+                case 1:
+                    break;
+                case 2:
+                // Dissable skills
+                // Spawn bosses
+                    break;
+                case 3:
+                // ZA WARUDO
+                    break;
+                default:
+                    break;
+            }
+
             Dodge();
-            //GroingStuff();
+            GroingStuff();
             PlayerTimeTravel();
         }
 
@@ -157,6 +180,12 @@ namespace rene_roid_enemy {
                 _targetPlayer.transform.position = playerPos;
             }
         }
+        #endregion
+
+        #region Dissable Skills
+        [Header("Dissable Skills")]
+        [SerializeField] private float _dissableSkillsCooldown = 20f;
+        private float _dissableSkillsCooldownTimer = 0f;
         #endregion
     }
 }
