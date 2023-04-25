@@ -30,6 +30,7 @@ namespace rene_roid_player {
         [ContextMenu(nameof(WingedShoes))] void WingedShoes() => Items.Add(new WingedShoes());
         [ContextMenu(nameof(FashionEars))] void FashionEars() => Items.Add(new FashionEars());
         [ContextMenu(nameof(MonsterWheights))] void MonsterWheights() => Items.Add(new MonsterWheights());
+        [ContextMenu(nameof(LaParca))] void LaParca() => Items.Add(new LaParca());
         #endregion
     }
 
@@ -398,6 +399,29 @@ namespace rene_roid_player {
             base.OnRemove(player, itemManager);
             // Deactivate item manager item
             itemManager.FashionEarsAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class LaParca : ItemBase {
+        public string Name = "La Parca";
+        public float EnemyMaxLife = 15f;
+        public float MaxPorcen = 0.30f;
+
+        public LaParca() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.LaParcaAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.LaParcaAmount -= 1;  
         }
     }
 }

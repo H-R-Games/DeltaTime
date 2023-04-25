@@ -6275,7 +6275,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1028132526
 GameObject:
@@ -13236,7 +13236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a97b030973be0c44b6568e78adfd5e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Item: {fileID: 11400000, guid: 3741a8d670c3b6f44860349560c04dfc, type: 2}
+  Item: {fileID: 11400000, guid: 07d1c9ca67e8c004fa8d347593b6b5fc, type: 2}
   ShowItemUI: {fileID: 0}
 --- !u!61 &1926819073
 BoxCollider2D:
@@ -14602,7 +14602,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a97b030973be0c44b6568e78adfd5e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Item: {fileID: 11400000, guid: 3741a8d670c3b6f44860349560c04dfc, type: 2}
+  Item: {fileID: 11400000, guid: 07d1c9ca67e8c004fa8d347593b6b5fc, type: 2}
   ShowItemUI: {fileID: 0}
 --- !u!212 &2142453149
 SpriteRenderer:
@@ -14726,7 +14726,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3441860747171742046, guid: 127880879ee6c374a9f3f463d39f502a, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3441860747171742046, guid: 127880879ee6c374a9f3f463d39f502a, type: 3}
       propertyPath: m_LocalPosition.x

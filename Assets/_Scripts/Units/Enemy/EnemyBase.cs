@@ -95,6 +95,9 @@ namespace rene_roid_enemy
             }
         }
 
+        public float CurrentHealth() { return _health; }
+        public float GetHealthPercentage() { return _health / _enemyBaseStats.Health; }
+        public void DestroyEnemy() { Destroy(this.gameObject); }
         /// <summary>
         /// Calculate the damage the enemy will deal to the player
         /// </summary>

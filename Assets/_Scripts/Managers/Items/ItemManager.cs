@@ -47,6 +47,7 @@ namespace rene_roid_player {
 
             // Game Items 100% proc
             DealMonsterWheights(damage, enemy);
+            GetLaParca(enemy);
         }
 
         public void OnKill(float damage, EnemyBase enemy) {
@@ -386,7 +387,24 @@ namespace rene_roid_player {
             var removeSpeed = enemy.GetMoveSpeed() * _movementRedux;
             enemy.SetMoveSpeed(enemy.GetMoveSpeed() - removeSpeed);
         }
-        
+        #endregion
+        #region La Parca
+        [Header("La Parca")]
+        public int LaParcaAmount = 0; // Amount of items
+        private LaParca _laParcaItem;
+
+        private void GetLaParca(EnemyBase enemy) {
+            if (LaParcaAmount == 0) return;
+            if (_laParcaItem == null) _laParcaItem = new LaParca();
+
+            // TODO: If the enemy has less than 15% life, kill him instantly
+            var f = _laParcaItem.EnemyMaxLife * LaParcaAmount;
+            f = Mathf.Clamp(f, 0, _laParcaItem.MaxPorcen);
+
+            if (enemy.GetHealthPercentage() <= f) {
+                enemy.DestroyEnemy();
+            }
+        }
         #endregion
     }
 }
