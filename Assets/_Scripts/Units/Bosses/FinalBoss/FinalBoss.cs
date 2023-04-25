@@ -1,21 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using rene_roid;
 
 namespace rene_roid_enemy {
     public class FinalBoss : EnemyBase
     {
         private int _phase = 1;
+        private Rigidbody2D _rb;
 
         public override void Start() {
             base.Start();
+            _rb = GetComponent<Rigidbody2D>();
             _lastHP = _health;
         }
 
         public override void Update() {
             base.Update();
-
-            InDodge();
         }
 
         public override void UpdateState()
@@ -30,27 +31,60 @@ namespace rene_roid_enemy {
             if (_phase < 3 && _health <= EnemyBaseStats.Health * 0.05f) {
                 _health = EnemyBaseStats.Health;
                 _phase++;
-            } 
+            }
+
+            Movement();
 
             switch (_phase)
             {
                 case 1:
                     break;
                 case 2:
-                // Dissable skills
-                // Spawn bosses
+                    // Dissable skills
+                    DissableSkills();
+                    // Spawn bosses
                     break;
                 case 3:
-                // ZA WARUDO
+                    // ZA WARUDO
+                    ZaWarudo();
                     break;
                 default:
                     break;
             }
 
+            if (ZaWarudoActive) return;
             Dodge();
             GroingStuff();
             PlayerTimeTravel();
         }
+
+        #region Movement
+        [Header("Movement")]
+        [SerializeField] private float _speed = 5f;
+        
+        private void Movement() {
+            var dir = _targetPlayer.transform.position - transform.position;
+            dir.Normalize();
+            dir = new Vector2(dir.x, 0);
+
+            if (dir.x > 0) {
+                transform.localScale = new Vector3(-1, 1, 1);
+            }
+            else if (dir.x < 0) {
+                transform.localScale = new Vector3(1, 1, 1);
+            }
+
+            if (Vector2.Distance(transform.position, _targetPlayer.transform.position) > 5f) {
+                _rb.velocity = dir * _speed;
+            }
+            else if (Vector2.Distance(transform.position, _targetPlayer.transform.position) < 3f) {
+                _rb.velocity = -dir * _speed * 0.75f;
+            }
+            else {
+                _rb.velocity = Vector2.zero;
+            }
+        }
+        #endregion
 
         #region Dodge
         [Header("Dodge")]
@@ -184,8 +218,109 @@ namespace rene_roid_enemy {
 
         #region Dissable Skills
         [Header("Dissable Skills")]
-        [SerializeField] private float _dissableSkillsCooldown = 20f;
+        [SerializeField] private float _dissableSkillsCooldown = 30f;
         private float _dissableSkillsCooldownTimer = 0f;
+
+        [SerializeField] private float _dissableSkillsDuration = 15f;
+
+        private void DissableSkills() {
+            _dissableSkillsCooldownTimer += Time.deltaTime;
+            if (_dissableSkillsCooldownTimer >= _dissableSkillsCooldown) {
+                _dissableSkillsCooldownTimer = 0f;
+                _targetPlayer.AddSkillsCooldown(_dissableSkillsDuration);
+            }
+        }
+        #endregion
+    
+        #region Za Warudo
+        [Header("Za Warudo")]
+        [SerializeField] private float _zaWarudoCooldown = 60f;
+        private float _zaWarudoCooldownTimer = 0f;
+
+        [SerializeField] private float _zaWarudoDuration = 10f;
+        [SerializeField] private Shark _sharkPrefab;
+        [SerializeField] private int _sharkCount = 5;
+        public bool ZaWarudoActive = false;
+
+        private void ZaWarudo() {
+            _zaWarudoCooldownTimer += Time.deltaTime;
+            if (_zaWarudoCooldownTimer >= _zaWarudoCooldown) {
+                _zaWarudoCooldownTimer = 0f;
+                StartCoroutine(ZaWarudoCoroutine());
+            }
+            
+            IEnumerator ZaWarudoCoroutine() {
+                _targetPlayer.TakeAwayControl();
+                ZaWarudoActive = true;
+
+                var dirPlayer = _targetPlayer.transform.position - transform.position;
+                dirPlayer.Normalize();
+                var pos = transform.position + -dirPlayer * 30f;
+
+                // Spawn sharks
+                for (int i = 0; i < _sharkCount; i++)
+                {
+                    var randx = Random.Range(-1f, 1f);
+                    var randy = Random.Range(-4f, 4f);
+                    pos.x += randx;
+                    pos.y += randy;
+                    Shark shark = Instantiate(_sharkPrefab, pos, Quaternion.identity);
+                    shark._boss = this;
+                    shark._target = _targetPlayer.transform;
+
+                }
+
+                yield return Helpers.GetWait(_zaWarudoDuration);
+                _targetPlayer.ReturnControl();
+                ZaWarudoActive = false;
+            }
+        }
+        #endregion
+
+        #region Time Travel
+        [Header("Time Travel")]
+        [SerializeField] private float _timeTravelCooldown = 60f;
+        private float _timeTravelCooldownTimer = 0f;
+
+        [SerializeField] private float _timeTravelDuration = 10f;
+        [SerializeField] private SpriteRenderer _timeTravelPrefab;
+        private void TimeTravel() {
+            // When activated save the position and after the duration return to that position
+            _timeTravelCooldownTimer += Time.deltaTime;
+            if (_timeTravelCooldownTimer >= _timeTravelCooldown) {
+                _timeTravelCooldownTimer = 0f;
+                StartCoroutine(TimeTravelCoroutine());
+            }
+
+            IEnumerator TimeTravelCoroutine() {
+                var sr = this.GetComponentInChildren<SpriteRenderer>();
+                var pos = transform.position;
+                var t = 0f;
+                var dur = _timeTravelDuration;
+
+                StartCoroutine(ShadowCoroutine(dur));
+
+                while (t < 1) {
+                    t += Time.deltaTime / dur;
+                    yield return null;
+                }
+                //yield return Helpers.GetWait(_timeTravelDuration);
+                transform.position = pos;
+
+
+                IEnumerator ShadowCoroutine(float dur) {
+                    var count = 0;
+                    var t2 = dur / 20f;
+
+                    while (count < 20) {
+                        count++;
+                        var shadow = Instantiate(_timeTravelPrefab, transform.position, Quaternion.identity);
+                        shadow.sprite = sr.sprite;
+                        yield return Helpers.GetWait(t2);
+                    }
+                }
+            }
+        }
         #endregion
     }
 }

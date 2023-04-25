@@ -631,6 +631,18 @@ namespace rene_roid_player
             }
         }
 
+        public void AddSkillsCooldown(float time) {
+            //_basicAttackTimer -= time;
+            _skill1Timer= Skill1Cooldown - time;
+            _skill2Timer = Skill2Cooldown - time;
+            _ultimateTimer = UltimateCooldown - time;
+
+            //_basicAttackReady = false;
+            _skill1Ready = false;
+            _skill2Ready = false;
+            _ultimateReady = false;
+        }
+
         public virtual void BasicAttack()
         {
             // print("Basic attack!");
