@@ -22,6 +22,7 @@ namespace rene_roid_player
         protected PlayerInput _input;
         protected FrameInput _frameInput;
         protected int _fixedFrame;
+        private Director _director;
         #endregion
 
         #region External Variables
@@ -686,6 +687,19 @@ namespace rene_roid_player
 
             // * Add experience
             AddExperience(enemy.EnemyBaseStats.ExperienceReward);
+
+            if (_director == null) {
+                _director = FindObjectOfType<Director>();
+
+                if (_director == null) {
+                    Debug.LogError("No director found in scene!");
+                    return;
+                } else {
+                    _director.AddExp(enemy.EnemyBaseStats.ExperienceReward * 0.5f);
+                }
+            } else {
+                _director.AddExp(enemy.EnemyBaseStats.ExperienceReward * 0.5f);
+            }
         }
         #endregion
 
