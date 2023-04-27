@@ -10,11 +10,11 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - 
-  - Player
+  - 
   - Wall
   - Ladder
   - Enemy
@@ -43,14 +43,11 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Player
-    uniqueID: 2223117063
+  - name: BackGroundwall
+    uniqueID: 985637583
     locked: 0
   - name: Floor
     uniqueID: 1893653353
-    locked: 0
-  - name: BackGroundwall
-    uniqueID: 985637583
     locked: 0
   - name: BackGroundWall2
     uniqueID: 96587647
@@ -60,4 +57,7 @@ TagManager:
     locked: 0
   - name: Jails
     uniqueID: 3881079659
+    locked: 0
+  - name: Player
+    uniqueID: 2223117063
     locked: 0
