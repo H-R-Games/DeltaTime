@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using rene_roid_player;
 
 namespace rene_roid_enemy {    
     public class Shark : MonoBehaviour
@@ -7,6 +8,8 @@ namespace rene_roid_enemy {
         private bool _onGoing = false;
         public Transform _target;
         public FinalBoss _boss;
+
+        public float Damage = 1f;
 
         void Update()
         {
@@ -66,6 +69,12 @@ namespace rene_roid_enemy {
                 yield return null;
             }
             print("attacked player");
+        }
+
+        private void OnTriggerEnter2D(Collider2D other) {
+            if (other.CompareTag("Player")) {
+                other.GetComponent<PlayerBase>().TakeDamage(Damage);
+            }
         }
     }
 }

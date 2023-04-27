@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using rene_roid;
+using rene_roid_player;
 
 namespace rene_roid_enemy {    
     public class StompWall : MonoBehaviour
@@ -8,6 +9,7 @@ namespace rene_roid_enemy {
         public float Speed = 5f;
         public float Cd = 5f;
         private bool _go = false;
+        public float Damage = 1f;
 
         void Start()
         {
@@ -38,6 +40,12 @@ namespace rene_roid_enemy {
         private void Update() {
             if (_go) {
                 transform.position += Vector3.down * Time.deltaTime * Speed;
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D other) {
+            if (other.CompareTag("Player")) {
+                other.GetComponent<PlayerBase>().TakeDamage(Damage);
             }
         }
     }

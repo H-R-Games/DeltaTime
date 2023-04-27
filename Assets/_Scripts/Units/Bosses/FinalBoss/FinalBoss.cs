@@ -209,6 +209,7 @@ namespace rene_roid_enemy {
                 yield return new WaitForSeconds(_playerTimeTravelDuration * 0.5f);
                 var gameobj = Instantiate(_stompPrefab, playerPos + new Vector3(0, 5, 0), Quaternion.identity);
                 gameobj.GetComponent<StompWall>().Cd = _playerTimeTravelDuration;
+                gameobj.GetComponent<StompWall>().Damage = _damage;
                 yield return new WaitForSeconds(_playerTimeTravelDuration * 0.5f);
 
                 _targetPlayer.transform.position = playerPos;
@@ -265,6 +266,7 @@ namespace rene_roid_enemy {
                     pos.x += randx;
                     pos.y += randy;
                     Shark shark = Instantiate(_sharkPrefab, pos, Quaternion.identity);
+                    shark.Damage = _damage;
                     shark._boss = this;
                     shark._target = _targetPlayer.transform;
 
@@ -300,6 +302,8 @@ namespace rene_roid_enemy {
 
                 StartCoroutine(ShadowCoroutine(dur));
 
+                var hp = _health;
+
                 while (t < 1) {
                     t += Time.deltaTime / dur;
                     yield return null;
@@ -319,6 +323,9 @@ namespace rene_roid_enemy {
                         yield return Helpers.GetWait(t2);
                     }
                 }
+
+                var hplost = hp - _health;
+                _health = hplost * 0.75f;
             }
         }
         #endregion

@@ -40,5 +40,11 @@ namespace rene_roid_enemy {
             }
             Destroy(gameObject);
         }
+
+        private void OnControllerColliderHit(ControllerColliderHit hit) {
+            if (hit.gameObject.CompareTag("Player")) {
+                print("hit");
+            }
+        }
     }
 }
