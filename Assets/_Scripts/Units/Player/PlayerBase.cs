@@ -23,6 +23,8 @@ namespace rene_roid_player
         protected FrameInput _frameInput;
         protected int _fixedFrame;
         private Director _director;
+
+        private float _luck = 0;
         #endregion
 
         #region External Variables
@@ -45,6 +47,8 @@ namespace rene_roid_player
         public int WallDirection => _wallDir;
         public bool ClimbingLadder => _onLadder;
 
+
+        public float Luck => _luck;
 
         public virtual void ApplyVelocity(Vector2 vel, PlayerForce forceType)
         {
