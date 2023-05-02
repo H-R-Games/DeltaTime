@@ -68,6 +68,7 @@ namespace rene_roid_player {
         private void ProccItems(List<ItemBase> items, float damage, EnemyBase enemy, float procCo = 1f) {
             print("Procc Items");
             ChanceToDealExtraHit(items, damage, enemy, procCo);
+            GetDecisionArrow(items, enemy, procCo);
         }
 
         #region Heal On Kill
@@ -362,8 +363,6 @@ namespace rene_roid_player {
             IEnumerator RunFast() {
                 var f = _FashionEarsItem.SpeedIncrease * FashionEarsAmount;
                 var t = _FashionEarsItem.TimeToDesactive;
-                print(f);
-                print(t);
                 _player.AddMovementSpeedPercentage(f);
                 yield return new WaitForSeconds(t);
                 _player.RemoveMovementSpeedPercentage(f);
@@ -404,6 +403,46 @@ namespace rene_roid_player {
             if (enemy.GetHealthPercentage() <= f) {
                 enemy.DestroyEnemy();
             }
+        }
+        #endregion
+        #region Decision Arrow
+        [Header("Decision Arrow")]
+        public int DecisionArrowAmount = 0; // Amount of items
+        private DecisionArrow _decisionArrowItem;
+        Arrow ArrowPrefab;
+
+        private void GetDecisionArrow(List<ItemBase> items, EnemyBase enemy, float procCo = 1f) {
+            if (DecisionArrowAmount == 0) return;
+
+            // If the items list is not empty, then check if it contains the class
+            if (items.Count > 0) {
+                // If the items list contains the class, then we don't want to do anything
+                for (int i = 0; i < items.Count; i++) {
+                    if (items[i].GetType() == typeof(ChanceToDealExtraHit)) return; 
+                }
+            }
+
+            if (_decisionArrowItem == null) _decisionArrowItem = new DecisionArrow();
+            if (ArrowPrefab == null) ArrowPrefab = Resources.Load<Arrow>("Arrow");
+
+            // TODO: When we are attacking an enemy there is a probability that we will shoot an arrow
+
+            // Create a new instance of the class
+            ChanceToDealExtraHit chanceToDealExtraHitItem = new ChanceToDealExtraHit();
+            
+            if (Random.Range(0, 1f) > _decisionArrowItem.Probability * procCo + _player.Luck) return;
+
+            for (int i = 0; i < DecisionArrowAmount; i++) {
+                var f = Random.Range(-2, 2);
+                Arrow arrow = Instantiate(ArrowPrefab, enemy.transform.position + new Vector3(Random.Range(0f, 1f) > 0.5f ? 20 + f : -20 + f, 20, 0), Quaternion.identity);
+                arrow.targetPosition = enemy.transform.position;
+                arrow.direction = (enemy.transform.position - arrow.transform.position).normalized;
+            }
+
+            // Add the class to the items list
+            items.Add(chanceToDealExtraHitItem);
+            // Call the ProccItems method
+            ProccItems(items, 10, enemy);
         }
         #endregion
     }

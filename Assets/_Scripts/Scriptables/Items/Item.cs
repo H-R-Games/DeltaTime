@@ -31,6 +31,7 @@ namespace rene_roid_player {
         [ContextMenu(nameof(FashionEars))] void FashionEars() => Items.Add(new FashionEars());
         [ContextMenu(nameof(MonsterWheights))] void MonsterWheights() => Items.Add(new MonsterWheights());
         [ContextMenu(nameof(LaParca))] void LaParca() => Items.Add(new LaParca());
+        [ContextMenu(nameof(DecisionArrow))] void DecisionArrow() => Items.Add(new DecisionArrow());
         #endregion
     }
 
@@ -422,6 +423,29 @@ namespace rene_roid_player {
             base.OnRemove(player, itemManager);
             // Deactivate item manager item
             itemManager.LaParcaAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class DecisionArrow : ItemBase {
+        public string Name = "Decision Arrow";
+        public float Probability = 0.30f;
+        public float Damage = 10f;
+
+        public DecisionArrow() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.DecisionArrowAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.DecisionArrowAmount -= 1;  
         }
     }
 }
