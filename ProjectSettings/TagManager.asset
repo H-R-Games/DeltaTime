@@ -43,21 +43,27 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: BackGroundwall
-    uniqueID: 985637583
+  - name: BackGroundWall
+    uniqueID: 3495301089
     locked: 0
-  - name: Floor
-    uniqueID: 1893653353
+  - name: Decos
+    uniqueID: 1869106197
     locked: 0
-  - name: BackGroundWall2
-    uniqueID: 96587647
+  - name: Docks
+    uniqueID: 1011790815
     locked: 0
-  - name: BG Decos
-    uniqueID: 3584118911
+  - name: Water
+    uniqueID: 2712386189
     locked: 0
-  - name: Jails
-    uniqueID: 3881079659
+  - name: Ground
+    uniqueID: 3650790433
+    locked: 0
+  - name: Ladder
+    uniqueID: 931471597
     locked: 0
   - name: Player
     uniqueID: 2223117063
+    locked: 0
+  - name: Doors
+    uniqueID: 3026862931
     locked: 0
