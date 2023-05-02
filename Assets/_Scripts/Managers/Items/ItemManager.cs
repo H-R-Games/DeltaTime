@@ -418,7 +418,7 @@ namespace rene_roid_player {
             if (items.Count > 0) {
                 // If the items list contains the class, then we don't want to do anything
                 for (int i = 0; i < items.Count; i++) {
-                    if (items[i].GetType() == typeof(ChanceToDealExtraHit)) return; 
+                    if (items[i].GetType() == typeof(DecisionArrow)) return; 
                 }
             }
 
@@ -428,7 +428,7 @@ namespace rene_roid_player {
             // TODO: When we are attacking an enemy there is a probability that we will shoot an arrow
 
             // Create a new instance of the class
-            ChanceToDealExtraHit chanceToDealExtraHitItem = new ChanceToDealExtraHit();
+            DecisionArrow DecisionArrowItem = new DecisionArrow();
             
             if (Random.Range(0, 1f) > _decisionArrowItem.Probability * procCo + _player.Luck) return;
 
@@ -440,7 +440,7 @@ namespace rene_roid_player {
             }
 
             // Add the class to the items list
-            items.Add(chanceToDealExtraHitItem);
+            items.Add(DecisionArrowItem);
             // Call the ProccItems method
             ProccItems(items, 10, enemy);
         }
