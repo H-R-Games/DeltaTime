@@ -38,9 +38,10 @@ namespace rene_roid
 
         void Update()
         {
+            ConstantLvlUp();
+            LevelUpDirectors();
             if (CurrentStageEnemies.Count < 0) return;
             DirectorsUpdate();
-            LevelUpDirectors();
         }
 
         #region Directors
@@ -579,6 +580,35 @@ namespace rene_roid
 
             _creditsOnActivateTED = _creditsOnActivateTED + (_creditsOnActivateTED * _directorsLevel);
             _creditsPerSecondTED = _creditsPerSecondTED + (_creditsPerSecondTED * _directorsLevel);
+        }
+
+        private float _exp = 0;
+        private float _expToLevelUp = 100;
+        private float _expPerSecond = 0.3f;
+        private float _difficulty = 1;
+        private void ConstantLvlUp() {
+            // if (_directorsLevel == 0) return;
+            GetExp();
+
+            // Level up
+            if (_exp >= _expToLevelUp) {
+                _exp = 0;
+                _directorsLevel++;
+
+                _expToLevelUp = _expToLevelUp * 1.5f;
+            }
+
+            void GetExp() {
+                _exp += _expPerSecond * Time.deltaTime * _difficulty;
+                if (_exp >= _expToLevelUp) {
+                    _exp = 0;
+                    _directorsLevel++;
+                }
+            }
+        }
+
+        public void AddExp(float exp) {
+            _exp += exp;
         }
 
         private void GetWheightRange()
