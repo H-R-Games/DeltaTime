@@ -36,6 +36,7 @@ namespace rene_roid_player {
         [ContextMenu(nameof(TeethOfTheFearful))] void TeethOfTheFearful() => Items.Add(new TeethOfTheFearful());
         [ContextMenu(nameof(DecisionArrow))] void DecisionArrow() => Items.Add(new DecisionArrow());
         [ContextMenu(nameof(BerserkBeer))] void BerserkBeer() => Items.Add(new BerserkBeer());
+        [ContextMenu(nameof(GeniusComet))] void GeniusComet() => Items.Add(new GeniusComet());
         #endregion
     }
 
@@ -538,6 +539,27 @@ namespace rene_roid_player {
         {
             base.OnRemove(player, itemManager);
             itemManager.BerserkBeerAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class GeniusComet : ItemBase {
+        public string Name = "Genius comet";
+        public float Probability = 0.30f;
+        public float Damage = 10f;
+
+        public GeniusComet() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            itemManager.GeniusCometAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            itemManager.GeniusCometAmount -= 1;  
         }
     }
 }

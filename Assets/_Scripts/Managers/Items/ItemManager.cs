@@ -69,6 +69,7 @@ namespace rene_roid_player {
             print("Procc Items");
             ChanceToDealExtraHit(items, damage, enemy, procCo);
             GetDecisionArrow(items, enemy, procCo);
+            GetGeniusComet(items, enemy, procCo);
         }
 
         #region Heal On Kill
@@ -508,6 +509,46 @@ namespace rene_roid_player {
                     _player.AddPercentageDamageBonus(-_berserkBeerItem.DamageBoost * BerserkBeerAmount);
                 }
             }
+        }
+        #endregion
+        #region GeniusComet
+        [Header("Genius Comet")]
+        public int GeniusCometAmount = 0; // Amount of items
+        private GeniusComet _geniusCometItem;
+        Comet CometPrefab;
+
+        private void GetGeniusComet(List<ItemBase> items, EnemyBase enemy, float procCo = 1f) {
+            if (GeniusCometAmount == 0) return;
+
+            // If the items list is not empty, then check if it contains the class
+            if (items.Count > 0) {
+                // If the items list contains the class, then we don't want to do anything
+                for (int i = 0; i < items.Count; i++) {
+                    if (items[i].GetType() == typeof(GeniusComet)) return; 
+                }
+            }
+
+            if (_geniusCometItem == null) _geniusCometItem = new GeniusComet();
+            if (CometPrefab == null) CometPrefab = Resources.Load<Comet>("Comet");
+
+            // TODO: When we are attacking an enemy there is a probability that we will shoot an comet
+
+            // Create a new instance of the class
+            GeniusComet GeniusCometItem = new GeniusComet();
+
+            if (Random.Range(0, 1f) > _geniusCometItem.Probability * procCo + _player.Luck) return;
+
+            var damage = GeniusCometItem.Damage * GeniusCometAmount;
+
+            Comet comet = Instantiate(CometPrefab, enemy.transform.position, Quaternion.identity);
+            comet.targetPosition = enemy.transform.position;
+            comet.direction = (enemy.transform.position - comet.transform.position).normalized;
+            comet.damage = damage;
+
+            // Add the class to the items list
+            items.Add(GeniusCometItem);
+            // Call the ProccItems method
+            ProccItems(items, damage, enemy);
         }
         #endregion
     }
