@@ -18,6 +18,8 @@ public class Arrow : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         Destroy(this.gameObject, _lifeTime);
+        if (direction.x > 0) this.gameObject.GetComponent<SpriteRenderer>().flipX = true;
+        else this.gameObject.GetComponent<SpriteRenderer>().flipX = false;
     }
 
     void Update()
