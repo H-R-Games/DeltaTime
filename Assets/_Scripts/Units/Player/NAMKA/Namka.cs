@@ -215,7 +215,7 @@ namespace rene_roid_player
 
             base.Ultimate();
 
-            StartCoroutine(RemoveControl(_ultimateChargeTime));
+            StartCoroutine(RemoveControl(_ultimateChargeTime + 1.5f));
 
             _rb.velocity = new Vector2(0, 0);
 

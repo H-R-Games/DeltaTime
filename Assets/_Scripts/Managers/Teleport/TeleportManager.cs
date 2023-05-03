@@ -30,6 +30,9 @@ namespace hrTeleport
         public static int _piecesActivated = 0;
         EnemyBase _bossScript;
         List<GameObject> _pieces = new List<GameObject>();
+
+
+        public bool IsFinished => _isFinished;
         
         void Start()
         {
@@ -83,7 +86,6 @@ namespace hrTeleport
         {
             ActivateTeleport();
             loadTeleport();
-            Debug.Log(_bossScript);
         }
 
         void ActivateTeleport()

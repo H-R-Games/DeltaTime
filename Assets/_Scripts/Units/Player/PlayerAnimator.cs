@@ -55,24 +55,30 @@ namespace rene_roid_player
         [SerializeField] private float _specialAttack1Time, _specialAttack2Time, _ultimateAttackTime;
         private bool _basicAttack1, _specialAttack1, _specialAttack2, _ultimateAttack;
 
+        [SerializeField] private AudioClip _basicAttackClip, _specialAttack1Clip, _specialAttack2Clip, _ultimateAttackClip;
+
         private void OnBasicAttack1()
         {
             _basicAttack1 = true;
+            PlaySound(_basicAttackClip, 0.1f, Random.Range(0.97f, 1.03f));
         }
 
         private void OnSpecialAttack1()
         {
             _specialAttack1 = true;
+            PlaySound(_specialAttack1Clip, 0.1f, Random.Range(0.97f, 1.03f));
         }
 
         private void OnSpecialAttack2()
         {
             _specialAttack2 = true;
+            PlaySound(_specialAttack2Clip, 0.1f, Random.Range(0.97f, 1.03f));
         }
 
         private void OnUltimateAttack()
         {
             _ultimateAttack = true;
+            PlaySound(_ultimateAttackClip, 0.1f, Random.Range(0.97f, 1.03f));
         }
         #endregion
 
@@ -105,7 +111,11 @@ namespace rene_roid_player
 
         #region Wall Sliding and Climbing
         [Header("WALL")]
-
+        [SerializeField] private AudioSource _wallSlideSource;
+        [SerializeField] private AudioClip[] _wallClimbClips;
+        [SerializeField] private float _maxWallSlideVolume = 0.2f;
+        [SerializeField] private float _wallSlideVolumeSpeed = 0.6f;
+        [SerializeField] private float _wallSlideParticleOffset = 0.3f;
         private bool _hitWall, _isOnWall, _isSliding, _dismountedWall;
 
         private void OnWallGrabChanged(bool onWall)
@@ -126,14 +136,18 @@ namespace rene_roid_player
             {
                 _isSliding = false;
             }
+
+            _wallSlideSource.volume = _isSliding || _player.ClimbingLadder && _player.Speed.y < 0
+            ? Mathf.MoveTowards(_wallSlideSource.volume, _maxWallSlideVolume, _wallSlideVolumeSpeed * Time.deltaTime)
+            : 0;
         }
 
         private int _wallClimbIndex = 0;
 
         public void PlayWallClimbSound()
         {
-            //_wallClimbIndex = (_wallClimbIndex + 1) % _wallClimbClips.Length;
-            //PlaySound(_wallClimbClips[_wallClimbIndex], 0.1f);
+            _wallClimbIndex = (_wallClimbIndex + 1) % _wallClimbClips.Length;
+            PlaySound(_wallClimbClips[_wallClimbIndex], 0.1f);
         }
 
         #endregion
@@ -149,6 +163,7 @@ namespace rene_roid_player
         {
             if (_player.Speed.y < 0) return;
             _climbIndex = (_climbIndex + 1) % _ladderClips.Length;
+            PlaySound(_ladderClips[_climbIndex], 0.07f);
         }
 
         #endregion
@@ -156,7 +171,7 @@ namespace rene_roid_player
         #region Jumping & Landing
         [Header("JUMPING")]
         [SerializeField] private float _minImpactForce = 20;
-
+        [SerializeField] private AudioClip _landClip, _jumpClip, _doubleJumpClip;
         private bool _jumpTriggered;
         private bool _landed;
         private bool _grounded;
@@ -166,12 +181,14 @@ namespace rene_roid_player
         {
             _jumpTriggered = true;
             _wallJumped = wallJumped;
+            PlaySound(_jumpClip, 0.05f, Random.Range(0.98f, 1.02f));
         }
 
         private void OnAirJumped()
         {
             _jumpTriggered = true;
             _wallJumped = false;
+            PlaySound(_doubleJumpClip, 0.1f);
         }
 
         private void OnGroundedChanged(bool grounded, float impactForce)
@@ -182,6 +199,7 @@ namespace rene_roid_player
             {
                 var p = Mathf.InverseLerp(0, _minImpactForce, impactForce);
                 _landed = true;
+                PlaySound(_landClip, p * 0.1f);
             }
         }
         #endregion

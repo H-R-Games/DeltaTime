@@ -28,6 +28,8 @@ namespace rene_roid_enemy
         #region External Variables
         public event Action<float> OnHit;
         public event Action OnDeath;
+
+        public EnemyBaseStats EnemyBaseStats { get => _enemyBaseStats; }
         #endregion
 
         public virtual void Awake()
@@ -81,10 +83,12 @@ namespace rene_roid_enemy
             if (_armor < 0) damage *= 2 - 100 / (100 - _armor);
 
             _health -= damage;
+            _targetPlayer.OnEnemyHit(damage, this);
 
             if (_health <= 0)
             {
                 OnDeath?.Invoke();
+                _targetPlayer.OnEnemyDeath(damage, this);
                 return;
             }
         }
@@ -100,7 +104,7 @@ namespace rene_roid_enemy
         public virtual void UpdateState() { }
         #endregion
 
-        #region Movement
+        #region Movement AI
         [Header("Movement")]
         [SerializeField] protected float _movementSpeedMultiplier = 1f;
         [SerializeField] protected float _headLevel = 0.5f;
