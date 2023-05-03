@@ -48,7 +48,7 @@ namespace rene_roid_player
         public bool ClimbingLadder => _onLadder;
 
 
-        public float Luck => _luck;
+        public float Luck { get; set; }
 
         public virtual void ApplyVelocity(Vector2 vel, PlayerForce forceType)
         {
@@ -458,14 +458,15 @@ namespace rene_roid_player
         private float _currentExperience = 0;
         private float _experienceToNextLevel = 100;
         private float _experienceMultiplier = 1.37f;
+        private float _extraExp = 1;
         public void AddExperienceMultiplier(float multiplier)
         {
-            _experienceMultiplier += multiplier;
+            _extraExp = multiplier;
         }
 
         public void AddExperience(float experience)
         {
-            _currentExperience += experience;
+            _currentExperience += experience * _extraExp;
             if (_currentExperience >= _experienceToNextLevel)
             {
                 LevelUp();

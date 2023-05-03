@@ -31,7 +31,11 @@ namespace rene_roid_player {
         [ContextMenu(nameof(FashionEars))] void FashionEars() => Items.Add(new FashionEars());
         [ContextMenu(nameof(MonsterWheights))] void MonsterWheights() => Items.Add(new MonsterWheights());
         [ContextMenu(nameof(LaParca))] void LaParca() => Items.Add(new LaParca());
+        [ContextMenu(nameof(BookOfKnowledge))] void BookOfKnowledge() => Items.Add(new BookOfKnowledge());
+        [ContextMenu(nameof(LuckyGlasses))] void LuckyGlasses() => Items.Add(new LuckyGlasses());
+        [ContextMenu(nameof(TeethOfTheFearful))] void TeethOfTheFearful() => Items.Add(new TeethOfTheFearful());
         [ContextMenu(nameof(DecisionArrow))] void DecisionArrow() => Items.Add(new DecisionArrow());
+        [ContextMenu(nameof(BerserkBeer))] void BerserkBeer() => Items.Add(new BerserkBeer());
         #endregion
     }
 
@@ -427,6 +431,30 @@ namespace rene_roid_player {
     }
 
     [System.Serializable]
+    public class BookOfKnowledge : ItemBase {
+        public string Name = "Book Of Knowledge";
+        public float ExpMultiplier = 1.5f;
+
+        public BookOfKnowledge() { }
+
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.BookOfKnowledgeAmount += 1;
+            itemManager.DecisionArrowAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.BookOfKnowledgeAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
     public class DecisionArrow : ItemBase {
         public string Name = "Decision Arrow";
         public float Probability = 0.30f;
@@ -446,6 +474,70 @@ namespace rene_roid_player {
             base.OnRemove(player, itemManager);
             // Deactivate item manager item
             itemManager.DecisionArrowAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class LuckyGlasses : ItemBase {
+        public string Name = "Lucky Glasses";
+        public float Luck = 0.05f;
+
+        public LuckyGlasses() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.LuckyGlassesAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.LuckyGlassesAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class TeethOfTheFearful : ItemBase {
+        public string Name = "Teeth Of The Fearful";
+        public float HealthSteal = 0.03f;
+
+        public TeethOfTheFearful() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.TeethOfTheFearfulAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.TeethOfTheFearfulAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class BerserkBeer : ItemBase {
+        public string Name = "Berserk Beer";
+        public float DamageBoost = 0.3f;
+
+        public BerserkBeer() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            itemManager.BerserkBeerAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            itemManager.BerserkBeerAmount -= 1;  
         }
     }
 }

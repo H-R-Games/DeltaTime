@@ -150,7 +150,7 @@ namespace rene_roid_player {
             
             // Chance to deal extra hit
             // If the chance to deal extra hit is less than the random range, then we don't want to do anything
-            if (Random.Range(0f, 1f) > _chanceToDealExtraHit * procCo) return;
+            if (Random.Range(0f, 1f) > _chanceToDealExtraHit * procCo + _player.Luck) return;
             print("YAAAAY: " + _chanceToDealExtraHit);
 
             // Create a new instance of the class
@@ -405,6 +405,48 @@ namespace rene_roid_player {
             }
         }
         #endregion
+        #region Book of Knowledge
+        [Header("Book of Knowledge")]
+        public int BookOfKnowledgeAmount = 0; // Amount of items
+        private BookOfKnowledge _bookOfKnowledgeItem;
+        private int _lastBookOfKnowledgeAmmount = 0;
+
+        private void GetBookOfKnowledge() {
+            if (BookOfKnowledgeAmount == 0) return;
+            if (_lastBookOfKnowledgeAmmount == BookOfKnowledgeAmount) return;
+            if (_bookOfKnowledgeItem == null) _bookOfKnowledgeItem = new BookOfKnowledge();
+            _lastBookOfKnowledgeAmmount = BookOfKnowledgeAmount;
+
+            _player.AddExperienceMultiplier(_bookOfKnowledgeItem.ExpMultiplier * BookOfKnowledgeAmount);
+        }
+        #endregion
+        #region Lucky Glasses
+        [Header("Lucky Glasses")]
+        public int LuckyGlassesAmount = 0; // Amount of items
+        private LuckyGlasses _luckyGlassesItem;
+        private int _lastLuckyGlassesAmmount = 0;
+
+        private void GetLuckyGlasses() {
+            if (LuckyGlassesAmount == 0) return;
+            if (_lastLuckyGlassesAmmount == LuckyGlassesAmount) return;
+            if (_luckyGlassesItem == null) _luckyGlassesItem = new LuckyGlasses();
+            _lastLuckyGlassesAmmount = LuckyGlassesAmount;
+
+            _player.Luck = _luckyGlassesItem.Luck * LuckyGlassesAmount;
+        }
+        #endregion
+        #region Teeth Of The Fearful
+        [Header("Teeth Of The Fearful")]
+        public int TeethOfTheFearfulAmount = 0; // Amount of items
+        private TeethOfTheFearful _teethOfTheFearfulItem;
+
+        private void GetTeethOfTheFearful(float damage) {
+            if (TeethOfTheFearfulAmount == 0) return;
+            if (_teethOfTheFearfulItem == null) _teethOfTheFearfulItem = new TeethOfTheFearful();
+
+            _player.HealAmmount(damage * (TeethOfTheFearfulAmount * _teethOfTheFearfulItem.HealthSteal));
+        }
+        #endregion
         #region Decision Arrow
         [Header("Decision Arrow")]
         public int DecisionArrowAmount = 0; // Amount of items
@@ -443,6 +485,29 @@ namespace rene_roid_player {
             items.Add(DecisionArrowItem);
             // Call the ProccItems method
             ProccItems(items, 10, enemy);
+        }
+        #endregion
+        #region Berserk Beer
+        [Header("Berserk Beer")]
+        public int BerserkBeerAmount = 0; // Amount of items
+        private BerserkBeer _berserkBeerItem;
+
+        private bool _inBerserkBeer = false;
+        private void InBerserkBeer() {
+            if (BerserkBeerAmount == 0) return;
+            if (_berserkBeerItem == null) _berserkBeerItem = new BerserkBeer();
+
+            if (_player.CurrentHealth <= _player.MaxStats.Health * 0.3f) {
+                if (!_inBerserkBeer) {
+                    _inBerserkBeer = true;
+                    _player.AddPercentageDamageBonus(_berserkBeerItem.DamageBoost * BerserkBeerAmount);
+                }
+            } else {
+                if (_inBerserkBeer) {
+                    _inBerserkBeer = false;
+                    _player.AddPercentageDamageBonus(-_berserkBeerItem.DamageBoost * BerserkBeerAmount);
+                }
+            }
         }
         #endregion
     }
