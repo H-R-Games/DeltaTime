@@ -109,7 +109,7 @@ namespace rene_roid_enemy
         public virtual void UpdateState() { }
         #endregion
 
-        #region Movement
+        #region Movement AI
         [Header("Movement")]
         [SerializeField] protected float _movementSpeedMultiplier = 1f;
         [SerializeField] protected float _headLevel = 0.5f;
