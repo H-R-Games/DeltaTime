@@ -35,6 +35,7 @@ namespace rene_roid_player {
         [ContextMenu(nameof(LuckyGlasses))] void LuckyGlasses() => Items.Add(new LuckyGlasses());
         [ContextMenu(nameof(TeethOfTheFearful))] void TeethOfTheFearful() => Items.Add(new TeethOfTheFearful());
         [ContextMenu(nameof(DecisionArrow))] void DecisionArrow() => Items.Add(new DecisionArrow());
+        [ContextMenu(nameof(BerserkBeer))] void BerserkBeer() => Items.Add(new BerserkBeer());
         #endregion
     }
 
@@ -517,6 +518,26 @@ namespace rene_roid_player {
             base.OnRemove(player, itemManager);
             // Deactivate item manager item
             itemManager.TeethOfTheFearfulAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class BerserkBeer : ItemBase {
+        public string Name = "Berserk Beer";
+        public float DamageBoost = 0.3f;
+
+        public BerserkBeer() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            itemManager.BerserkBeerAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            itemManager.BerserkBeerAmount -= 1;  
         }
     }
 }

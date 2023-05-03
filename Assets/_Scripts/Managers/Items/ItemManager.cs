@@ -487,5 +487,28 @@ namespace rene_roid_player {
             ProccItems(items, 10, enemy);
         }
         #endregion
+        #region Berserk Beer
+        [Header("Berserk Beer")]
+        public int BerserkBeerAmount = 0; // Amount of items
+        private BerserkBeer _berserkBeerItem;
+
+        private bool _inBerserkBeer = false;
+        private void InBerserkBeer() {
+            if (BerserkBeerAmount == 0) return;
+            if (_berserkBeerItem == null) _berserkBeerItem = new BerserkBeer();
+
+            if (_player.CurrentHealth <= _player.MaxStats.Health * 0.3f) {
+                if (!_inBerserkBeer) {
+                    _inBerserkBeer = true;
+                    _player.AddPercentageDamageBonus(_berserkBeerItem.DamageBoost * BerserkBeerAmount);
+                }
+            } else {
+                if (_inBerserkBeer) {
+                    _inBerserkBeer = false;
+                    _player.AddPercentageDamageBonus(-_berserkBeerItem.DamageBoost * BerserkBeerAmount);
+                }
+            }
+        }
+        #endregion
     }
 }
