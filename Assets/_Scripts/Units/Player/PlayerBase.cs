@@ -701,13 +701,14 @@ namespace rene_roid_player
             _itemManager.OnHit(damage, enemy);
         }
 
+        public float MoneyMultiplier = 1;
         public virtual void OnEnemyDeath(float damage, EnemyBase enemy)
         {
             print("Killed enemy  " + enemy.name + " for " + damage + " damage!");
             _itemManager.OnKill(damage, enemy);
 
             // ? Chance to get experience
-            AddMoney(enemy.EnemyBaseStats.MoneyReward);
+            AddMoney(enemy.EnemyBaseStats.MoneyReward * MoneyMultiplier);
 
             // * Add experience
             AddExperience(enemy.EnemyBaseStats.ExperienceReward);

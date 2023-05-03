@@ -33,6 +33,7 @@ namespace rene_roid_player {
             GetRock();
             GetWingedShoes();
             GetSpringShoes();
+            OnGetCachinkGlasses();
         }
 
         public void OnRemove(float damage, EnemyBase enemy) {
@@ -549,6 +550,21 @@ namespace rene_roid_player {
             items.Add(GeniusCometItem);
             // Call the ProccItems method
             ProccItems(items, damage, enemy);
+        }
+        #endregion
+        #region Cachink Glasses
+        [Header("Cachink Glasses")]
+        public int CachinkGlassesAmount = 0; // Amount of items
+        private CachinkGlasses _cachinkGlassesItem;
+        private int _lastCachinkGlassesAmmount = 0;
+
+        private void OnGetCachinkGlasses() {
+            if (CachinkGlassesAmount == 0) return;
+            if (_cachinkGlassesItem == null) _cachinkGlassesItem = new CachinkGlasses();
+            if (_lastCachinkGlassesAmmount == CachinkGlassesAmount) return;
+            _lastCachinkGlassesAmmount = CachinkGlassesAmount;
+
+            _player.MoneyMultiplier = 1 + _cachinkGlassesItem.MoneyMultiplier * CachinkGlassesAmount;
         }
         #endregion
     }
