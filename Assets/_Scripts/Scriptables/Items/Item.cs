@@ -34,6 +34,7 @@ namespace rene_roid_player {
         [ContextMenu(nameof(BookOfKnowledge))] void BookOfKnowledge() => Items.Add(new BookOfKnowledge());
         [ContextMenu(nameof(LuckyGlasses))] void LuckyGlasses() => Items.Add(new LuckyGlasses());
         [ContextMenu(nameof(TeethOfTheFearful))] void TeethOfTheFearful() => Items.Add(new TeethOfTheFearful());
+        [ContextMenu(nameof(DecisionArrow))] void DecisionArrow() => Items.Add(new DecisionArrow());
         #endregion
     }
 
@@ -435,11 +436,13 @@ namespace rene_roid_player {
 
         public BookOfKnowledge() { }
 
+
         public override void OnGet(PlayerBase player, ItemManager itemManager)
         {
             base.OnGet(player, itemManager);
             // Activate item manager item
             itemManager.BookOfKnowledgeAmount += 1;
+            itemManager.DecisionArrowAmount += 1;
         }
 
         public override void OnRemove(PlayerBase player, ItemManager itemManager)
@@ -447,6 +450,29 @@ namespace rene_roid_player {
             base.OnRemove(player, itemManager);
             // Deactivate item manager item
             itemManager.BookOfKnowledgeAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class DecisionArrow : ItemBase {
+        public string Name = "Decision Arrow";
+        public float Probability = 0.30f;
+        public float Damage = 10f;
+
+        public DecisionArrow() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.DecisionArrowAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.DecisionArrowAmount -= 1;  
         }
     }
 
