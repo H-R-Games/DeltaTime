@@ -445,6 +445,8 @@ namespace rene_roid_player {
             if (_teethOfTheFearfulItem == null) _teethOfTheFearfulItem = new TeethOfTheFearful();
 
             _player.HealAmmount(damage * (TeethOfTheFearfulAmount * _teethOfTheFearfulItem.HealthSteal));
+        }
+        #endregion
         #region Decision Arrow
         [Header("Decision Arrow")]
         public int DecisionArrowAmount = 0; // Amount of items
