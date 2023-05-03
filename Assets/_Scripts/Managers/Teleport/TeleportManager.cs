@@ -14,6 +14,7 @@ namespace hrTeleport
         [SerializeField] private int _piecesToActivate = 3;
         [SerializeField][Range(0f, 100f)] private float _timeToFinnishLoad = 5f;
         [SerializeField] private LayerMask _playerLayer;
+        [SerializeField] private List<Sprite> _sprites = new List<Sprite>();
 
         [Header("Boss Settings")]
         [SerializeField] private GameObject _boss;
@@ -53,6 +54,7 @@ namespace hrTeleport
                 }
 
                 var piece = Instantiate(_piece, pos, Quaternion.identity);
+                piece.GetComponent<SpriteRenderer>().sprite = _sprites[Random.Range(0, _sprites.Count)];
 
                 _pieces.Add(piece);
                 _places[index].isUsed = true;   
@@ -105,7 +107,7 @@ namespace hrTeleport
             // Debug.Log("Piesas activas: " + _piecesActivated + " / " + _piecesToActivate);
             if (!_isActive) return;
             if (_isSpwaned && _bossScript == null) _isBossDied = true;
-            if (_timeLoaded >= _timeToFinnishLoad && _isBossDied) _isFinished = true; 
+            if (_timeLoaded >= _timeToFinnishLoad && _isBossDied) _isFinished = true;
             else if (_timeLoaded < _timeToFinnishLoad) _timeLoaded += Time.deltaTime;
         }
     }
@@ -115,11 +117,13 @@ namespace hrTeleport
     {
         public Transform transform;
         public bool isUsed;
+        public Sprite sprite;
 
-        public Places(Transform pos, bool isUsed)
+        public Places(Transform pos, bool isUsed, Sprite sprite)
         {
             transform = pos;
             isUsed = isUsed;
+            sprite = sprite;
         }
     }
 }
