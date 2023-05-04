@@ -22,6 +22,9 @@ namespace rene_roid_player
         protected PlayerInput _input;
         protected FrameInput _frameInput;
         protected int _fixedFrame;
+        private Director _director;
+
+        private float _luck = 0;
         #endregion
 
         #region External Variables
@@ -44,6 +47,8 @@ namespace rene_roid_player
         public int WallDirection => _wallDir;
         public bool ClimbingLadder => _onLadder;
 
+
+        public float Luck => _luck;
 
         public virtual void ApplyVelocity(Vector2 vel, PlayerForce forceType)
         {
@@ -143,7 +148,7 @@ namespace rene_roid_player
             FallDamage();
         }
 
-        protected void SetPlayerStats()
+        public void SetPlayerStats()
         {
             _currentHealth = _maxStats.Health;
             _currentHealthRegen = _maxStats.HealthRegen;
@@ -198,15 +203,14 @@ namespace rene_roid_player
             {
                 _fallTime += Time.deltaTime;
 
-                if (_fallTime > 0.6f)
+                if (_fallTime > 1f)
                 {
                     _fallDamage = Mathf.Clamp(_fallTime * _fallDamageMultiplier, 0, _maxFallDamagePercentage * _maxStats.Health);
-                    // float fib = Fibonacci(_fallTime);
-                    // _fallDamage = CalculateFallDamage(_fallTime);
                 }
             }
             else
             {
+                if (_onLadder) _fallDamage = 0;
                 if (_grounded && _fallDamage > 0)
                 {
                     print("Fall Damage: " + _fallDamage);
@@ -217,25 +221,7 @@ namespace rene_roid_player
                 }
 
                 _fallTime = 0f;
-                _fallDamage = 0;
             }
-
-            float CalculateFallDamage(float time) {
-                float baseDamage = 1.0f; // a constant base damage
-                float timeScaling = 1.5f; // a scaling factor for the time component
-                float timeDamage = Mathf.Pow(time, timeScaling); // time component of the damage
-                float fibonacci = Fibonacci((float)time); // Fibonacci component of the damage
-                float fibonacciScaling = 5.0f; // a scaling factor for the Fibonacci component
-                float fibonacciDamage = fibonacci * fibonacciScaling;
-                float totalDamage = baseDamage + timeDamage + fibonacciDamage;
-                return totalDamage;
-            }
-
-            float Fibonacci(double time) {
-                if (time <= 1) return 1;
-                return Fibonacci(time - 1) + Fibonacci(time - 2);
-            }
-
         }
         #endregion
 
@@ -417,7 +403,12 @@ namespace rene_roid_player
 
             if (_currentHealth <= 0)
             {
-                //Die();
+                Die();
+            }
+
+            void Die() {
+                var death = FindObjectOfType<Death>();
+                death.OnDeath();
             }
         }
 
@@ -558,6 +549,18 @@ namespace rene_roid_player
             SkillCooldowns();
         }
 
+        public void AddSkillsCooldown(float time) {
+            //_basicAttackTimer -= time;
+            _skill1Timer = Skill1Cooldown - time;
+            _skill2Timer = Skill2Cooldown - time;
+            _ultimateTimer = UltimateCooldown - time;
+
+            //_basicAttackReady = false;
+            _skill1Ready = false;
+            _skill2Ready = false;
+            _ultimateReady = false;
+        }
+
         protected void SkillCooldowns()
         {
             if (_locked)
@@ -631,42 +634,30 @@ namespace rene_roid_player
             }
         }
 
-        public void AddSkillsCooldown(float time) {
-            //_basicAttackTimer -= time;
-            _skill1Timer= Skill1Cooldown - time;
-            _skill2Timer = Skill2Cooldown - time;
-            _ultimateTimer = UltimateCooldown - time;
-
-            //_basicAttackReady = false;
-            _skill1Ready = false;
-            _skill2Ready = false;
-            _ultimateReady = false;
-        }
-
         public virtual void BasicAttack()
         {
-            // print("Basic attack!");
+            print("Basic attack!");
             _basicAttackReady = false;
             BasicAttack1.Invoke();
         }
 
         public virtual void Skill1()
         {
-            //// print("Skill 1!");
+            print("Skill 1!");
             _skill1Ready = false;
             SpecialAttack1.Invoke();
         }
 
         public virtual void Skill2()
         {
-            //// print("Skill 2!");
+            print("Skill 2!");
             _skill2Ready = false;
             SpecialAttack2.Invoke();
         }
 
         public virtual void Ultimate()
         {
-            //// print("ULTIMATE!");
+            print("ULTIMATE!");
             _ultimateReady = false;
             UltimateAttack.Invoke();
         }
@@ -712,6 +703,19 @@ namespace rene_roid_player
 
             // * Add experience
             AddExperience(enemy.EnemyBaseStats.ExperienceReward);
+
+            if (_director == null) {
+                _director = FindObjectOfType<Director>();
+
+                if (_director == null) {
+                    Debug.LogError("No director found in scene!");
+                    return;
+                } else {
+                    _director.AddExp(enemy.EnemyBaseStats.ExperienceReward * 0.5f);
+                }
+            } else {
+                _director.AddExp(enemy.EnemyBaseStats.ExperienceReward * 0.5f);
+            }
         }
         #endregion
 
@@ -1159,27 +1163,27 @@ namespace rene_roid_player
 #if UNITY_EDITOR
         protected void OnDrawGizmos()
         {
-            // Gizmos.color = Color.white;
-            // var bounds = GetWallDetectionBounds();
-            // Gizmos.DrawWireCube(bounds.center, bounds.size);
+            Gizmos.color = Color.white;
+            var bounds = GetWallDetectionBounds();
+            Gizmos.DrawWireCube(bounds.center, bounds.size);
 
-            // Gizmos.color = Color.green;
-            // var bound = new Bounds(_rb.position, _col.size);
-            // Gizmos.DrawWireCube(bound.center, bound.size);
+            Gizmos.color = Color.green;
+            var bound = new Bounds(_rb.position, _col.size);
+            Gizmos.DrawWireCube(bound.center, bound.size);
 
-            // Gizmos.color = Color.red;
-            // var down = new Vector2(_col.bounds.center.x, -_col.bounds.center.y + 1);
-            // Gizmos.DrawLine(_col.bounds.center, down);
+            Gizmos.color = Color.red;
+            var down = new Vector2(_col.bounds.center.x, -_col.bounds.center.y + 1);
+            Gizmos.DrawLine(_col.bounds.center, down);
 
-            // Gizmos.color = Color.blue;
-            // var boundF = new Bounds(_rb.position, _col.size / 0.9f); // Player bounds
-            // Gizmos.DrawWireCube(boundF.center, boundF.size);
+            Gizmos.color = Color.blue;
+            var boundF = new Bounds(_rb.position, _col.size / 0.9f); // Player bounds
+            Gizmos.DrawWireCube(boundF.center, boundF.size);
 
-            // Gizmos.color = Color.yellow;
-            // Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.up);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.up);
 
-            // Gizmos.color = Color.magenta;
-            // Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.down);
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.down);
         }
 
         protected void OnValidate()

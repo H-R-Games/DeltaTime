@@ -58,6 +58,7 @@ namespace rene_roid_player
 
         private FrameInput Gather()
         {
+            if (Time.timeScale == 0) return new FrameInput();
             return new FrameInput
             {
                 Move = _move.ReadValue<Vector2>(),
