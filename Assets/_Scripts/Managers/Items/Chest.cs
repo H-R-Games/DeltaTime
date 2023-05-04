@@ -26,6 +26,8 @@ namespace rene_roid_player
         public float RareChance;
         public float MythicChance;
         public float LegendaryChance;
+
+        public float LuckChance;
         #endregion
 
         private void Awake()
@@ -57,6 +59,7 @@ namespace rene_roid_player
                 if ( _playerBase.Money >= 100) {
                     _isOpened = true;
                     _spriteRenderer.sprite = _openedChest;
+                    LuckChance = _playerBase.Luck;
                     OpenChest();
 
                     _player.GetComponent<PlayerBase>().Money -= 100;
@@ -68,6 +71,8 @@ namespace rene_roid_player
         {
             float random = Random.Range(0, 100);
             var item = null as Item;
+
+            random += LuckChance;
 
             if (random < CommonChance) item = CommonItems[Random.Range(0, CommonItems.Length)];
             else if (random < CommonChance + RareChance) item = RareItems[Random.Range(0, RareItems.Length)];

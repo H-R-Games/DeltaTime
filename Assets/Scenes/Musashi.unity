@@ -7671,6 +7671,7 @@ Transform:
   - {fileID: 943492241}
   - {fileID: 1246104067}
   - {fileID: 148261749}
+  - {fileID: 1304855335}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8187,6 +8188,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
+  _currentTeleport: {fileID: 0}
+  _scenes: []
+  _loadingScreen: {fileID: 0}
 --- !u!1 &1250033636
 GameObject:
   m_ObjectHideFlags: 0
@@ -9217,6 +9221,82 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1291421550}
   m_CullTransparentMesh: 1
+--- !u!1 &1304855334
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1304855335}
+  - component: {fileID: 1304855336}
+  m_Layer: 0
+  m_Name: Director
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1304855335
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304855334}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1182088842}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1304855336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304855334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d6ac27d9b23e514587d00602bf93fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _directorsLevel: 1
+  _currentStage: 1
+  AllEnemies:
+  - {fileID: 3633027455234432500, guid: 8e1d37a007545f343b365631db614712, type: 3}
+  - {fileID: 3633027455234432500, guid: 8e1d37a007545f343b365631db614712, type: 3}
+  CurrentStageEnemies:
+  - {fileID: 3633027455234432500, guid: 8e1d37a007545f343b365631db614712, type: 3}
+  - {fileID: 3633027455234432500, guid: 8e1d37a007545f343b365631db614712, type: 3}
+  CurrentEnemiesInSceneCount: 0
+  _passiveDirectorState: 0
+  _creditsPD: 120
+  _creditsPerSecondPD: 0.2
+  _creditsPerSecondPerLevelPD: 0.2
+  _creditPercentagePerEnemyPD: 0.2
+  _creditPercentageToStartSpawningPD: 80
+  _multiplierToSpawnEnemies: 5
+  _spawningDurationPD: 15
+  _timeBetweenEnemySpawnPD: 0.7
+  _timeBetweenWavesPD: 20
+  _maxEnemiesPerWavePD: 10
+  _maxEnemiesPerWaveLevelUpPD: 1
+  _activeDirectorState: 0
+  _creditsAC: 0
+  _creditsOnActivateAC: 100
+  _extraCreditsPerLevelAC: 25
+  _timeBetweenEnemySpawnAC: 1
+  _teleportEventDirectorState: 0
+  _creditsTED: 0
+  _creditsOnActivateTED: 100
+  _extraCreditsPerLevelTED: 25
+  _creditsPerSecondTED: 2
+  _timeBetweenEnemySpawnTED: 1
 --- !u!1 &1306954226
 GameObject:
   m_ObjectHideFlags: 0

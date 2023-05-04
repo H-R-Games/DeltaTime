@@ -22,6 +22,9 @@ namespace rene_roid_player
         protected PlayerInput _input;
         protected FrameInput _frameInput;
         protected int _fixedFrame;
+        private Director _director;
+
+        private float _luck = 0;
         #endregion
 
         #region External Variables
@@ -44,6 +47,8 @@ namespace rene_roid_player
         public int WallDirection => _wallDir;
         public bool ClimbingLadder => _onLadder;
 
+
+        public float Luck => _luck;
 
         public virtual void ApplyVelocity(Vector2 vel, PlayerForce forceType)
         {
@@ -143,7 +148,7 @@ namespace rene_roid_player
             FallDamage();
         }
 
-        protected void SetPlayerStats()
+        public void SetPlayerStats()
         {
             _currentHealth = _maxStats.Health;
             _currentHealthRegen = _maxStats.HealthRegen;
@@ -198,13 +203,14 @@ namespace rene_roid_player
             {
                 _fallTime += Time.deltaTime;
 
-                if (_fallTime > 0.5f)
+                if (_fallTime > 1f)
                 {
                     _fallDamage = Mathf.Clamp(_fallTime * _fallDamageMultiplier, 0, _maxFallDamagePercentage * _maxStats.Health);
                 }
             }
             else
             {
+                if (_onLadder) _fallDamage = 0;
                 if (_grounded && _fallDamage > 0)
                 {
                     print("Fall Damage: " + _fallDamage);
@@ -397,7 +403,12 @@ namespace rene_roid_player
 
             if (_currentHealth <= 0)
             {
-                //Die();
+                Die();
+            }
+
+            void Die() {
+                var death = FindObjectOfType<Death>();
+                death.OnDeath();
             }
         }
 
@@ -680,6 +691,19 @@ namespace rene_roid_player
 
             // * Add experience
             AddExperience(enemy.EnemyBaseStats.ExperienceReward);
+
+            if (_director == null) {
+                _director = FindObjectOfType<Director>();
+
+                if (_director == null) {
+                    Debug.LogError("No director found in scene!");
+                    return;
+                } else {
+                    _director.AddExp(enemy.EnemyBaseStats.ExperienceReward * 0.5f);
+                }
+            } else {
+                _director.AddExp(enemy.EnemyBaseStats.ExperienceReward * 0.5f);
+            }
         }
         #endregion
 
