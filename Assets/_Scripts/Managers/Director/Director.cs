@@ -162,6 +162,13 @@ namespace rene_roid
                 case PassiveDirectorState.Gathering:
                     break;
                 case PassiveDirectorState.Spawning:
+                    _checkStartSpawningCooldownPD = 0;
+                    _lastTimePD = 0;
+                    _minIndexPD = 0;
+                    _waitTimePD = 0;
+                    _timeSpawningPD = 0;
+                    _waitBetweenEnemySpawnTimePD = 0;
+                    _enemiesSpawnedPD = 0;
                     break;
                 case PassiveDirectorState.Waiting:
                     _waitTimePD = Time.time; // Set wait time when entering the state
@@ -237,23 +244,26 @@ namespace rene_roid
         {
             GetWheightRange(); // Update wheight range
 
-            var xpos = Helpers.FromRangeToPercentage(_directorsLevel, 0, 100, true) * 100;
-            var minIndex = Mathf.FloorToInt(xpos - (xpos * (_weightRange / 2)));
-            var maxIndex = Mathf.CeilToInt(xpos + (xpos * (_weightRange / 2)));
-            _minIndexPD = minIndex;
-            print($"minIndex: {minIndex} | maxIndex: {maxIndex} | xpos: {xpos}");
+            // var xpos = Helpers.FromRangeToPercentage(_directorsLevel, 0, 100, true) * 100;
+            // var minIndex = Mathf.FloorToInt(xpos - (xpos * (_weightRange / 2)));
+            // var maxIndex = Mathf.CeilToInt(xpos + (xpos * (_weightRange / 2)));
+            // _minIndexPD = minIndex;
+            // print($"minIndex: {minIndex} | maxIndex: {maxIndex} | xpos: {xpos}");
 
-            // Get enemies inside the weight range
-            List<EnemyBase> enemies = new List<EnemyBase>();
-            for (int i = 0; i < CurrentStageEnemies.Count; i++)
-            {
-                var fatness = CurrentStageEnemies[i].EnemyBaseStats.Weight;
-                if (fatness >= minIndex && fatness <= maxIndex) enemies.Add(CurrentStageEnemies[i]);
-            }
+            // // Get enemies inside the weight range
+            // List<EnemyBase> enemies = new List<EnemyBase>();
+            // for (int i = 0; i < CurrentStageEnemies.Count; i++)
+            // {
+            //     var fatness = CurrentStageEnemies[i].EnemyBaseStats.Weight;
+            //     print($"Enemy: {CurrentStageEnemies[i].name} | Fatness: {fatness} | minIndex: {minIndex} | maxIndex: {maxIndex}");
+            //     if (fatness >= minIndex && fatness <= maxIndex) enemies.Add(CurrentStageEnemies[i]);
+            // }
 
-            // Get random enemy from enemies list
-            if (enemies.Count == 0) return null;
-            return enemies[Random.Range(0, enemies.Count)];
+            // print($"Enemies inside range: {enemies.Count}");
+
+            // // Get random enemy from enemies list
+            // if (enemies.Count == 0) return null;
+            return CurrentStageEnemies[Random.Range(0, CurrentStageEnemies.Count)];
         }
 
         // ----------- Waiting
