@@ -20,12 +20,21 @@ namespace rene_roid_enemy
         public override void Start()
         {
             base.Start();
-            CreateWormBody();
+            GenerateBody();
         }
 
         public override void UpdateState()
         {
             WormMovement();
+
+            RaycastHit2D ray = Physics2D.Raycast(transform.position, Vector2.up, 1f);
+            if (ray != null && ray.collider != null) {
+                if (ray.collider.tag == "Untagged")
+                {
+                    // Deactivate istrigger
+                    this.GetComponent<BoxCollider2D>().isTrigger = true;
+                }
+            }
         }
 
         #region Movement
@@ -54,7 +63,8 @@ namespace rene_roid_enemy
                 var t = Time.deltaTime / _time;
                 _timeLeft += t;
 
-                transform.position = CalculateBezierCuadraticPoint(_startPosition, _middlePoint, _finalPosition, _timeLeft);
+                var pos = CalculateBezierCuadraticPoint(_startPosition, _middlePoint, _finalPosition, _timeLeft);
+                transform.position = Vector2.Lerp(transform.position, pos, 0.2f);
 
                 if (_timeLeft >= 1) _fiumm = true;
             }
@@ -63,15 +73,6 @@ namespace rene_roid_enemy
                 // Move forward
                 transform.position += (Vector3)_direction * _movementSpeed * Time.deltaTime;
             }
-
-            // Fill array of worm last positions
-            _wormPastPositions.Insert(0, transform.position);
-            if (_wormPastPositions.Count > _bodyParts) _wormPastPositions.RemoveAt(1000);
-
-            // Fill array of worm last positions time
-            _wormPastPositionsTime.Insert(0, Time.deltaTime);
-            if (_wormPastPositionsTime.Count > _bodyParts) _wormPastPositionsTime.RemoveAt(1000);
-            BodyFollow();
 
             // Check if the enemy is in bounds
             _inBounds = transform.position.x > _boundsMin.x && transform.position.x < _boundsMax.x &&
@@ -175,83 +176,58 @@ namespace rene_roid_enemy
         #region Worm Body
         [Header("Worm Body")]
         [SerializeField] private GameObject _wormBodyPrefab;
-        [SerializeField] private int _bodyParts = 10;
-        [SerializeField] private float _bodyPartDistance = 1;
-        private List<GameObject> _wormBodyParts = new List<GameObject>();
-        [SerializeField] private List<Vector2> _wormPastPositions = new List<Vector2>();
-        [SerializeField] private List<float> _wormPastPositionsTime = new List<float>();
-        [SerializeField] private float _bodyFollowDelay = 0.15f;
-        [SerializeField] private float _bodyFirstFollowDelay = 0.15f;
+        [SerializeField] private int _wormBodyCount = 10;
 
-        private void CreateWormBody()
-        {
-            for (var i = 0; i < _bodyParts; i++)
-            {
-                var bodyPart = Instantiate(_wormBodyPrefab, transform.position, Quaternion.identity);
-                bodyPart.transform.position = transform.position + (Vector3)_direction * _bodyPartDistance * i;
-                _wormBodyParts.Add(bodyPart);
-                bodyPart.SetActive(true);
-            }
+        private List<WormBody> _wormBodyParts = new List<WormBody>();
 
-            // Fill array of worm last positions
-            for (var i = 0; i < 1000; i++)
-            {
-                _wormPastPositions.Add(transform.position);
-                _wormPastPositionsTime.Add(Time.deltaTime);
-            }
-
-        }
-
-        private void BodyFollow() {
-            // for (int i = 0; i < _wormBodyParts.Count; i++)
-            // {
-            //     var n = i * 2;
-            //     print(n);
-            //     var bodyPart = _wormBodyParts[i];
-            //     var pastPosition = _wormPastPositions[i + n];
-
-            //     bodyPart.transform.position = Vector2.MoveTowards(bodyPart.transform.position, pastPosition, _movementSpeed * Time.deltaTime);
-
-            //     // Get direction
-            //     var dir = pastPosition - _wormPastPositions[i + n + 1];
-            //     dir.Normalize();
-
-            //     // Rotate body part
-            //     bodyPart.transform.rotation = Quaternion.LookRotation(Vector3.forward, dir);
-            // }
-
-            for (int i = 0; i < _wormBodyParts.Count; i++)
-            {
-                var bodyPart = _wormBodyParts[i];
-                var time_diff = _bodyFollowDelay * i + _bodyFirstFollowDelay;
-
-                var time_pos = 0;
-                var t_calc = 0f;
-                for (int j = 0; j < _wormPastPositionsTime.Count; j++)
-                {
-                    t_calc += _wormPastPositionsTime[j];
-
-                    if (t_calc > time_diff)
-                    {
-                        time_pos = j;
-                        break;
-                    }
+        private void GenerateBody() {
+            for (var i = 0; i < _wormBodyCount; i++) {
+                var body = Instantiate(_wormBodyPrefab, transform.position, Quaternion.identity);
+                _wormBodyParts.Add(body.GetComponent<WormBody>());
+                body.GetComponent<WormBody>().Worm = this;
+                if (i == 0) {
+                    body.GetComponent<WormBody>().Target = this.transform.GetChild(1);
+                    continue;
                 }
-
-                var pastPosition = _wormPastPositions[(int)time_pos];
-
-                bodyPart.transform.position = Vector2.MoveTowards(bodyPart.transform.position, pastPosition, _movementSpeed * Time.deltaTime);
-
-                // Get direction
-                var dir = pastPosition - _wormPastPositions[(int)time_pos + 1];
-                dir.Normalize();
-
-                // Rotate body part
-                bodyPart.transform.rotation = Quaternion.LookRotation(Vector3.forward, dir);
+                var firstChild = _wormBodyParts[i - 1].transform.GetChild(2);
+                body.GetComponent<WormBody>().Target = firstChild.transform;
             }
         }
-
         #endregion
 
+        public float GetWormSpeed() {
+            return _movementSpeed;
+        }
+
+        private void OnTriggerExit2D(Collider2D other) {
+            if (other.gameObject.tag == "Untagged") {
+                // Deactivate is trigger
+                this.GetComponent<BoxCollider2D>().isTrigger = false;
+            }
+        }
+
+        public override void TakeDamage(float damage)
+        {
+            if (_armor > 0) damage *= 100 / (100 + _armor);
+            if (_armor < 0) damage *= 2 - 100 / (100 - _armor);
+
+            _health -= damage;
+            _targetPlayer.OnEnemyHit(damage, this);
+
+            Debug.Log("Enemy health: " + _health);
+
+            if (_health <= 0)
+            {
+                for (int i = 0; i < _wormBodyParts.Count; i++)
+                {
+                    Destroy(_wormBodyParts[i].gameObject);
+                }
+                _health = 0;
+                // this.gameObject.SetActive(false);
+                Destroy(this.gameObject);
+                _targetPlayer.OnEnemyDeath(damage, this);
+                return;
+            }
+        }
     }
 }

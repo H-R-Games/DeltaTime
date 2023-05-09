@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e5fc8bd857e32b44dbfa397b116784b5
+guid: 1ea6bdd40f869f646924da4524de639b
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -104,32 +104,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: dragon_0
+      name: idlCabezaDragon_0
       rect:
         serializedVersion: 2
-        x: 60
-        y: 10
-        width: 53
-        height: 163
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9936b28c8a929c0458d325fadf777a47
-      internalID: -1721150367
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: dragon_1
-      rect:
-        serializedVersion: 2
-        x: 210
-        y: 52
+        x: 23
+        y: 5
         width: 156
         height: 85
       alignment: 0
@@ -139,62 +118,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 967d31098bda2b24587ea4e422d57ed4
-      internalID: 2065330750
+      spriteID: 82e7723d1f902a44c9909846ff3c9281
+      internalID: -453756134
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dragon_2
+      name: idlCabezaDragon_1
       rect:
         serializedVersion: 2
-        x: 419
-        y: 59
-        width: 96
-        height: 47
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 85b16fa89fb227a41bd2bed7f15178d3
-      internalID: -1109684845
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: dragon_3
-      rect:
-        serializedVersion: 2
-        x: 595
-        y: 42
-        width: 128
-        height: 102
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2134bb6fdf865fe4fbfdbebdef36dc32
-      internalID: 1046598394
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: dragon_4
-      rect:
-        serializedVersion: 2
-        x: 775
-        y: 42
+        x: 212
+        y: 5
         width: 156
-        height: 99
+        height: 85
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -202,8 +139,155 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c45d97847138b2540afdfac8c252b160
-      internalID: 1501455631
+      spriteID: 43bb79d6a782a574f9c85295a91aad30
+      internalID: 504775199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idlCabezaDragon_2
+      rect:
+        serializedVersion: 2
+        x: 401
+        y: 5
+        width: 156
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 839fb6c2c1c46f04abad7fbe3627d989
+      internalID: 1545333397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idlCabezaDragon_3
+      rect:
+        serializedVersion: 2
+        x: 590
+        y: 5
+        width: 156
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba38188971ee6f240863937111c81795
+      internalID: 1112778345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idlCabezaDragon_4
+      rect:
+        serializedVersion: 2
+        x: 779
+        y: 5
+        width: 156
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d453c10ae52f277448f35b6cf1446d8c
+      internalID: -827556580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idlCabezaDragon_5
+      rect:
+        serializedVersion: 2
+        x: 968
+        y: 5
+        width: 156
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66d9ecfd60b134e42a8b37d748de3460
+      internalID: 203353126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idlCabezaDragon_6
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 5
+        width: 156
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5a0efbb03f5c8f488a4e9352183520f
+      internalID: -1806906260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idlCabezaDragon_7
+      rect:
+        serializedVersion: 2
+        x: 1346
+        y: 5
+        width: 156
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0369c6d37b490c94eb9ccfae7333ed69
+      internalID: -2078778026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idlCabezaDragon_8
+      rect:
+        serializedVersion: 2
+        x: 1535
+        y: 5
+        width: 156
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b277bca152640a0429c0171ed1593682
+      internalID: -130145971
       vertices: []
       indices: 
       edges: []
@@ -219,11 +303,15 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      dragon_3: 1046598394
-      dragon_0: -1721150367
-      dragon_1: 2065330750
-      dragon_2: -1109684845
-      dragon_4: 1501455631
+      idlCabezaDragon_0: -453756134
+      idlCabezaDragon_3: 1112778345
+      idlCabezaDragon_2: 1545333397
+      idlCabezaDragon_1: 504775199
+      idlCabezaDragon_6: -1806906260
+      idlCabezaDragon_4: -827556580
+      idlCabezaDragon_5: 203353126
+      idlCabezaDragon_8: -130145971
+      idlCabezaDragon_7: -2078778026
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

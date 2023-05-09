@@ -199,7 +199,7 @@ namespace rene_roid_player
 
         protected void FallDamage()
         {
-            if (_speed.y < 0 && !_grounded)
+            if (_speed.y < 0 && !_grounded && !_onLadder && !_isOnWall)
             {
                 _fallTime += Time.deltaTime;
 
@@ -566,6 +566,18 @@ namespace rene_roid_player
             }
 
             SkillCooldowns();
+        }
+
+        public void AddSkillsCooldown(float time) {
+            //_basicAttackTimer -= time;
+            _skill1Timer = Skill1Cooldown - time;
+            _skill2Timer = Skill2Cooldown - time;
+            _ultimateTimer = UltimateCooldown - time;
+
+            //_basicAttackReady = false;
+            _skill1Ready = false;
+            _skill2Ready = false;
+            _ultimateReady = false;
         }
 
         protected void SkillCooldowns()
@@ -1175,27 +1187,27 @@ namespace rene_roid_player
 #if UNITY_EDITOR
         protected void OnDrawGizmos()
         {
-            // Gizmos.color = Color.white;
-            // var bounds = GetWallDetectionBounds();
-            // Gizmos.DrawWireCube(bounds.center, bounds.size);
+            Gizmos.color = Color.white;
+            var bounds = GetWallDetectionBounds();
+            Gizmos.DrawWireCube(bounds.center, bounds.size);
 
-            // Gizmos.color = Color.green;
-            // var bound = new Bounds(_rb.position, _col.size);
-            // Gizmos.DrawWireCube(bound.center, bound.size);
+            Gizmos.color = Color.green;
+            var bound = new Bounds(_rb.position, _col.size);
+            Gizmos.DrawWireCube(bound.center, bound.size);
 
-            // Gizmos.color = Color.red;
-            // var down = new Vector2(_col.bounds.center.x, -_col.bounds.center.y + 1);
-            // Gizmos.DrawLine(_col.bounds.center, down);
+            Gizmos.color = Color.red;
+            var down = new Vector2(_col.bounds.center.x, -_col.bounds.center.y + 1);
+            Gizmos.DrawLine(_col.bounds.center, down);
 
-            // Gizmos.color = Color.blue;
-            // var boundF = new Bounds(_rb.position, _col.size / 0.9f); // Player bounds
-            // Gizmos.DrawWireCube(boundF.center, boundF.size);
+            Gizmos.color = Color.blue;
+            var boundF = new Bounds(_rb.position, _col.size / 0.9f); // Player bounds
+            Gizmos.DrawWireCube(boundF.center, boundF.size);
 
-            // Gizmos.color = Color.yellow;
-            // Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.up);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.up);
 
-            // Gizmos.color = Color.magenta;
-            // Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.down);
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawLine(_col.bounds.center, _col.bounds.center + Vector3.down);
         }
 
         protected void OnValidate()

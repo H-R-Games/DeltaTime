@@ -80,7 +80,7 @@ namespace rene_roid_enemy
         /// <summary>
         /// Function to take damage from the player
         /// </summary>
-        public void TakeDamage(float damage)
+        public virtual void TakeDamage(float damage)
         {
             print("Enemy took damage: " + damage);
 

@@ -33,7 +33,7 @@ namespace rene_roid_player {
         }
 
         private void OnTriggerEnter2D(Collider2D other) {
-            if (other.gameObject.CompareTag("Enemy")) {
+            if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Boss")) {
                 var enemy = other.gameObject.GetComponent<EnemyBase>();
                 if (enemy != null) enemy.TakeDamage(_player.DealDamage(_damage, _proc));
 
