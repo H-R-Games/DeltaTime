@@ -16,8 +16,27 @@ namespace rene_roid_enemy {
             _head = transform.GetChild(1);
         }
 
+        private float _damageCD = 0.5f;
+        private float _damageTimer = 0f;
         public override void Update() {
             if (Target == null) return;
+
+            if (_damageTimer > 0)
+            {
+                _damageTimer -= Time.deltaTime;
+            } else
+            {
+                // Overlap box and detect player
+                Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position, _boxCollider2D.size, 0);
+                foreach (Collider2D collider in colliders)
+                {
+                    if (collider.tag == "Player")
+                    {
+                        _targetPlayer.TakeDamage(_damage);
+                        _damageTimer = 0.5f;
+                    }
+                }
+            }
 
             var rot = Quaternion.Lerp(_head.rotation, Target.rotation, Time.deltaTime * ((Worm.GetWormSpeed() / 3) * 2));
             transform.rotation = rot;

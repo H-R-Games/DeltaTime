@@ -42,7 +42,7 @@ namespace rene_roid_enemy
 
         public virtual void Start() { GetPlayerDirection(); }
 
-        public virtual void Update() { UpdateState(); }
+        public virtual void Update() { UpdateState(); AutoDestroy(); }
 
         public virtual void FixedUpdate()
         {
@@ -258,5 +258,20 @@ namespace rene_roid_enemy
             Gizmos.color = Color.green;
             Gizmos.DrawRay((Vector2)transform.position + new Vector2(0, _headLevel), _movementDirection * new Vector2(0, _boxCollider2D.bounds.extents.y + 1f) * Vector2.right);
         }
+
+
+        // If there is no player for 0.5 seconds destroy the enemy
+        private float _timeToDestroy = 0.5f;
+        private void AutoDestroy() {
+            if (_targetPlayer == null) {
+                _timeToDestroy -= Time.deltaTime;
+                if (_timeToDestroy <= 0) {
+                    Destroy(this.gameObject);
+                }
+            } else {
+                _timeToDestroy = 0.5f;
+            }
+        }
+
     }
 }

@@ -23,8 +23,27 @@ namespace rene_roid_enemy
             GenerateBody();
         }
 
+        private float _damageCD = 0.5f;
+        private float _damageTimer = 0f;
         public override void UpdateState()
         {
+            if (_damageTimer > 0)
+            {
+                _damageTimer -= Time.deltaTime;
+            } else
+            {
+                // Overlap box and detect player
+                Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position, _boxCollider2D.size, 0);
+                foreach (Collider2D collider in colliders)
+                {
+                    if (collider.tag == "Player")
+                    {
+                        _targetPlayer.TakeDamage(_damage);
+                        _damageTimer = 0.5f;
+                    }
+                }
+            }
+
             WormMovement();
 
             RaycastHit2D ray = Physics2D.Raycast(transform.position, Vector2.up, 1f);
@@ -53,9 +72,15 @@ namespace rene_roid_enemy
         private Vector2 _direction;
         private bool _inBounds;
 
+        [SerializeField] private bool _isSmol = false;
         private void WormMovement()
         {
             if (_targetPlayer == null) return;
+
+            if (_isSmol) {
+                _boundsMin = new Vector2(_targetPlayer.transform.position.x - 10, _targetPlayer.transform.position.y - 10);
+                _boundsMax = new Vector2(_targetPlayer.transform.position.x + 10, _targetPlayer.transform.position.y + 10);
+            }
 
             // Do the bezier curve movement and when it's done, go forward until the enemy is out of bounds
             if (!_fiumm)

@@ -282,6 +282,17 @@ namespace rene_roid
             if (randomX > 0) spawnPos.x = cameraPos.x + cameraWidth + 1;
             else spawnPos.x = cameraPos.x - cameraWidth - 1;
 
+            // Raycast to the x position only detect layers 0 && 8
+            // Direction is from player to spawn position
+            var direction = spawnPos - (Vector2)_playerBase.transform.position;
+            var hit = Physics2D.Raycast(_playerBase.transform.position, direction, direction.magnitude, 1 << 0 | 1 << 8);
+
+            // If raycast hit something, spawn the enemy in the hit position and put it a little bit near the player direction
+            if (hit.collider != null) {
+                spawnPos = hit.point;
+                spawnPos -= direction.normalized * 2;
+            }
+            
             return spawnPos;
         }
         #endregion

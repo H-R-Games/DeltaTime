@@ -196,7 +196,7 @@ Transform:
   m_GameObject: {fileID: 7579115431353326267}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5.12, y: 2.73, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7579115432225807131}
@@ -218,7 +218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd22c3fc7c500874da2c87b787466aa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyBaseStats: {fileID: 11400000, guid: d13216a451c57374788a581b7e7f30b8, type: 2}
+  _enemyBaseStats: {fileID: 11400000, guid: 20f0fa8028b1d4541aa36e797bafca03, type: 2}
   _enemyState: 0
   _enemyType: 0
   _boxCollider2D: {fileID: 7579115431353326264}
@@ -247,9 +247,9 @@ MonoBehaviour:
   _maxPref: {fileID: 157320803}
   _boundsMin: {x: -24.42, y: -7}
   _boundsMax: {x: 23.9, y: 18.6}
-  _isSmol: 0
-  _wormBodyPrefab: {fileID: 2244270337090289089, guid: 25c0664d7877293429f2d5886f5d99d5, type: 3}
-  _wormBodyCount: 20
+  _isSmol: 1
+  _wormBodyPrefab: {fileID: 2244270337090289089, guid: 1e61968285140ff4e9de51214f052086, type: 3}
+  _wormBodyCount: 7
 --- !u!61 &7579115431353326264
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -109,7 +109,7 @@ namespace rene_roid
             
             _player.gameObject.SetActive(true);
             _player.SetPlayerStats();
-            _player.transform.position = new Vector3(0, 1, 0);
+            _player.transform.position = _scenes[_currentSceneIndex].transform.GetChild(0).transform.position;
 
             _loadingScreen.SetActive(false);
         }
