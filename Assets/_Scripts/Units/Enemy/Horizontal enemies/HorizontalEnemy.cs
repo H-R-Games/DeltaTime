@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using rene_roid_player;
 using rene_roid;
 
 namespace rene_roid_enemy
@@ -10,7 +12,6 @@ namespace rene_roid_enemy
         {
             base.Start();
             _enemyType = EnemyType.Horizontal;
-            ChangeState(EnemyStates.Move);
         }
 
         public override void Update() { UpdateState(); }
@@ -28,7 +29,7 @@ namespace rene_roid_enemy
                     break;
                 case EnemyStates.Attack:
                     GravityEnemy();
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceWatchin) ChangeState(EnemyStates.Move);
+                    Attack();
                     break;
                 case EnemyStates.Stun:
                     GravityEnemy();
@@ -38,10 +39,13 @@ namespace rene_roid_enemy
                     GravityEnemy();
                     if (!TargetPlayer()) UnTargetPlayer();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _targetDistanceWatchin) ChangeState(EnemyStates.Attack);
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _attackDistance + _rand) ChangeState(EnemyStates.Attack);
                     if (!_isStunned) FollowerPlayer();
                     break;
             }
+
+            // HandleAnimations();
+            _onHitRange = _attackDistance;
         }
 
         public override void ChangeState(EnemyStates newState)
@@ -91,11 +95,24 @@ namespace rene_roid_enemy
         /// </summary>
         private void Horizontal()
         {
-            Vector3 direction = new Vector3(_movementDirection.x, 0, 0);
+            Vector3 direction = new Vector3(_movementDirection.x + _rand, 0, 0);
 
-            if (_isGround) _movementDirection = _movementDirection * -1;
-            if (_walled) _movementDirection = _movementDirection * -1;
+            if (_isGround)
+            {
+                this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = _movementDirection.x < 0;
+                _movementDirection = _movementDirection * -1;
+            }
+
+            if (_walled)
+            {
+                this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = _movementDirection.x < 0;
+                _movementDirection = _movementDirection * -1;
+            }
+
             if (!_isStunned) transform.Translate(direction * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
+
+            if (_movementDirection.x > 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = _movementDirection.x < 0;
+            else if (_movementDirection.x < 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = _movementDirection.x < 0;
         }
         #endregion
         
@@ -141,35 +158,87 @@ namespace rene_roid_enemy
         {
             Vector3 directionX = (_targetPlayer.transform.position.x - this.transform.position.x) > 0 ? Vector3.right : Vector3.left;
             if (Vector3.Distance(-new Vector3(0, transform.position.y, 0), new Vector3(0, _targetPlayer.transform.position.y, 0)) > 3) Jump();
-            if (!_isGround && !_walled) transform.Translate(directionX * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
+            if (!_isGround && !_walled) transform.Translate(directionX * _movementSpeed * (_movementSpeedMultiplier + _rand) * Time.deltaTime);
+
+            if (_movementDirection.x > 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = _movementDirection.x < 0;
+            else if (_movementDirection.x < 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = _movementDirection.x < 0;
+
             _movementDirection = directionX;
         }
         #endregion
         #endregion
 
+        #region Attack
+        [Header("Attack Settings")]
+        [SerializeField] private float _attackDistance = 1f;
+        [SerializeField] private float _attackTime = 1f;
+        [SerializeField] private Transform _proyectileSpawn;
+        [SerializeField] private GameObject _proyectile;
+        [SerializeField] private float _attackCooldown = 1f;
+        float _timeAttack = 0;
+
+        private void Attack()
+        {
+            _timeAttack += Time.deltaTime * 0.5f;
+
+            Debug.Log(_timeAttack);
+
+            if (_timeAttack >= _attackTime)
+            {
+                if (_proyectileSpawn == null || _proyectile == null) return;
+
+                _timeAttack = 0;
+                _attackCooldown = 0;
+
+                if(Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) < 3f) return;
+
+                StartCoroutine(AttackCoroutine());
+            }
+        }
+
+        IEnumerator AttackCoroutine()
+        {
+            var proyectil = Instantiate(_proyectile, _proyectileSpawn.position, Quaternion.identity);
+            proyectil.GetComponent<ProyectilContreoller>().SetValues(_damage, _movementDirection);
+            yield return Helpers.GetWait(0.5f);
+            ChangeState(EnemyStates.Target);
+        }
+
+        #endregion
+
+        #region Animation
+        #endregion
+
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
+            if (_targetPlayer == null) return;
             var p = (_targetPlayer.transform.position - this.transform.position).normalized;
-            bool watchin = (p.x > 0 && _movementDirection.x > 0) || (p.x < 0 && _movementDirection.x < 0);
-            bool isRange = Vector3.Distance(transform.position, _targetPlayer.transform.position) < (watchin ? _targetDistanceWatchin : _targetDistanceNotWatchin);
+            // bool watchin = (p.x > 0 && _movementDirection.x > 0) || (p.x < 0 && _movementDirection.x < 0);
+            // bool isRange = Vector3.Distance(transform.position, _targetPlayer.transform.position) < (watchin ? _targetDistanceWatchin : _targetDistanceNotWatchin);
 
-            Gizmos.color = isRange ? Color.blue : Color.green;
-            Gizmos.DrawWireSphere(transform.position, _targetDistanceNotWatchin);
-            Gizmos.DrawWireSphere(transform.position, (isRange ? _targetDistanceWatchin : _targetDistanceNotWatchin));
+            // Gizmos.color = isRange ? Color.blue : Color.green;
+            // Gizmos.DrawWireSphere(transform.position, _targetDistanceNotWatchin);
+            // Gizmos.DrawWireSphere(transform.position, (isRange ? _targetDistanceWatchin : _targetDistanceNotWatchin));
 
             Vector2 dir = _movementDirection;
-            Vector2 dir2 = p;
+            // Vector2 dir2 = p;
 
-            Gizmos.color = isRange ? Color.blue : Color.green;
-            Gizmos.DrawLine((Vector2)transform.position, (dir) * (isRange ? _targetDistanceWatchin : _targetDistanceNotWatchin) + (Vector2)transform.position);
-            Gizmos.DrawLine((Vector2)transform.position, (dir2) * (isRange ? _targetDistanceWatchin : _targetDistanceNotWatchin) + (Vector2)transform.position);
+            // Gizmos.color = isRange ? Color.blue : Color.green;
+            // Gizmos.DrawLine((Vector2)transform.position, (dir) + (Vector2)transform.position);
+            // Gizmos.DrawLine((Vector2)transform.position, (dir2) * (isRange ? _targetDistanceWatchin : _targetDistanceNotWatchin) + (Vector2)transform.position);
 
-            Gizmos.color = Color.white;
-            Gizmos.DrawRay((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0), Vector2.down * 5);
+            // Gizmos.color = Color.white;
+            // Gizmos.DrawRay((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0), Vector2.down * 5);
 
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, Vector2.up * 5 + (Vector2)transform.position);
+            // Gizmos.color = Color.yellow;
+            // Gizmos.DrawLine(transform.position, Vector2.up * 5 + (Vector2)transform.position);
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, 3f);
+
+            Gizmos.color = Color.red;
+            // Gizmos.DrawLine((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0) + Vector2.left, _boxCollider2D.bounds.extents.x + 5);
         }
 #endif
     }

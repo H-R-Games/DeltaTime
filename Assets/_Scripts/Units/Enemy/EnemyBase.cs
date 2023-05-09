@@ -1,13 +1,13 @@
 using rene_roid_player;
-using System;
 using UnityEngine;
+using System;
 
 namespace rene_roid_enemy
 {
     [RequireComponent(typeof(BoxCollider2D))]
     public class EnemyBase : MonoBehaviour
     {
-        public enum EnemyStates { Idle, Move, Attack, Stun, Target, KnockBack }
+        public enum EnemyStates { Idle, Move, Attack, Stun, Target, KnockBack, Dead, Attack2 }
         public enum EnemyType { Horizontal, Flying, Boss }
 
         [Header("Enemy stats")]
@@ -23,11 +23,11 @@ namespace rene_roid_enemy
         [SerializeField] protected LayerMask _playerLayer;
         protected PlayerBase _targetPlayer = null;
         protected int _fixedFrame;
+        protected float _rand = 0.1f;
         #endregion
 
         #region External Variables
         public event Action<float> OnHit;
-        public event Action OnDeath;
 
         public EnemyBaseStats EnemyBaseStats { get => _enemyBaseStats; }
         #endregion
@@ -37,6 +37,7 @@ namespace rene_roid_enemy
             AwakeEnemyStats();
             _boxCollider2D = GetComponent<BoxCollider2D>();
             _targetPlayer = FindObjectOfType<PlayerBase>();
+            _rand = UnityEngine.Random.Range(-0.2f, 0.2f);
         }
 
         public virtual void Start() { GetPlayerDirection(); }
@@ -69,7 +70,7 @@ namespace rene_roid_enemy
             _health = _enemyBaseStats.Health * _level;
             _damage = _enemyBaseStats.Damage * _level;
             _armor = _enemyBaseStats.Armor * _level;
-            _movementSpeed = _enemyBaseStats.MovementSpeed * _level;
+            _movementSpeed = _enemyBaseStats.MovementSpeed * _level + _rand;
         }
 
         public void LevelUp() { _level++; }
@@ -81,6 +82,8 @@ namespace rene_roid_enemy
         /// </summary>
         public void TakeDamage(float damage)
         {
+            print("Enemy took damage: " + damage);
+
             if (_armor > 0) damage *= 100 / (100 + _armor);
             if (_armor < 0) damage *= 2 - 100 / (100 - _armor);
 
@@ -89,7 +92,9 @@ namespace rene_roid_enemy
 
             if (_health <= 0)
             {
-                OnDeath?.Invoke();
+                _health = 0;
+                // this.gameObject.SetActive(false);
+                Destroy(this.gameObject);
                 _targetPlayer.OnEnemyDeath(damage, this);
                 return;
             }
@@ -118,11 +123,13 @@ namespace rene_roid_enemy
         protected Vector2 _movementDirection = Vector2.right;
         protected float _knockBackForce = 0;
         protected float _knockBackDuration = 1;
+        protected float _onHitRange = 0.5f;
         protected bool _grounded = false;
         protected bool _walled = false;
         protected bool _isStunned = false;
         protected bool _isGround = true;
         protected bool _isBlockedUp = false;
+        protected bool _onHit = false;
 
         #region Raycast
         private RaycastHit2D _feetRaycast;
@@ -130,6 +137,7 @@ namespace rene_roid_enemy
         private RaycastHit2D _grounRaycast;
         private RaycastHit2D _detectUp;
         protected RaycastHit2D _hitTarget;
+        protected RaycastHit2D _hitPlayer;
 
         /// <summary>
         /// Check the collisions of the enemy with the environment
@@ -149,6 +157,10 @@ namespace rene_roid_enemy
             _isBlockedUp = _detectUp.collider != null;
 
             _hitTarget = Physics2D.Linecast(this.transform.position, _targetPlayer.transform.position, ~_enemyLayer);
+
+            // _hitPlayer = Physics2D.Raycast(transform.position, _movementDirection, _boxCollider2D.bounds.extents.y + _onHitRange, _playerLayer);
+            _hitPlayer = Physics2D.Raycast((Vector2)transform.position + new Vector2((_movementDirection.x > 0 ? 1 : -1), 0) + Vector2.left, new Vector2(_onHitRange + _boxCollider2D.bounds.extents.x , 0), _playerLayer);
+            _onHit = _hitPlayer.collider != null;
         }
 
         /// <summary>

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987569b084917784ab815b4d235dfa33, type: 3}
+  m_Name: Dragon
+  m_EditorClassIdentifier: 
+  Name: Dragon
+  Health: 1200
+  Damage: 56
+  Armor: 20
+  MovementSpeed: 0
+  MoneyReward: 573
+  ExperienceReward: 300
+  HealthPerLevel: 24
+  DamagePerLevel: 2.4
+  ArmorPerLevel: 0
+  MovementSpeedPerLevel: 0
+  MoneyRewardPerLevel: 2
+  ExperienceRewardPerLevel: 2
