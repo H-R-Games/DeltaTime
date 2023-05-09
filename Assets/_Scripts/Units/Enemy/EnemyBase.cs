@@ -56,6 +56,8 @@ namespace rene_roid_enemy
         [SerializeField] protected float _damage;
         [SerializeField] protected float _armor;
         [SerializeField] protected float _movementSpeed;
+        public float GetMoveSpeed() { return _movementSpeed; }
+        public void SetMoveSpeed(float speed) { _movementSpeed = speed; }
 
         private void AwakeEnemyStats() { SetEnemyStats(); }
 
@@ -93,6 +95,9 @@ namespace rene_roid_enemy
             }
         }
 
+        public float CurrentHealth() { return _health; }
+        public float GetHealthPercentage() { return _health / _enemyBaseStats.Health; }
+        public void DestroyEnemy() { Destroy(this.gameObject); }
         /// <summary>
         /// Calculate the damage the enemy will deal to the player
         /// </summary>

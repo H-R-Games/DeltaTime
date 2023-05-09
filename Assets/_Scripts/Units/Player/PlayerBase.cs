@@ -48,7 +48,7 @@ namespace rene_roid_player
         public bool ClimbingLadder => _onLadder;
 
 
-        public float Luck => _luck;
+        public float Luck { get; set; }
 
         public virtual void ApplyVelocity(Vector2 vel, PlayerForce forceType)
         {
@@ -359,8 +359,18 @@ namespace rene_roid_player
         #endregion
 
         #region Health
+        private bool _inCombat = false;
+        public bool InCombat => _inCombat;
+        private float _lastDamageTaken = 0f;
+
         protected void ConstantHealing()
         {
+            // If has not taken damage in 5 seconds, _inCombat = false
+            if (_inCombat && Time.time - _lastDamageTaken > 5f)
+            {
+                _inCombat = false;
+            }
+
             // Heal the player every second
             if (_currentHealth >= _maxStats.Health) return;
             HealAmmount(_currentHealthRegen * Time.deltaTime);
@@ -394,6 +404,11 @@ namespace rene_roid_player
 
         public void TakeDamage(float damage)
         {
+            _inCombat = true;
+            _lastDamageTaken = Time.time;
+
+            _itemManager.OnDamageTaken(damage);
+
             if (_currentArmor > 0)
             {
                 damage *= 100 / (100 + _currentArmor);
@@ -411,7 +426,6 @@ namespace rene_roid_player
                 death.OnDeath();
             }
         }
-
 
         public float DealDamage(float percentage, float proc)
         {
@@ -444,10 +458,15 @@ namespace rene_roid_player
         private float _currentExperience = 0;
         private float _experienceToNextLevel = 100;
         private float _experienceMultiplier = 1.37f;
+        private float _extraExp = 1;
+        public void AddExperienceMultiplier(float multiplier)
+        {
+            _extraExp = multiplier;
+        }
 
         public void AddExperience(float experience)
         {
-            _currentExperience += experience;
+            _currentExperience += experience * _extraExp;
             if (_currentExperience >= _experienceToNextLevel)
             {
                 LevelUp();
@@ -665,6 +684,7 @@ namespace rene_roid_player
         {
             Items.Add(item);
             item.Items.ForEach(i => i.OnGet(this, _itemManager));
+            _itemManager.OnPickUp();
         }
 
         // private void UpdateItems() => _items.ForEach(i => i.Items.ForEach(i => i.OnUpdate(this)));
@@ -681,13 +701,14 @@ namespace rene_roid_player
             _itemManager.OnHit(damage, enemy);
         }
 
+        public float MoneyMultiplier = 1;
         public virtual void OnEnemyDeath(float damage, EnemyBase enemy)
         {
             print("Killed enemy  " + enemy.name + " for " + damage + " damage!");
             _itemManager.OnKill(damage, enemy);
 
             // ? Chance to get experience
-            AddMoney(enemy.EnemyBaseStats.MoneyReward);
+            AddMoney(enemy.EnemyBaseStats.MoneyReward * MoneyMultiplier);
 
             // * Add experience
             AddExperience(enemy.EnemyBaseStats.ExperienceReward);
@@ -1007,6 +1028,7 @@ namespace rene_roid_player
             ResetAirJumps();
         }
 
+        public void AddAirJump() => _maxAirJumps++;
         protected virtual void ResetAirJumps() => _airJumpsRemaining = _maxAirJumps;
         #endregion
 
@@ -1093,6 +1115,8 @@ namespace rene_roid_player
         // Jump
         protected int _maxAirJumps = 1; // Max amount of jumps the player can do in the air. 0 = No air jumps
         protected float _jumpForce = 36; // Inmediate force applied to the player when jumping
+        public float JumpForce => _jumpForce;
+        public void SetJumpForce(float jumpForce) => _jumpForce = jumpForce;
         protected float _maxFallSpeed = 40; // Max speed the player can fall at
         protected float _fallAcceleration = 100; // Acceleration applied to the player when falling
         protected float _jumpEndEarlyGravityModifier = 3; // Gravity modifier applied to the player when ending a jump early
