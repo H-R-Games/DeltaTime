@@ -8,7 +8,7 @@ namespace rene_roid_enemy
 {
     public class Skullbok : EnemyBase
     {
-public override void Start()
+        public override void Start()
         {
             base.Start();
             _enemyType = EnemyType.Horizontal;
@@ -191,20 +191,21 @@ public override void Start()
         IEnumerator Attack()
         {
             ChangeState(EnemyStates.Idle);
+            _attaclCollider.enabled = true;
             yield return Helpers.GetWait(_attackStop);
 
             var players = Physics2D.OverlapBoxAll(_attaclCollider.bounds.center, _attaclCollider.bounds.size, 0, _playerLayer);
-
-            if (_movementDirection.x > 0) _attaclCollider.offset = new Vector2(0.5f, 0);
-            else _attaclCollider.offset = new Vector2(-0.5f, 0);
+            
+            _attaclCollider.transform.position = transform.position;
+            _attaclCollider.transform.Translate(new Vector3(_movementDirection.x > 0 ? 0.3f : -0.3f, 0, 0));
 
             foreach (var player in players)
             {
                 _onAttack = true;
-                _attaclCollider.enabled = true;
-                var playerBase = player.GetComponent<PlayerBase>();
-                if (playerBase != null) playerBase.TakeDamage(_damage);
+                player.GetComponent<PlayerBase>().TakeDamage(_damage);
             }
+
+            yield return Helpers.GetWait(0.3f);
 
             _attaclCollider.enabled = false;
             _onAttack = false;
