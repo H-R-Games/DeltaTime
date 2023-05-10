@@ -52,7 +52,7 @@ namespace rene_roid
             HealthText.text = _playerScript.CurrentHealth.ToString("0");
 
             // Smooth the healthbar
-            float healthPercentage = _playerScript.CurrentHealth / _playerScript.MaxStats.Health + (_playerScript.MaxStats.HealthPerLevel *_playerScript.Level);
+            float healthPercentage = _playerScript.CurrentHealth / _playerScript.MaxStats.Health;
             HealthBar.fillAmount = Mathf.Lerp(HealthBar.fillAmount, healthPercentage, Time.deltaTime * 10);
         }
         #endregion

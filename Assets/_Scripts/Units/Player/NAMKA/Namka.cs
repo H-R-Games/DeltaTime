@@ -43,7 +43,7 @@ namespace rene_roid_player
             LastSkillProcCoefficient = _procCoBasic;
             base.BasicAttack();
 
-            if (!_skill2Active) StartCoroutine(RemoveControl(.3f));
+            if (!_skill2Active) StartCoroutine(RemoveControl(.2f));
 
             if (IsGrounded() && !_skill2Active) _rb.velocity = new Vector2(0, _rb.velocity.y);
 
@@ -73,7 +73,7 @@ namespace rene_roid_player
            LastSkillProcCoefficient = _procCoSkill1;
             base.Skill1();
 
-            StartCoroutine(RemoveControl(1f));
+            StartCoroutine(RemoveControl(.7f));
 
             _rb.velocity = new Vector2(0, 0);
 

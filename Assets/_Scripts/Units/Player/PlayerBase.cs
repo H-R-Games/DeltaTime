@@ -690,6 +690,7 @@ namespace rene_roid_player
         public float Money = 0;
         public ItemManager _itemManager;
         public List<Item> Items = new List<Item>();
+        [SerializeField] private GameObject _hitPrefab;
 
         public void AddMoney(float amount) => Money += amount;
 
@@ -712,6 +713,8 @@ namespace rene_roid_player
 
         public virtual void OnEnemyHit(float damage, EnemyBase enemy) 
         {
+            var hit = Instantiate(_hitPrefab, enemy.transform.position, Quaternion.identity);
+            Destroy(hit, 1f);
             print("Hit enemy for " + damage + " damage!");
             _itemManager.OnHit(damage, enemy);
         }
