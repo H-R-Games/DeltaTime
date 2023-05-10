@@ -54,8 +54,6 @@ namespace rene_roid_enemy
                 TimedFireBreath();
                 f = 3;
             }
-            
-            print(f);
         }
 
         #region Attacks
