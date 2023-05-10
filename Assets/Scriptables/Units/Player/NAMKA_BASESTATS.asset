@@ -16,10 +16,10 @@ MonoBehaviour:
   Health: 100
   HealthRegen: 1
   Damage: 12
-  Armor: 0
+  Armor: 5
   MovementSpeed: 14
   HealthPerLevel: 33
   HealthRegenPerLevel: 0.2
   DamagePerLevel: 2.4
-  ArmorPerLevel: 0
+  ArmorPerLevel: 1
   MovementSpeedPerLevel: 0

@@ -42,7 +42,7 @@ namespace rene_roid_enemy
 
         public virtual void Start() { GetPlayerDirection(); }
 
-        public virtual void Update() { UpdateState(); }
+        public virtual void Update() { UpdateState(); AutoDestroy(); }
 
         public virtual void FixedUpdate()
         {
@@ -57,6 +57,8 @@ namespace rene_roid_enemy
         [SerializeField] protected float _damage;
         [SerializeField] protected float _armor;
         [SerializeField] protected float _movementSpeed;
+        public float GetMoveSpeed() { return _movementSpeed; }
+        public void SetMoveSpeed(float speed) { _movementSpeed = speed; }
 
         private void AwakeEnemyStats() { SetEnemyStats(); }
 
@@ -78,7 +80,7 @@ namespace rene_roid_enemy
         /// <summary>
         /// Function to take damage from the player
         /// </summary>
-        public void TakeDamage(float damage)
+        public virtual void TakeDamage(float damage)
         {
             print("Enemy took damage: " + damage);
 
@@ -98,6 +100,9 @@ namespace rene_roid_enemy
             }
         }
 
+        public float CurrentHealth() { return _health; }
+        public float GetHealthPercentage() { return _health / _enemyBaseStats.Health; }
+        public void DestroyEnemy() { Destroy(this.gameObject); }
         /// <summary>
         /// Calculate the damage the enemy will deal to the player
         /// </summary>
@@ -253,5 +258,20 @@ namespace rene_roid_enemy
             Gizmos.color = Color.green;
             Gizmos.DrawRay((Vector2)transform.position + new Vector2(0, _headLevel), _movementDirection * new Vector2(0, _boxCollider2D.bounds.extents.y + 1f) * Vector2.right);
         }
+
+
+        // If there is no player for 0.5 seconds destroy the enemy
+        private float _timeToDestroy = 0.5f;
+        private void AutoDestroy() {
+            if (_targetPlayer == null) {
+                _timeToDestroy -= Time.deltaTime;
+                if (_timeToDestroy <= 0) {
+                    Destroy(this.gameObject);
+                }
+            } else {
+                _timeToDestroy = 0.5f;
+            }
+        }
+
     }
 }

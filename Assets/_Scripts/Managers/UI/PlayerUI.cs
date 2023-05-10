@@ -18,6 +18,7 @@ namespace rene_roid
         [Header("External")]
         [Header("Healt")]
         public Image HealthBar;
+        public TMP_Text HealthText;
 
         [Header("Abilities")]
         public Image BasicAttackFiller;
@@ -48,6 +49,7 @@ namespace rene_roid
         private void UpdateHealthbar()
         {
             HealthBar.fillAmount = _playerScript.CurrentHealth / _playerScript.MaxStats.Health;
+            HealthText.text = _playerScript.CurrentHealth.ToString("0");
         }
         #endregion
 
