@@ -38,3 +38,13 @@ public abstract class PersistentSingleton<T> : Singleton<T> where T : MonoBehavi
     }
 }
 
+
+/// <summary>
+/// Like Static instance but with a don't destroy on load
+/// <summary>
+public abstract class PersistentStaticInstance<T> : StaticInstance<T> where T : MonoBehaviour {
+        protected override void Awake() {
+        base.Awake();
+        DontDestroyOnLoad(gameObject);
+    }
+}

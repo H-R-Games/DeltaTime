@@ -42,7 +42,7 @@ namespace rene_roid_enemy
 
         public virtual void Start() { GetPlayerDirection(); }
 
-        public virtual void Update() { UpdateState(); }
+        public virtual void Update() { AutoDestroy(); UpdateState(); }
 
         public virtual void FixedUpdate()
         {
@@ -53,22 +53,25 @@ namespace rene_roid_enemy
         #region Enemy Stats
         [Header("Enemy Stats")]
         [SerializeField] protected int _level = 1;
+        public int Level { get => _level; set => _level = value; }
         [SerializeField] protected float _health;
         [SerializeField] protected float _damage;
         [SerializeField] protected float _armor;
         [SerializeField] protected float _movementSpeed;
+        public float GetMoveSpeed() { return _movementSpeed; }
+        public void SetMoveSpeed(float speed) { _movementSpeed = speed; }
 
         private void AwakeEnemyStats() { SetEnemyStats(); }
 
         /// <summary>
         /// Set the enemy stats based on the base stats and the level
         /// </summary>
-        private void SetEnemyStats()
+        public void SetEnemyStats()
         {
-            _health = _enemyBaseStats.Health * _level;
-            _damage = _enemyBaseStats.Damage * _level;
-            _armor = _enemyBaseStats.Armor * _level;
-            _movementSpeed = _enemyBaseStats.MovementSpeed * _level + _rand;
+            _health = _enemyBaseStats.Health + (_enemyBaseStats.HealthPerLevel * _level);
+            _damage = _enemyBaseStats.Damage + (_enemyBaseStats.DamagePerLevel * _level);
+            _armor = _enemyBaseStats.Armor + (_enemyBaseStats.ArmorPerLevel * _level);
+            _movementSpeed = _enemyBaseStats.MovementSpeed + (_enemyBaseStats.MovementSpeedPerLevel * _level) + _rand;
         }
 
         public void LevelUp() { _level++; }
@@ -80,13 +83,13 @@ namespace rene_roid_enemy
         /// </summary>
         public virtual void TakeDamage(float damage)
         {
+            print("Enemy took damage: " + damage);
+
             if (_armor > 0) damage *= 100 / (100 + _armor);
             if (_armor < 0) damage *= 2 - 100 / (100 - _armor);
 
             _health -= damage;
             _targetPlayer.OnEnemyHit(damage, this);
-
-            Debug.Log("Enemy health: " + _health);
 
             if (_health <= 0)
             {
@@ -98,6 +101,9 @@ namespace rene_roid_enemy
             }
         }
 
+        public float CurrentHealth() { return _health; }
+        public float GetHealthPercentage() { return _health / _enemyBaseStats.Health; }
+        public void DestroyEnemy() { Destroy(this.gameObject); }
         /// <summary>
         /// Calculate the damage the enemy will deal to the player
         /// </summary>
@@ -109,7 +115,7 @@ namespace rene_roid_enemy
         public virtual void UpdateState() { }
         #endregion
 
-        #region Movement
+        #region Movement AI
         [Header("Movement")]
         [SerializeField] protected float _movementSpeedMultiplier = 1f;
         [SerializeField] protected float _headLevel = 0.5f;
@@ -164,7 +170,9 @@ namespace rene_roid_enemy
         public virtual void GetPlayerDirection()
         {
             var player = GameObject.FindGameObjectWithTag("Player");
-            _movementDirection = (player.transform.position - this.transform.position).normalized;
+            if (player != null) {
+                _movementDirection = (player.transform.position - this.transform.position).normalized;
+            }
         }
 
         /// <summary>
@@ -253,5 +261,20 @@ namespace rene_roid_enemy
             Gizmos.color = Color.green;
             Gizmos.DrawRay((Vector2)transform.position + new Vector2(0, _headLevel), _movementDirection * new Vector2(0, _boxCollider2D.bounds.extents.y + 1f) * Vector2.right);
         }
+
+
+        // If there is no player for 0.5 seconds destroy the enemy
+        private float _timeToDestroy = 0.5f;
+        private void AutoDestroy() {
+            if (_targetPlayer == null || _targetPlayer.transform.position == null) {
+                _timeToDestroy -= Time.deltaTime;
+                if (_timeToDestroy <= 0) {
+                    Destroy(this.gameObject);
+                }
+            } else {
+                _timeToDestroy = 0.5f;
+            }
+        }
+
     }
 }
