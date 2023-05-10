@@ -8,6 +8,10 @@ namespace rene_roid
 {
     public class GameManager : MonoBehaviour
     {
+        private void Awake() {
+            _director = GameObject.FindObjectOfType<Director>();
+        }
+
         void Start()
         {
             OnPlayerStart();
@@ -64,6 +68,7 @@ namespace rene_roid
         [SerializeField] private List<GameObject> _scenes;
         [SerializeField] private GameObject _loadingScreen;
         private int _currentSceneIndex = 0;
+        private Director _director;
 
         private void OnScenemanagement()
         {
@@ -103,6 +108,7 @@ namespace rene_roid
             _player.gameObject.SetActive(false);
 
             UnloadMap(_currentSceneIndex);
+            if (_director != null) _director.NewPassiveDirectorState(Director.PassiveDirectorState.Innactive);
             yield return Helpers.GetWait(Random.Range(0.5f, 3f));
             _currentSceneIndex++;
             LoadMap(_currentSceneIndex);
@@ -112,6 +118,7 @@ namespace rene_roid
             _player.transform.position = _scenes[_currentSceneIndex].transform.GetChild(0).transform.position;
 
             _loadingScreen.SetActive(false);
+            if (_director != null) _director.NewPassiveDirectorState(Director.PassiveDirectorState.Gathering);
         }
         #endregion
     }

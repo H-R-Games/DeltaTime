@@ -116,6 +116,7 @@ namespace rene_roid_player
         #region Player Stats
         [Header("Player Stats")]
         [SerializeField] protected int _level = 1;
+        public int Level => _level;
 
         [SerializeField] protected float _currentHealth;
         [SerializeField] protected float _currentHealthRegen;
@@ -456,7 +457,9 @@ namespace rene_roid_player
         #region Experience
         [Header("Experience")]
         private float _currentExperience = 0;
+        public  float CurrentExperience => _currentExperience;
         private float _experienceToNextLevel = 100;
+        public  float ExperienceToNextLevel => _experienceToNextLevel;
         private float _experienceMultiplier = 1.37f;
         private float _extraExp = 1;
         public void AddExperienceMultiplier(float multiplier)
@@ -723,7 +726,7 @@ namespace rene_roid_player
             AddMoney(enemy.EnemyBaseStats.MoneyReward * MoneyMultiplier);
 
             // * Add experience
-            AddExperience(enemy.EnemyBaseStats.ExperienceReward);
+            AddExperience(enemy.EnemyBaseStats.ExperienceReward + (enemy.EnemyBaseStats.ExperienceRewardPerLevel * enemy.Level));
 
             if (_director == null) {
                 _director = FindObjectOfType<Director>();
