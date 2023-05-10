@@ -134,7 +134,7 @@ MonoBehaviour:
   _lifeTime: 3
   _playerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 136
 --- !u!58 &8289405399561134388
 CircleCollider2D:
   m_ObjectHideFlags: 0

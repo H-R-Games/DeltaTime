@@ -389,7 +389,7 @@ MonoBehaviour:
   _col: {fileID: 6217724634034246108}
   _playerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 136
   _level: 1
   _currentHealth: 0
   _currentHealthRegen: 0
@@ -409,6 +409,7 @@ MonoBehaviour:
   Money: 100
   _itemManager: {fileID: 0}
   Items: []
+  MoneyMultiplier: 1
   _wallLayerMask:
     serializedVersion: 2
     m_Bits: 256
@@ -502,6 +503,24 @@ MonoBehaviour:
   HealOnKillAmount: 0
   MoveFastWhenLowHealthAmount: 0
   ChanceToDealExtraHitAmount: 0
+  LionEmblemAmount: 0
+  DopamineAmount: 0
+  MarcaShoesAmount: 0
+  RockAmount: 0
+  AspirinAmount: 0
+  SpringShoesAmount: 0
+  ImmovableSwordAmount: 0
+  WingedShoesAmount: 0
+  FashionEarsAmount: 0
+  MonsterWheightsAmount: 0
+  LaParcaAmount: 0
+  BookOfKnowledgeAmount: 0
+  LuckyGlassesAmount: 0
+  TeethOfTheFearfulAmount: 0
+  DecisionArrowAmount: 0
+  BerserkBeerAmount: 0
+  GeniusCometAmount: 0
+  CachinkGlassesAmount: 0
 --- !u!1 &6217724634197588224
 GameObject:
   m_ObjectHideFlags: 0

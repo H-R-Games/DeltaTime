@@ -195,6 +195,9 @@ public override void Start()
 
             var players = Physics2D.OverlapBoxAll(_attaclCollider.bounds.center, _attaclCollider.bounds.size, 0, _playerLayer);
 
+            if (_movementDirection.x > 0) _attaclCollider.offset = new Vector2(0.5f, 0);
+            else _attaclCollider.offset = new Vector2(-0.5f, 0);
+
             foreach (var player in players)
             {
                 _onAttack = true;
