@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using rene_roid_player;
 using rene_roid_enemy;
+using TMPro;
 
 namespace hrTeleport
 {
@@ -28,6 +29,7 @@ namespace hrTeleport
         bool _isActive = false;
         float _timeLoaded = 0f;
         public static int _piecesActivated = 0;
+        public TMP_Text _piecesText;
         EnemyBase _bossScript;
         List<GameObject> _pieces = new List<GameObject>();
 
@@ -84,6 +86,8 @@ namespace hrTeleport
 
         void Update()
         {
+            if (_isActive) _timeLoaded += Time.deltaTime;
+            _piecesText.text = _piecesActivated.ToString() + " / " + _piecesToActivate.ToString();
             ActivateTeleport();
             loadTeleport();
         }

@@ -44,8 +44,9 @@ namespace rene_roid_player {
             //_specialChestSpawnPointParent = GameObject.Find("SpecialChestSpawnPoints");
 
             // Get all child objects of the chest spawn point parent
-            _chestSpawnPoints = _chestSpawnPointParent.GetComponentsInChildren<Transform>();
+            //_chestSpawnPoints = _chestSpawnPointParent.GetComponentsInChildren<Transform>();
             //_specialChestSpawnPoints = _specialChestSpawnPointParent.GetComponentsInChildren<Transform>();
+            _chestSpawnPointParent = _chestSpawnPoints[0].parent.gameObject;
 
             // Spawn chests
             var chestSpawnPoints = Mathf.RoundToInt(_chestSpawnPoints.Length * _chestSpawnPercentage);
