@@ -40,9 +40,10 @@ namespace rene_roid_enemy
                     break;
                 case EnemyStates.Target:
                     GravityEnemy();
+                    if (_enterAttack) break;
                     if (!TargetPlayer()) UnTargetPlayer();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= 0.6f + _rand) ChangeState(EnemyStates.Attack);
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= 0.6f + _rand) StartCoroutine(EnterAttack());
                     if (!_isStunned) FollowerPlayer();
                     break;
             }
@@ -176,21 +177,28 @@ namespace rene_roid_enemy
         [SerializeField] private float _cooldownAttack = 1f;
         float _timeAttack = 0;
         bool _onAttack;
+        bool _enterAttack;
 
         private void AttackBox()
         {   
-            if (_enemyState == EnemyStates.Attack && !_onAttack)
+            if (_enemyState == EnemyStates.Attack && !_onAttack && !_enterAttack)
             {
                 _onAttack = true;
                 StartCoroutine(Attack());
             }
         }
 
-        IEnumerator Attack()
+        IEnumerator EnterAttack()
         {
+            _enterAttack = true;
             ChangeState(EnemyStates.Idle);
             yield return Helpers.GetWait(_attackStop);
+            ChangeState(EnemyStates.Attack);
+            _enterAttack = false;   
+        }
 
+        IEnumerator Attack()
+        {
             var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
 
             foreach (var player in players)
@@ -201,6 +209,7 @@ namespace rene_roid_enemy
             }
             _onAttack = false;
             _timeAttack = 0;
+            yield return Helpers.GetWait(_attackStop);
             ChangeState(EnemyStates.Target);
         }      
         #endregion
