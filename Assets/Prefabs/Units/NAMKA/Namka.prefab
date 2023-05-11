@@ -245,7 +245,7 @@ GameObject:
   - component: {fileID: 4764580286669513358}
   - component: {fileID: 4764580286669513362}
   - component: {fileID: 4764580286669513365}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: Namka
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -285,7 +285,7 @@ MonoBehaviour:
   _col: {fileID: 4764580286669513365}
   _playerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 136
   _level: 1
   _currentHealth: 0
   _currentHealthRegen: 0
@@ -305,6 +305,8 @@ MonoBehaviour:
   Money: 0
   _itemManager: {fileID: 0}
   Items: []
+  _hitPrefab: {fileID: 6406356131523818034, guid: a1faca963139fc84b8f61ff317782229, type: 3}
+  MoneyMultiplier: 1
   _wallLayerMask:
     serializedVersion: 2
     m_Bits: 256
@@ -320,7 +322,7 @@ MonoBehaviour:
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
-  _basicAttackPercentage: 0.7
+  _basicAttackPercentage: 1
   _procCoBasic: 1
   _skill1Percentage: 3
   _procCoSkill1: 1
@@ -361,6 +363,24 @@ MonoBehaviour:
   HealOnKillAmount: 0
   MoveFastWhenLowHealthAmount: 0
   ChanceToDealExtraHitAmount: 0
+  LionEmblemAmount: 0
+  DopamineAmount: 0
+  MarcaShoesAmount: 0
+  RockAmount: 0
+  AspirinAmount: 0
+  SpringShoesAmount: 0
+  ImmovableSwordAmount: 0
+  WingedShoesAmount: 0
+  FashionEarsAmount: 0
+  MonsterWheightsAmount: 0
+  LaParcaAmount: 0
+  BookOfKnowledgeAmount: 0
+  LuckyGlassesAmount: 0
+  TeethOfTheFearfulAmount: 0
+  DecisionArrowAmount: 0
+  BerserkBeerAmount: 0
+  GeniusCometAmount: 0
+  CachinkGlassesAmount: 0
 --- !u!50 &4764580286669513362
 Rigidbody2D:
   serializedVersion: 4
@@ -504,6 +524,9 @@ MonoBehaviour:
   _specialAttack2Time: 10
   _ultimateAttackTime: 3.5
   _basicAttackClip: {fileID: 8300000, guid: 66e17d64fc5cd0846b055db2b5dd9ab1, type: 3}
+  _specialAttack1Clip: {fileID: 0}
+  _specialAttack2Clip: {fileID: 0}
+  _ultimateAttackClip: {fileID: 0}
   _footstepClips:
   - {fileID: 8300000, guid: 4180aaef26463034ca6455997a38fa33, type: 3}
   - {fileID: 8300000, guid: 96daa61f9d2bb0948ad54869543592c3, type: 3}

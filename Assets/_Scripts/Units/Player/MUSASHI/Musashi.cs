@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using rene_roid;
 using UnityEngine;
 using rene_roid_enemy;
@@ -21,6 +22,15 @@ namespace rene_roid_player
             base.Start();
             _renderer = GetComponentInChildren<SpriteRenderer>();
             _collider = GetComponent<CapsuleCollider2D>();
+        }
+
+        private void OnDisable() {
+            if (_isOniMode) {
+                UpdateMaxPlayerStats();
+
+                _renderer.color = Color.white;
+                _isOniMode = false;
+            }
         }
 
         public override void Update()

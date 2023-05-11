@@ -73,3 +73,6 @@ TagManager:
   - name: Doors
     uniqueID: 1380196151
     locked: 0
+  - name: Particles
+    uniqueID: 206140821
+    locked: 0

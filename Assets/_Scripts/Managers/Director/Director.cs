@@ -23,6 +23,8 @@ namespace rene_roid
         #region External
         public List<EnemyBase> AllEnemies = new List<EnemyBase>();
         public List<EnemyBase> CurrentStageEnemies = new List<EnemyBase>();
+        public void SetStageEnemies(List<EnemyBase> enemies) => CurrentStageEnemies = enemies;
+        public void ClearStageEnemies() => CurrentStageEnemies.Clear();
 
         public int CurrentEnemiesInSceneCount = 0;
         #endregion
@@ -59,7 +61,7 @@ namespace rene_roid
         }
 
         #region Passive Director
-        private enum PassiveDirectorState
+        public enum PassiveDirectorState
         {
             Innactive,
             Gathering,
@@ -180,6 +182,11 @@ namespace rene_roid
             _passiveDirectorState = newState;
         }
 
+        public void NewPassiveDirectorState(PassiveDirectorState newState)
+        {
+            PassiveDirectorChangeState(newState);
+        }
+
 
         // ----------- Passive Director States -----------
 
@@ -238,6 +245,9 @@ namespace rene_roid
             print($"Spawning enemy: {enemy2spawn.name} | Cost: {enemy2spawn.EnemyBaseStats.Cost} | Credits left: {_creditsPD}");
 
             var enemy = Instantiate(enemy2spawn, SpawnPosition(), Quaternion.identity);
+            EnemyBase enemyBase = enemy.GetComponent<EnemyBase>();
+            enemyBase.Level = _directorsLevel;
+            enemyBase.SetEnemyStats();
         }
 
         private EnemyBase ChooseEnemeyToSpawnPD()
@@ -262,7 +272,7 @@ namespace rene_roid
             // print($"Enemies inside range: {enemies.Count}");
 
             // // Get random enemy from enemies list
-            // if (enemies.Count == 0) return null;
+            if (CurrentStageEnemies.Count == 0) return null;
             return CurrentStageEnemies[Random.Range(0, CurrentStageEnemies.Count)];
         }
 

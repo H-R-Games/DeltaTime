@@ -42,7 +42,7 @@ namespace rene_roid_enemy
 
         public virtual void Start() { GetPlayerDirection(); }
 
-        public virtual void Update() { UpdateState(); AutoDestroy(); }
+        public virtual void Update() { AutoDestroy(); UpdateState(); }
 
         public virtual void FixedUpdate()
         {
@@ -53,6 +53,7 @@ namespace rene_roid_enemy
         #region Enemy Stats
         [Header("Enemy Stats")]
         [SerializeField] protected int _level = 1;
+        public int Level { get => _level; set => _level = value; }
         [SerializeField] protected float _health;
         [SerializeField] protected float _damage;
         [SerializeField] protected float _armor;
@@ -65,12 +66,12 @@ namespace rene_roid_enemy
         /// <summary>
         /// Set the enemy stats based on the base stats and the level
         /// </summary>
-        private void SetEnemyStats()
+        public void SetEnemyStats()
         {
-            _health = _enemyBaseStats.Health * _level;
-            _damage = _enemyBaseStats.Damage * _level;
-            _armor = _enemyBaseStats.Armor * _level;
-            _movementSpeed = _enemyBaseStats.MovementSpeed * _level + _rand;
+            _health = _enemyBaseStats.Health + (_enemyBaseStats.HealthPerLevel * _level);
+            _damage = _enemyBaseStats.Damage + (_enemyBaseStats.DamagePerLevel * _level);
+            _armor = _enemyBaseStats.Armor + (_enemyBaseStats.ArmorPerLevel * _level);
+            _movementSpeed = _enemyBaseStats.MovementSpeed + (_enemyBaseStats.MovementSpeedPerLevel * _level) + _rand;
         }
 
         public void LevelUp() { _level++; }
@@ -169,7 +170,9 @@ namespace rene_roid_enemy
         public virtual void GetPlayerDirection()
         {
             var player = GameObject.FindGameObjectWithTag("Player");
-            _movementDirection = (player.transform.position - this.transform.position).normalized;
+            if (player != null) {
+                _movementDirection = (player.transform.position - this.transform.position).normalized;
+            }
         }
 
         /// <summary>
@@ -263,7 +266,7 @@ namespace rene_roid_enemy
         // If there is no player for 0.5 seconds destroy the enemy
         private float _timeToDestroy = 0.5f;
         private void AutoDestroy() {
-            if (_targetPlayer == null) {
+            if (_targetPlayer == null || _targetPlayer.transform.position == null) {
                 _timeToDestroy -= Time.deltaTime;
                 if (_timeToDestroy <= 0) {
                     Destroy(this.gameObject);

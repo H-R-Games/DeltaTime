@@ -9,7 +9,7 @@ namespace rene_roid_enemy
     public class ProyectilContreoller : MonoBehaviour
     {
         [Header("Movement Settings")]
-        [SerializeField] private float _speed = 5f;
+        [SerializeField] private float _speed = 10f;
         [SerializeField] private float _lifeTime = 3f;
         [SerializeField] private LayerMask _playerLayer;
         CircleCollider2D _collider;
@@ -25,6 +25,8 @@ namespace rene_roid_enemy
         void FixedUpdate()
         {
             transform.Translate(new Vector2(_direction.x, 0) * _speed * Time.deltaTime);
+            // hacemos que el hijo rote para darle un efecto de rotacion de movimiento
+            transform.GetChild(0).Rotate(new Vector3(0, 0, 1) * 1000 * Time.deltaTime);
 
             var player = Physics2D.OverlapCircle(transform.position, _collider.radius, _playerLayer);
 
