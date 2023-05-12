@@ -111,9 +111,10 @@ namespace rene_roid
             if (_director != null) _director.NewPassiveDirectorState(Director.PassiveDirectorState.Innactive);
             yield return Helpers.GetWait(Random.Range(0.5f, 3f));
             _currentSceneIndex++;
-            LoadMap(_currentSceneIndex);
             
             _player.gameObject.SetActive(true);
+            LoadMap(_currentSceneIndex);
+            
             _player.SetPlayerStats();
             _player.transform.position = _scenes[_currentSceneIndex].transform.GetChild(0).transform.position;
 

@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Smol Worm
   Description: Enemy Description
-  Cost: 6
+  Cost: 20
   Weight: 1
   StageCondition: []
   Health: 57
   Damage: 1
-  Armor: 30
+  Armor: 10
   MovementSpeed: 15
   MoneyReward: 10
   ExperienceReward: 10
   HealthPerLevel: 8
-  DamagePerLevel: 0.2
+  DamagePerLevel: 0.05
   ArmorPerLevel: 0
   MovementSpeedPerLevel: 0
   MoneyRewardPerLevel: 2

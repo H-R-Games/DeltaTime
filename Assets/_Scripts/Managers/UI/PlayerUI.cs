@@ -44,6 +44,7 @@ namespace rene_roid
             UpdateHealthbar();
             UpdateLevel();
             UpdateAbilityIcons();
+            UpdateMoney();
         }
 
         #region Healthbar
@@ -77,6 +78,14 @@ namespace rene_roid
             // smooth
             float levelPercentage = _playerScript.CurrentExperience / _playerScript.ExperienceToNextLevel;
             LevelFiller.fillAmount = Mathf.Lerp(LevelFiller.fillAmount, levelPercentage, Time.deltaTime * 10);
+        }
+
+
+        [Header("Money")]
+        public TMP_Text MoneyText;
+
+        public void UpdateMoney() {
+            MoneyText.text = _playerScript.Money.ToString() + " $";
         }
         
     }

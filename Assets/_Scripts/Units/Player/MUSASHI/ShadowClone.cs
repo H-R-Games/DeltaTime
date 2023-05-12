@@ -35,17 +35,30 @@ namespace rene_roid_player {
 
         private List<EnemyBase> _enemiesHit = new List<EnemyBase>();
         private void Update() {
-            // Overlap box all
+            // // Overlap box all
+            // var enemies = Physics2D.OverlapBoxAll(transform.position, new Vector2(1, 1), 0, LayerMask.GetMask("Enemy"));
+
+            // // Loop through all enemies and check if they are already hit
+            // foreach (var enemy in enemies) {
+            //     var enemyBase = enemy.GetComponent<EnemyBase>();
+            //     if (enemyBase == null) continue;
+
+            //     if (!_enemiesHit.Contains(enemyBase)) {
+            //         _enemiesHit.Add(enemyBase);
+            //         enemyBase.TakeDamage(_player.DealDamage(_damage, _proc));
+            //     }
+            // }
+
             var enemies = Physics2D.OverlapBoxAll(transform.position, new Vector2(1, 1), 0, LayerMask.GetMask("Enemy"));
             foreach (var enemy in enemies) {
                 var hit = enemy.gameObject.GetComponent<EnemyBase>();
                 if (hit != null && !_enemiesHit.Contains(hit)) {
                     hit.TakeDamage(_player.DealDamage(_damage, _proc));
                     _enemiesHit.Add(hit);
-                }
 
-                if (_oni && !Clone && hit != null) {
-                    OniClone(hit.transform, _damage, _proc);
+                    if (_oni && !Clone && hit != null) {
+                        OniClone(hit.transform, _damage, _proc);
+                    }
                 }
             }
         }

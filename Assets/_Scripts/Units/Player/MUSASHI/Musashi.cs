@@ -26,6 +26,9 @@ namespace rene_roid_player
 
         private void OnDisable() {
             if (_isOniMode) {
+                RemoveFlatDamageBonus(_addedOniDamage);
+                RemoveMovementSpeedFlat(_addedOniSpeed);
+
                 UpdateMaxPlayerStats();
 
                 _renderer.color = Color.white;
@@ -313,6 +316,8 @@ namespace rene_roid_player
             StartCoroutine(OniMode());
         }
 
+        private float _addedOniDamage = 0;
+        private float _addedOniSpeed = 0;
         private IEnumerator OniMode()
         {
             _isOniMode = true;
@@ -320,6 +325,9 @@ namespace rene_roid_player
 
             var dmg = _maxStats.Damage;
             var spd = _maxStats.MovementSpeed;
+
+            _addedOniDamage = dmg;
+            _addedOniSpeed = spd;
 
             AddFlatDamageBonus(dmg);
             AddMovementSpeedFlat(spd);
@@ -330,6 +338,9 @@ namespace rene_roid_player
 
             RemoveFlatDamageBonus(dmg);
             RemoveMovementSpeedFlat(spd);
+
+            _addedOniDamage = 0;
+            _addedOniSpeed = 0;
 
             UpdateCurrentStats();
 
