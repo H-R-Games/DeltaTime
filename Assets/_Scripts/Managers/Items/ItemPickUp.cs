@@ -25,12 +25,14 @@ namespace rene_roid_player {
         {
             _rb = GetComponent<Rigidbody2D>();
             _collider = GetComponent<Collider2D>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
 
             ShowItemUI = GameObject.FindObjectOfType<ShowItemUI>();
         }
 
         void Update()
         {
+            if (_spriteRenderer != null && Item.Icon != null) _spriteRenderer.sprite = Item.Icon;
             if (!_launched)
             {
                 _rb.AddForce(new Vector2(Random.Range(-.5f, .5f), Random.Range(.5f, 1f)), ForceMode2D.Impulse);
@@ -74,7 +76,7 @@ namespace rene_roid_player {
         {
             Item = item;
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            if (_spriteRenderer != null && item.Icon != null) _spriteRenderer.sprite = item.Icon;
+            if (_spriteRenderer != null && item.Icon != null) _spriteRenderer.sprite = Item.Icon;
         }
     }
 }

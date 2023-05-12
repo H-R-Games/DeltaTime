@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Monster Wheights
   Description: 
-  Icon: {fileID: 0}
+  Icon: {fileID: 1181108389, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 5227128222747721738
   references:

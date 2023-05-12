@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Lion Emblem
   Description: 
-  Icon: {fileID: 0}
+  Icon: {fileID: -2087563722, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 5227128222747721729
   references:
