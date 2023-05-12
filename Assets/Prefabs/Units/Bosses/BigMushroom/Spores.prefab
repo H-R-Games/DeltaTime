@@ -4859,7 +4859,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 206140821
-  m_SortingLayer: 11
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -4937,10 +4937,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 606e86da193dc714ea00553b4b8d137e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyBaseStats: {fileID: 11400000, guid: 3b1e047e6c3cc8b44ada6eeb121fd3e9, type: 2}
+  _enemyBaseStats: {fileID: 11400000, guid: ed19669f4a535df4ba57f999493fa601, type: 2}
   _enemyState: 0
   _enemyType: 0
-  _boxCollider2D: {fileID: 0}
+  _boxCollider2D: {fileID: 4684449853615178394}
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
