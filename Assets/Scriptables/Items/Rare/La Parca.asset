@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: La Parca
   Description: 
-  Icon: {fileID: 0}
+  Icon: {fileID: 492410290, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 4406867372903235584
   references:

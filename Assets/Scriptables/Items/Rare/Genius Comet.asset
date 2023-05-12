@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Genius Comet
   Description: 
-  Icon: {fileID: 0}
+  Icon: {fileID: -8114880, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 7045599124553465856
   references:

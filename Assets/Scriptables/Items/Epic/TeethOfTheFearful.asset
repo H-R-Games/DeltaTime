@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Teeth Of The Fearful
   Description: 
-  Icon: {fileID: 0}
+  Icon: {fileID: 805612411, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 8529696829327802368
   references:

@@ -21,6 +21,7 @@ namespace rene_roid_enemy
         #region State Machine
         public override void UpdateState()
         {
+            print(_onAttack);
             switch (_enemyState)
             {
                 case EnemyStates.Idle:
@@ -31,7 +32,7 @@ namespace rene_roid_enemy
                     break;
                 case EnemyStates.Attack:
                     GravityEnemy();
-                    if (!_isStunned) AttackBox();
+                    if (!_isStunned && !_onAttack) AttackBox();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 0.6f + _rand) ChangeState(EnemyStates.Move);
                     break;
                 case EnemyStates.Stun:
@@ -192,24 +193,25 @@ namespace rene_roid_enemy
         {
             _enterAttack = true;
             ChangeState(EnemyStates.Idle);
-            yield return Helpers.GetWait(_attackStop);
+            yield return Helpers.GetWait(_cooldownAttack);
             ChangeState(EnemyStates.Attack);
-            _enterAttack = false;   
+            _enterAttack = false;
         }
 
         IEnumerator Attack()
         {
+            _onAttack = true;
+            _onAttackAnim = true;
             var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
 
             foreach (var player in players)
             {
-                _onAttack = true;
                 var playerBase = player.GetComponent<PlayerBase>();
                 if (playerBase != null) playerBase.TakeDamage(_damage);
             }
-            _onAttack = false;
             _timeAttack = 0;
             yield return Helpers.GetWait(_attackStop);
+            _onAttack = false;
             ChangeState(EnemyStates.Target);
         }      
         #endregion
@@ -225,6 +227,7 @@ namespace rene_roid_enemy
             private static readonly int AttackAnim = Animator.StringToHash("Attack");
 
             [SerializeField] private float _attackAnimTime = 0.5f;
+            private bool _onAttackAnim = false;
 
             private void HandleAnimations()
             {
@@ -241,7 +244,7 @@ namespace rene_roid_enemy
 
                     // ANY SKILL PRESSED
                     // if (_isStunned) return LockState(UltimateAttackAnim, 5);
-                    if (_onAttack) return LockState(AttackAnim, _attackAnimTime);
+                    if (_onAttackAnim) return LockState(AttackAnim, _attackAnimTime);
 
                     // NO SKILL PRESSED
                     return Run;
@@ -255,7 +258,7 @@ namespace rene_roid_enemy
 
                 }
 
-                void ResetFlags() { _onAttack = false; }
+                void ResetFlags() { _onAttackAnim = false; }
             }
         #endregion
 

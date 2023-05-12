@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Fashion Ears
   Description: 
-  Icon: {fileID: 0}
+  Icon: {fileID: 1426242278, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 4406867260420128768
   references:

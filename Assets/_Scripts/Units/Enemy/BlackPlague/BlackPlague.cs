@@ -191,6 +191,7 @@ namespace rene_roid_enemy
         IEnumerator Attack()
         {
             ChangeState(EnemyStates.Idle);
+            _onAttackAnim = true;
             yield return Helpers.GetWait(_attackStop);
 
             var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
@@ -217,6 +218,7 @@ namespace rene_roid_enemy
             private static readonly int StunnedAnim = Animator.StringToHash("Stunned");
             private static readonly int AttackAnim = Animator.StringToHash("Attack");
             bool _idleAnim;
+            bool _onAttackAnim;
 
             [SerializeField] private float _attackAnimTime = 0.5f;
 
@@ -235,7 +237,7 @@ namespace rene_roid_enemy
 
                     // ANY SKILL PRESSED
                     // if (_isStunned) return LockState(UltimateAttackAnim, 5);
-                    if (_onAttack) return LockState(AttackAnim, _attackAnimTime);
+                    if (_onAttackAnim) return LockState(AttackAnim, _attackAnimTime);
                     if (_idleAnim) return Idle;
 
                     // NO SKILL PRESSED
@@ -250,7 +252,7 @@ namespace rene_roid_enemy
 
                 }
 
-                void ResetFlags() { _onAttack = false; }
+                void ResetFlags() { _onAttackAnim = false; }
             }
         #endregion
 

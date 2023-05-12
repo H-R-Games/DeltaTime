@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Spring Shoes
   Description: 
-  Icon: {fileID: 0}
+  Icon: {fileID: 799097567, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 5227128222747721733
   references:

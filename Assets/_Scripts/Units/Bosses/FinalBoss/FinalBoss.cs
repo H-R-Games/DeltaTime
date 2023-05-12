@@ -22,8 +22,8 @@ namespace rene_roid_enemy {
         public override void UpdateState()
         {
             base.UpdateState();
-
-            FinalBossAI();
+            Knifes();
+            //FinalBossAI();
         }
 
 
@@ -157,6 +157,12 @@ namespace rene_roid_enemy {
                     pos.y += Random.Range(-1f, 1f);
                     var stuff = Instantiate(_groingStuff, pos, Quaternion.identity);
                     stuffs.Add(stuff);
+                    
+                    if (Random.Range(0, 2) == 0) {
+                        stuff.GetComponent<BoxCollider2D>().isTrigger = true;
+                        stuff.GetComponent<SpriteRenderer>().color = Color.blue;
+                    }
+
                     yield return new WaitForSeconds(0.1f);
                 }
 
@@ -326,6 +332,76 @@ namespace rene_roid_enemy {
 
                 var hplost = hp - _health;
                 _health = hplost * 0.75f;
+            }
+        }
+        #endregion
+
+        #region Knifes
+        [Header("Knifes")]
+        [SerializeField] private float _knifesCooldown = 30f;
+        private float _knifesCooldownTimer = 0f;
+
+        [SerializeField] private float _knifesDuration = 5f;
+        [SerializeField] private GameObject _knifePrefab;
+        [SerializeField] private int _knifeCount = 5;
+
+        private void Knifes() {
+            _knifesCooldownTimer += Time.deltaTime;
+            if (_knifesCooldownTimer >= _knifesCooldown) {
+                _knifesCooldownTimer = 0f;
+                if (Random.Range(0, 2) == 0) StartCoroutine(KnifesCoroutine());
+                else StartCoroutine(KnifesDelayCoroutine());
+            }
+
+            IEnumerator KnifesCoroutine() {
+                var dirPlayer = _targetPlayer.transform.position - transform.position;
+                dirPlayer.Normalize();
+                var pos = transform.position + -dirPlayer * 10f;
+
+                // Spawn knifes
+                for (int i = 0; i < _knifeCount; i++)
+                {                    
+                    var knife = Instantiate(_knifePrefab, GetRandomPosition(), Quaternion.identity);
+                    knife.GetComponent<Knife>().Damage = _damage;
+                    knife.GetComponent<Knife>()._target = _targetPlayer.transform;
+
+                    Destroy(knife, _knifesDuration);
+                }
+
+                Vector2 GetRandomPosition()
+                {
+                    Vector2 randomPoint = Random.insideUnitCircle.normalized * 20;
+                    Vector2 offset = new Vector2(randomPoint.x, randomPoint.y);
+                    return _targetPlayer.transform.position + (Vector3)offset;
+                }
+
+                yield return null;
+            }
+
+            IEnumerator KnifesDelayCoroutine() {
+                var dirPlayer = _targetPlayer.transform.position - transform.position;
+                dirPlayer.Normalize();
+                var pos = transform.position + -dirPlayer * 10f;
+
+                // Spawn knifes
+                for (int i = 0; i < _knifeCount; i++)
+                {                    
+                    var knife = Instantiate(_knifePrefab, GetRandomPosition(), Quaternion.identity);
+                    knife.GetComponent<Knife>().Damage = _damage;
+                    knife.GetComponent<Knife>()._target = _targetPlayer.transform;
+
+                    Destroy(knife, _knifesDuration);
+                    yield return Helpers.GetWait(0.2f);
+                }
+
+                Vector2 GetRandomPosition()
+                {
+                    Vector2 randomPoint = Random.insideUnitCircle.normalized * 20;
+                    Vector2 offset = new Vector2(randomPoint.x, randomPoint.y);
+                    return _targetPlayer.transform.position + (Vector3)offset;
+                }
+
+                yield return null;
             }
         }
         #endregion

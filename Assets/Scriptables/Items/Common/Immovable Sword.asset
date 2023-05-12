@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Immovable Sword
   Description: 
-  Icon: {fileID: 0}
+  Icon: {fileID: 2132605019, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 4406867215292301313
   references:
@@ -24,3 +24,6 @@ MonoBehaviour:
       type: {class: ImmovableSword, ns: rene_roid_player, asm: Assembly-CSharp}
       data:
         Name: Immovable Sword
+        DamagePorcen: 0.15
+        TimeToActive: 5
+        TimeToDesactive: 7

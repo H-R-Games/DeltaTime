@@ -120,7 +120,7 @@ namespace rene_roid_enemy
             else if (_movementDirection.x < 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = _movementDirection.x < 0;
         }
         #endregion
-        
+
         #region Target Player
         [Header("Target Player Settings")]
         [SerializeField] private float _targetDistanceWatchin = 10f;
@@ -128,7 +128,7 @@ namespace rene_roid_enemy
         [SerializeField] private float _targetDistanceUnfollow = 50f;
         [SerializeField] private float _targetTimeUnfollow = 3f;
         float _timeUnTarget = 0;
-        
+
         /// <summary>
         /// Function that checks if the player is in the range of the enemy and the enemy is looking at the player
         /// </summary>
@@ -150,8 +150,8 @@ namespace rene_roid_enemy
 
             if (_timeUnTarget < _targetTimeUnfollow)
             {
-                if (_hitTarget.collider != null && _hitTarget.collider.gameObject.tag == "Player") { _timeUnTarget = 0; return;};
-                if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) { _timeUnTarget = 0; return;};
+                if (_hitTarget.collider != null && _hitTarget.collider.gameObject.tag == "Player") { _timeUnTarget = 0; return; };
+                if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) { _timeUnTarget = 0; return; };
             }
             else if (_timeUnTarget >= 1) { _timeUnTarget = 0; ChangeState(EnemyStates.Move); }
         }
@@ -173,7 +173,7 @@ namespace rene_roid_enemy
         #endregion
         #endregion
 
-       #region Attack
+        #region Attack
         [Header("Attack Settings")]
         [SerializeField] private float _attackStop = 2f;
         [SerializeField] private float _cooldownAttack = 1f;
@@ -182,7 +182,7 @@ namespace rene_roid_enemy
         bool _enterAttack;
 
         private void AttackBox()
-        {   
+        {
             if (_enemyState == EnemyStates.Attack && !_onAttack && !_enterAttack)
             {
                 _onAttack = true;
@@ -196,71 +196,73 @@ namespace rene_roid_enemy
             ChangeState(EnemyStates.Idle);
             yield return Helpers.GetWait(_attackStop);
             ChangeState(EnemyStates.Attack);
-            _enterAttack = false;   
+            _enterAttack = false;
         }
 
         IEnumerator Attack()
         {
+            _onAttack = true;
+            _onAttackAnim = true;
             var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
 
             foreach (var player in players)
             {
-                _onAttack = true;
                 var playerBase = player.GetComponent<PlayerBase>();
                 if (playerBase != null) playerBase.TakeDamage(_damage);
             }
-            _onAttack = false;
             _timeAttack = 0;
             yield return Helpers.GetWait(_attackStop);
+            _onAttack = false;
             ChangeState(EnemyStates.Target);
-        }      
+        }
         #endregion
 
         #region Animation
         private Animator _anim;
-            private int _currentAnimation = 0;
-            private float _lockedTill;
-            private static readonly int Idle = Animator.StringToHash("Idle");
-            private static readonly int Run = Animator.StringToHash("Run");
-            private static readonly int Death = Animator.StringToHash("Die");
-            private static readonly int StunnedAnim = Animator.StringToHash("Stunned");
-            private static readonly int AttackAnim = Animator.StringToHash("Attack");
-            bool _idleAnim;
+        private int _currentAnimation = 0;
+        private float _lockedTill;
+        private static readonly int Idle = Animator.StringToHash("Idle");
+        private static readonly int Run = Animator.StringToHash("Run");
+        private static readonly int Death = Animator.StringToHash("Die");
+        private static readonly int StunnedAnim = Animator.StringToHash("Stunned");
+        private static readonly int AttackAnim = Animator.StringToHash("Attack");
+        bool _idleAnim;
+        bool _onAttackAnim;
 
-            [SerializeField] private float _attackAnimTime = 0.5f;
+        [SerializeField] private float _attackAnimTime = 0.5f;
 
-            private void HandleAnimations()
+        private void HandleAnimations()
+        {
+            var state = GetState();
+            ResetFlags();
+            if (state == _currentAnimation) return;
+
+            _anim.Play(state, 0); //_anim.CrossFade(state, 0, 0);
+            _currentAnimation = state;
+
+            int GetState()
             {
-                var state = GetState();
-                ResetFlags();
-                if (state == _currentAnimation) return;
+                if (Time.time < _lockedTill) return _currentAnimation;
 
-                _anim.Play(state, 0); //_anim.CrossFade(state, 0, 0);
-                _currentAnimation = state;
+                // ANY SKILL PRESSED
+                // if (_isStunned) return LockState(UltimateAttackAnim, 5);
+                if (_onAttackAnim) return LockState(AttackAnim, _attackAnimTime);
+                if (_idleAnim) return Idle;
 
-                int GetState()
+                // NO SKILL PRESSED
+                return Run;
+
+                // State and time to lock
+                int LockState(int s, float t)
                 {
-                    if (Time.time < _lockedTill) return _currentAnimation;
-
-                    // ANY SKILL PRESSED
-                    // if (_isStunned) return LockState(UltimateAttackAnim, 5);
-                    if (_onAttack) return LockState(AttackAnim, _attackAnimTime);
-                    if (_idleAnim) return Idle;
-
-                    // NO SKILL PRESSED
-                    return Run;
-
-                    // State and time to lock
-                    int LockState(int s, float t)
-                    {
-                        _lockedTill = Time.time + t;
-                        return s;
-                    }
-
+                    _lockedTill = Time.time + t;
+                    return s;
                 }
 
-                void ResetFlags() { _onAttack = false; }
             }
+
+            void ResetFlags() { _onAttackAnim = false; }
+        }
         #endregion
 
 #if UNITY_EDITOR

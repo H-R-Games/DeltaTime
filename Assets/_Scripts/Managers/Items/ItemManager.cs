@@ -21,13 +21,13 @@ namespace rene_roid_player {
 
             // Game Items
             LionEmblem();
-            Aspirin();
             GetImmovableSword();
             GetFashionEars();
         }
         
         public void OnPickUp() {
             // Game Items
+            Aspirin();
             GetDopamine();
             GetMarcaShoes();
             GetRock();
@@ -252,10 +252,13 @@ namespace rene_roid_player {
         public int AspirinAmount = 0; // Amount of items
         private float _aspirin = 0f; // Aspirin (Stack with other items)
         private Aspirin _aspirinItem;
+        private int _lastAspirinAmmount = 0;
 
         private void Aspirin() {
             if (AspirinAmount == 0) return;
+            if (_lastAspirinAmmount == AspirinAmount) return;
             if (_aspirinItem == null) _aspirinItem = new Aspirin();
+            _lastAspirinAmmount = AspirinAmount;
 
             _aspirin = _aspirinItem.HealthRegen * AspirinAmount;
 

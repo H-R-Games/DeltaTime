@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Vital food
   Description: 
-  Icon: {fileID: 0}
+  Icon: {fileID: 1724888815, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 8529696807747321859
   references:
