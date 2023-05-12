@@ -150,15 +150,22 @@ namespace rene_roid_enemy
         {
             _attackClap = true;
             ChangeState(EnemyStates.Idle);
+
+            _colliderClap.transform.position = transform.position;
+            _colliderClap.transform.Translate(new Vector3(_movementDirection.x > 0 ? 1.5f : -1.5f, 0, 0));
+
             var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
 
             _colliderClap.GetComponent<Collider2D>().enabled = true;
+            
             foreach (var player in players)
             {
                 var playerBase = player.GetComponent<PlayerBase>();
                 if (playerBase != null) playerBase.TakeDamage(_damage);
             }
+            
             yield return Helpers.GetWait(_attackClapAnimTime + 0.5f);
+            
             _colliderClap.GetComponent<Collider2D>().enabled = false;
             ChangeState(EnemyStates.Target);
         }
@@ -167,6 +174,10 @@ namespace rene_roid_enemy
         {
             _attackNibble = true;
             ChangeState(EnemyStates.Idle);
+
+            _colliderNibble.transform.position = transform.position;
+            _colliderNibble.transform.Translate(new Vector3(_movementDirection.x > 0 ? 1.5f : -1.5f, 0, 0));
+
             var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
 
             foreach (var player in players)
@@ -175,7 +186,9 @@ namespace rene_roid_enemy
                 var playerBase = player.GetComponent<PlayerBase>();
                 if (playerBase != null) playerBase.TakeDamage(_damage);
             }
+
             yield return Helpers.GetWait(_attackNibbleAnimTime + 0.5f);
+            
             _colliderNibble.GetComponent<Collider2D>().enabled = false;
             ChangeState(EnemyStates.Target);
         }

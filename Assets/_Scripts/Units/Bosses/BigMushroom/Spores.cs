@@ -16,10 +16,10 @@ namespace rene_roid_enemy
 
         void Update()
         {
-            _timeCurrenLife += Time.deltaTime * 0.5f;
+            _timeCurrenLife += Time.deltaTime;
             if (_timeCurrenLife >= _sporesLifeTime) Destroy(gameObject);
 
-            t += Time.deltaTime * 0.5f;
+            t += Time.deltaTime;
             if (t >= 0.5f)
             {
                 if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= _sporesDistance) _targetPlayer.GetComponent<PlayerBase>().TakeDamage(_damage);
