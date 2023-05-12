@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using rene_roid;
+using rene_roid_player;
 
 namespace rene_roid_enemy {    
     public class GrowingStuff : MonoBehaviour
@@ -41,9 +42,9 @@ namespace rene_roid_enemy {
             Destroy(gameObject);
         }
 
-        private void OnControllerColliderHit(ControllerColliderHit hit) {
-            if (hit.gameObject.CompareTag("Player")) {
-                print("hit");
+        private void OnTriggerEnter2D(Collider2D other) {
+            if (other.CompareTag("Player")) {
+                other.GetComponent<PlayerBase>().TakeDamage(20);
             }
         }
     }
