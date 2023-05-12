@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 987569b084917784ab815b4d235dfa33, type: 3}
-  m_Name: BigMushroom
+  m_Name: Spores
   m_EditorClassIdentifier: 
-  Name: BigMushroom
+  Name: Spores
   Description: Enemy Description
   Cost: 6
   Weight: 1
   StageCondition: []
-  Health: 800
-  Damage: 10
-  Armor: 10
-  MovementSpeed: 3
+  Health: 80
+  Damage: 5
+  Armor: 0
+  MovementSpeed: 6
   MoneyReward: 10
   ExperienceReward: 10
   HealthPerLevel: 24
   DamagePerLevel: 2.4
-  ArmorPerLevel: 1
-  MovementSpeedPerLevel: 0.5
+  ArmorPerLevel: 0
+  MovementSpeedPerLevel: 0
   MoneyRewardPerLevel: 2
   ExperienceRewardPerLevel: 2
