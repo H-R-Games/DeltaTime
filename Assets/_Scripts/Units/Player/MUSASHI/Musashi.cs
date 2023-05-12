@@ -166,13 +166,16 @@ namespace rene_roid_player
         }
 
         public float ESPIID = 100f;
+        [SerializeField] private LayerMask _floorLayerMask;
         private IEnumerator SpeedDash(float dist, float t)
         {
             var dir = _renderer.flipX ? -1 : 1;
             var pos = transform.position;
             var target = new Vector2(pos.x + (dist *dir), pos.y);
             print(pos.x+" "+target);
-            var ray = Physics2D.Linecast(pos, target, _wallLayerMask);
+            // Get floor layer
+
+            var ray = Physics2D.Linecast(pos, target, _wallLayerMask & _floorLayerMask);
             if (ray.collider != null)
             {
                 target = ray.point;

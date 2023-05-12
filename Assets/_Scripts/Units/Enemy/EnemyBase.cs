@@ -55,6 +55,7 @@ namespace rene_roid_enemy
         [SerializeField] protected int _level = 1;
         public int Level { get => _level; set => _level = value; }
         [SerializeField] protected float _health;
+        public float Health { get => _health; set => _health = value; }
         [SerializeField] protected float _damage;
         [SerializeField] protected float _armor;
         [SerializeField] protected float _movementSpeed;
