@@ -13,10 +13,12 @@ namespace rene_roid_enemy {
             base.Start();
             _rb = GetComponent<Rigidbody2D>();
             _lastHP = _health;
+            _animator = GetComponentInChildren<Animator>();
         }
 
         public override void Update() {
             base.Update();
+            HandleAnimations();
         }
 
         public override void UpdateState()
@@ -326,6 +328,47 @@ namespace rene_roid_enemy {
 
                 var hplost = hp - _health;
                 _health = hplost * 0.75f;
+            }
+        }
+        #endregion
+
+        #region Animations
+        private Animator _animator;
+        private int _currentAnimation = 0;
+        private float _lockedTill;
+
+        private static readonly int IdleInt = Animator.StringToHash("Idle");
+        private static readonly int WalkInt = Animator.StringToHash("Walk");
+
+        
+        private void HandleAnimations() {
+            var state = GetState();
+            ResetFlags();
+            if (state == _currentAnimation) return;
+
+            _animator.Play(state, 0); //_anim.CrossFade(state, 0, 0);
+            _currentAnimation = state;
+
+            int GetState()
+            {
+                if (Time.time < _lockedTill) return _currentAnimation;
+
+                if (_rb.velocity != Vector2.zero) return WalkInt;
+
+                // NO SKILL PRESSED
+                return IdleInt;
+
+                // State and time to lock
+                int LockState(int s, float t)
+                {
+                    _lockedTill = Time.time + t;
+                    return s;
+                }
+
+            }
+
+            void ResetFlags() {
+                
             }
         }
         #endregion
