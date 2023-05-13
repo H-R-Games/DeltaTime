@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Rock
   m_EditorClassIdentifier: 
   Name: Rock
-  Description: 
+  Description: Te da 5 de armadura
   Icon: {fileID: -1319288952, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 5227128222747721732

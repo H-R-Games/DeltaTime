@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Lion Emblem
   m_EditorClassIdentifier: 
   Name: Lion Emblem
-  Description: 
+  Description: 'Aumenta la defensa con poco porcentaje de vida. (Menos del 30% de
+    vida)  '
   Icon: {fileID: -2087563722, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 5227128222747721729

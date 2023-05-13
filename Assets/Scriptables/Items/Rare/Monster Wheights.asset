@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Monster Wheights
   m_EditorClassIdentifier: 
   Name: Monster Wheights
-  Description: 
+  Description: Al pegar a enemigos reduce su velocidad de movimiento (un 30%(ajustable
+    porque ni puta idea de cuanto de lentos se moveran))
   Icon: {fileID: 1181108389, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 5227128222747721738

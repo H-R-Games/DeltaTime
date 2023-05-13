@@ -322,9 +322,9 @@ MonoBehaviour:
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
-  _basicAttackPercentage: 1
+  _basicAttackPercentage: 2
   _procCoBasic: 1
-  _skill1Percentage: 3
+  _skill1Percentage: 3.5
   _procCoSkill1: 1
   _skill1Rad: {fileID: 4764580285460173337}
   _skill1Slash: {fileID: 5399627222900152123, guid: 7f461157002c52143839a0af2a61721b, type: 3}
@@ -336,6 +336,7 @@ MonoBehaviour:
   _procCoUltimate: 1
   _ultimateRad: {fileID: 1324960377480317777}
   _ultimateChargeTime: 2
+  _nuke: {fileID: 7686323592938109950, guid: 6145c283aaa5c684a88ccd66560ec07b, type: 3}
 --- !u!114 &4764580286669513360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -493,8 +494,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1879795371
+  m_SortingLayer: 5
   m_SortingOrder: 1
   m_Sprite: {fileID: -1897674143, guid: 4a49941b9b2810a4b8650664b2c72729, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

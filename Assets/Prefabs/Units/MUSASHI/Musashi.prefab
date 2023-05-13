@@ -74,8 +74,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1879795371
+  m_SortingLayer: 5
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: d50c683b4ca1c734ea6f92ee1d07932e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -438,6 +438,9 @@ MonoBehaviour:
   _smokePrefab: {fileID: 3114603624422194117, guid: 4ad024df4afa2594aaafc31823be1328, type: 3}
   _dashCollider: {fileID: 6217724634197588238}
   ESPIID: 250
+  _floorLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   _ultimatePercentage: 5
   _procCoUltimate: 2
 --- !u!114 &6217724634034246105

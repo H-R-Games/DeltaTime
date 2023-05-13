@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Aspirin
   m_EditorClassIdentifier: 
   Name: Aspirin
-  Description: 
+  Description: Regeneracion de vida cuando no estas en combate
   Icon: {fileID: 543197981, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 5227128222747721736

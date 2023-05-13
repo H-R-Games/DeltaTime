@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Bread
   m_EditorClassIdentifier: 
   Name: Bread
-  Description: 
+  Description: Aumenta 5% de vida maxima
   Icon: {fileID: -1315733022, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 5227128222747721734

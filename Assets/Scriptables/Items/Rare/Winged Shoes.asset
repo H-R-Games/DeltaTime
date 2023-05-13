@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Winged Shoes
   m_EditorClassIdentifier: 
   Name: Winged Shoes
-  Description: 
+  Description: + 1 salto
   Icon: {fileID: -2023014567, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 4406867259617705984

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Dopamine
   m_EditorClassIdentifier: 
   Name: Dopamine
-  Description: 
+  Description: 'Incrementa la velocidad de ataque y el ataque del jugador  '
   Icon: {fileID: 1258915342, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 5227128222747721730

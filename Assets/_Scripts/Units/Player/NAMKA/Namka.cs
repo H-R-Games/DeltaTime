@@ -43,7 +43,7 @@ namespace rene_roid_player
             LastSkillProcCoefficient = _procCoBasic;
             base.BasicAttack();
 
-            if (!_skill2Active) StartCoroutine(RemoveControl(.2f));
+            if (!_skill2Active) StartCoroutine(RemoveControl(.15f));
 
             if (IsGrounded() && !_skill2Active) _rb.velocity = new Vector2(0, _rb.velocity.y);
 
@@ -73,7 +73,7 @@ namespace rene_roid_player
            LastSkillProcCoefficient = _procCoSkill1;
             base.Skill1();
 
-            StartCoroutine(RemoveControl(.7f));
+            // StartCoroutine(RemoveControl(.6f));
 
             _rb.velocity = new Vector2(0, 0);
 
@@ -208,6 +208,8 @@ namespace rene_roid_player
 
         private float _ultimateChargeTimer = 0f;
 
+        [SerializeField] private GameObject _nuke;
+
         public override void Ultimate()
         {
             if (!IsGrounded()) return;
@@ -215,11 +217,15 @@ namespace rene_roid_player
 
             base.Ultimate();
 
-            StartCoroutine(RemoveControl(_ultimateChargeTime + 1.5f));
+            var nuk = Instantiate(_nuke, transform.position, Quaternion.identity, transform);
+            nuk.GetComponent<NukeNamka>().Damage = _ultimatePercentage;
+            nuk.GetComponent<NukeNamka>().parent = this;
 
-            _rb.velocity = new Vector2(0, 0);
+            //StartCoroutine(RemoveControl(_ultimateChargeTime + 1.5f));
 
-            StartCoroutine(DealDamageUltimate(_ultimatePercentage, _procCoUltimate, 2));
+            //_rb.velocity = new Vector2(0, 0);
+
+            //StartCoroutine(DealDamageUltimate(_ultimatePercentage, _procCoUltimate, 2));
         }
 
         private IEnumerator DealDamageUltimate(float percentage, float procCo, float delay)

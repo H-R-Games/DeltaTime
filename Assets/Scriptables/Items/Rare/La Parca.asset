@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: La Parca
   m_EditorClassIdentifier: 
   Name: La Parca
-  Description: 
+  Description: Ejecutar enemigos con poca vida (enemigos con menos del 15% de vida)
   Icon: {fileID: 492410290, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 4406867372903235584

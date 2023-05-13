@@ -87,7 +87,9 @@ namespace hrTeleport
         void Update()
         {
             if (_isActive) _timeLoaded += Time.deltaTime;
-            _piecesText.text = _piecesActivated.ToString() + " / " + _piecesToActivate.ToString();
+            
+            if (_isActive) _piecesText.text = "Defeat the Boss!";
+            else _piecesText.text = _piecesActivated.ToString() + " / " + _piecesToActivate.ToString();
             ActivateTeleport();
             loadTeleport();
         }

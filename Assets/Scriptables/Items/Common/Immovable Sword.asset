@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Immovable Sword
   m_EditorClassIdentifier: 
   Name: Immovable Sword
-  Description: 
+  Description: "Si estas quieto 5 segundos aumenta tu ataque durante 7 segundos(+
+    15% de da\xF1o base)"
   Icon: {fileID: 2132605019, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 4406867215292301313

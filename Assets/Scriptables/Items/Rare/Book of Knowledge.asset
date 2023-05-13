@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Book of Knowledge
   m_EditorClassIdentifier: 
   Name: Book of Knowledge
-  Description: 
+  Description: Subes de nivel un poco mas rapido (20%)
   Icon: {fileID: 1533814402, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 8529696807747321856

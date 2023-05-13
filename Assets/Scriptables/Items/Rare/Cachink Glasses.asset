@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Cachink Glasses
   m_EditorClassIdentifier: 
   Name: Cachink Glasses
-  Description: 
+  Description: Los enemigos sueltan mas dinero 5%
   Icon: {fileID: -2127072994, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 8529696830624104448

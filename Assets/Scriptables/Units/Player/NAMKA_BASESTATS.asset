@@ -15,7 +15,7 @@ MonoBehaviour:
   Name: Namka
   Health: 100
   HealthRegen: 1
-  Damage: 12
+  Damage: 24
   Armor: 5
   MovementSpeed: 14
   HealthPerLevel: 33

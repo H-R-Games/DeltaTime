@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Lucky Glasses
   m_EditorClassIdentifier: 
   Name: Lucky Glasses
-  Description: 
+  Description: Aumenta la suerte 5%
   Icon: {fileID: -1590415014, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 8529696807747321857

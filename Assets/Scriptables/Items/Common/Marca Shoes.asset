@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Marca Shoes
   m_EditorClassIdentifier: 
   Name: Marca Shoes
-  Description: 
+  Description: Incrementa la velocidad de movimiento del jugador
   Icon: {fileID: -1558146188, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 5227128222747721731

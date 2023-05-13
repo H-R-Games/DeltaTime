@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Genius Comet
   m_EditorClassIdentifier: 
   Name: Genius Comet
-  Description: 
+  Description: Al pegar prob de tirar un rallo
   Icon: {fileID: -8114880, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 7045599124553465856

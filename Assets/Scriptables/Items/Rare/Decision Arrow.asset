@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Decision Arrow
   m_EditorClassIdentifier: 
   Name: Decision Arrow
-  Description: 
+  Description: Al pegar prob de tirar una flecha cuantas mas tengas mas caen (30%
+    de probavilidad de activarse por golpe)
   Icon: {fileID: 244651062, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 4406867418939129856
