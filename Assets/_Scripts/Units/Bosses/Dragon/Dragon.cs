@@ -16,12 +16,14 @@ namespace rene_roid_enemy
 
         public override void Start()
         {
+            _animator = GetComponentInChildren<Animator>();
             base.Start();
         }
 
         public override void Update()
         {
             base.Update();
+            HandleAnimations();
         }
 
         public override void UpdateState()
@@ -54,8 +56,6 @@ namespace rene_roid_enemy
                 TimedFireBreath();
                 f = 3;
             }
-            
-            print(f);
         }
 
         #region Attacks
@@ -66,11 +66,13 @@ namespace rene_roid_enemy
         [SerializeField] private float _fireballDamageMultiplier = 0.5f;
         [SerializeField] private float _fireballCooldown;
         private float _fireballCooldownTimer = 0;
+        private bool _fireballAttack = false;
 
         private void FireballAttack()
         {
             if (_fireballCooldownTimer <= 0)
             {
+                _fireballAttack = true;
                 for (int i = 0; i < 3; i++)
                 {
                     var fireball = Instantiate(_fireballPrefab, _fireballSpawnPoint.position, Quaternion.identity);
@@ -95,9 +97,11 @@ namespace rene_roid_enemy
         [SerializeField] private float _firebreathDamageMultiplier = 0.8f;
         [SerializeField] private float _firebreathCooldown;
         private float _firebreathCooldownTimer = 0;
+        private bool _firebreathAttack = false;
 
         private void TimedFireBreath() {
             if (_firebreathCooldownTimer <= 0) {
+                _firebreathAttack = true;
                 StartCoroutine(FireBreath());
                 _firebreathCooldownTimer = _firebreathCooldown;
             }
@@ -140,6 +144,7 @@ namespace rene_roid_enemy
 
         private float _tailSlamCooldownTimer = 0;
         [SerializeField] private float _tailSlamCooldown = 5;
+        
 
         private void TailSlam() {
             if (_tailSlamCooldownTimer <= 0) {
@@ -202,11 +207,13 @@ namespace rene_roid_enemy
         [SerializeField] private GameObject _petrifiedEnemyPrefab;
         [SerializeField] private float _petrifiedEnemyCooldown;
         private float _petrifiedEnemyCooldownTimer = 0;
+        private bool _petrifiedEnemyAttack = false;
 
         private List<GameObject> _petrifiedEnemies = new List<GameObject>();
 
         private void TimedPetrifiedEnemy() {
             if (_petrifiedEnemyCooldownTimer <= 0) {
+                _petrifiedEnemyAttack = true;
                 PetrifiedEnemy();
                 _petrifiedEnemyCooldownTimer = _petrifiedEnemyCooldown;
             }
@@ -230,6 +237,54 @@ namespace rene_roid_enemy
             yield return Helpers.GetWait(0.3f);
             petrifiedEnemy.GetComponent<Collider2D>().isTrigger = false;
             
+        }
+        #endregion
+
+        #region Animations
+        private Animator _animator;
+        private int _currentAnimation = 0;
+        private float _lockedTill;
+
+        private static readonly int IdleInt = Animator.StringToHash("idl");
+        private static readonly int FireballInt = Animator.StringToHash("BossDragon_FireBallAttack");
+        private static readonly int FireballsInt = Animator.StringToHash("BossDragon_FireBalls");
+        private static readonly int PetrifiedInt = Animator.StringToHash("BossDragon_PetrifiedEnemys");
+        private static readonly int AttackAnim = Animator.StringToHash("Attack");
+
+        
+        private void HandleAnimations() {
+            var state = GetState();
+            ResetFlags();
+            if (state == _currentAnimation) return;
+
+            _animator.Play(state, 0); //_anim.CrossFade(state, 0, 0);
+            _currentAnimation = state;
+
+            int GetState()
+            {
+                if (Time.time < _lockedTill) return _currentAnimation;
+
+                if (_fireballAttack) return LockState(FireballsInt, .7f);
+                if (_firebreathAttack) return LockState(FireballInt, .7f);
+                if (_petrifiedEnemyAttack) return LockState(PetrifiedInt, .7f);
+
+                // NO SKILL PRESSED
+                return IdleInt;
+
+                // State and time to lock
+                int LockState(int s, float t)
+                {
+                    _lockedTill = Time.time + t;
+                    return s;
+                }
+
+            }
+
+            void ResetFlags() {
+                _fireballAttack = false;
+                _firebreathAttack = false;
+                _petrifiedEnemyAttack = false;
+            }
         }
         #endregion
     }
