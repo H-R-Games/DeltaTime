@@ -24,8 +24,7 @@ namespace rene_roid_enemy {
         public override void UpdateState()
         {
             base.UpdateState();
-            Knifes();
-            //FinalBossAI();
+            FinalBossAI();
         }
 
 
@@ -58,6 +57,7 @@ namespace rene_roid_enemy {
             Dodge();
             GroingStuff();
             PlayerTimeTravel();
+            Knifes();
         }
 
         #region Movement
