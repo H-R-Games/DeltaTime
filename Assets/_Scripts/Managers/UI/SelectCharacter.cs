@@ -10,8 +10,12 @@ namespace rene_roid {
         Musashi,
     }
 
-    public class SelectCharacter : PersistentStaticInstance<SelectCharacter>
+    public class SelectCharacter : MonoBehaviour
     {
+        private void Start() {
+            DontDestroyOnLoad(gameObject);
+        }
+
         public void LoadScene(int sceneIndex) {
             if (_character == Characters.None) return;
             SceneManager.LoadScene(sceneIndex);
@@ -23,12 +27,18 @@ namespace rene_roid {
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
+        private void OnDisable() {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        int _sceneLoadCount = 0;
         // Detect when a scene is loaded
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             Debug.Log("Scene loaded: " + scene.name);
             Debug.Log(mode);
 
+            _sceneLoadCount++;
             if (scene.name == "Gameflow") LoadCharacter();
         }
 
@@ -60,6 +70,8 @@ namespace rene_roid {
                     Debug.Log("No character selected");
                     break;
             }
+
+            Destroy(gameObject);
         }
 
     }

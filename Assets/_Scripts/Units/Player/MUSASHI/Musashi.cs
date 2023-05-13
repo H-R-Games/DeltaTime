@@ -324,7 +324,7 @@ namespace rene_roid_player
             _renderer.color = Color.red;
 
             var dmg = _maxStats.Damage;
-            var spd = _maxStats.MovementSpeed;
+            var spd = _maxStats.MovementSpeed / 2;
 
             _addedOniDamage = dmg;
             _addedOniSpeed = spd;
