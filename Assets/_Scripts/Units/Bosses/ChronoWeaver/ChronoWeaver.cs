@@ -7,6 +7,13 @@ namespace rene_roid_enemy
 {
     public class ChronoWeaver : EnemyBase
     {
+        [Header("Chrono Weaver")]
+        [SerializeField] private Sprite _idleSprite;
+        [SerializeField] private Sprite _attackSprite;
+        [SerializeField] private Sprite _moveSprite;
+
+        [SerializeField] private SpriteRenderer _spriteRenderer;
+
         private int _currentAttackCount = 0;
         public override void Awake()
         {
@@ -23,6 +30,7 @@ namespace rene_roid_enemy
 
         public override void Update()
         {
+            PlayAnimations();
             base.Update();
             Move();
 
@@ -34,6 +42,16 @@ namespace rene_roid_enemy
 
         public override void UpdateState()
         {
+        }
+
+        private void PlayAnimations() {
+            if (_doingAtatck1 || _doingAtatck2) {
+                _spriteRenderer.sprite = _attackSprite;
+            } else if (_moving) {
+                _spriteRenderer.sprite = _moveSprite;
+            } else {
+                _spriteRenderer.sprite = _idleSprite;
+            }
         }
 
         #region Moving
