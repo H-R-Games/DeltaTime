@@ -31,7 +31,7 @@ namespace rene_roid {
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
-        int _sceneLoadCount = 0;
+        int _sceneLoadCount = 1;
         // Detect when a scene is loaded
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
