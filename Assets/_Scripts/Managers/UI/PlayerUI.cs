@@ -29,6 +29,17 @@ namespace rene_roid
         public Image SpecialAttack2Sprite;
         public Image UltimateFiller;
         public Image UltimateSprite;
+
+        [Header("Sprites")]
+        public Sprite MusashiBasicAttackSprite;
+        public Sprite MusashiSpecialAttack1Sprite;
+        public Sprite MusashiSpecialAttack2Sprite;
+        public Sprite MusashiUltimateSprite;
+
+        public Sprite NamkaBasicAttackSprite;
+        public Sprite NamkaSpecialAttack1Sprite;
+        public Sprite NamkaSpecialAttack2Sprite;
+        public Sprite NamkaUltimateSprite;
         #endregion
 
         private void Awake()
@@ -38,6 +49,18 @@ namespace rene_roid
         private void Start() {
             if (_player == null) _player = GameObject.FindObjectOfType<PlayerBase>().gameObject;
             _playerScript = _player.GetComponent<PlayerBase>();
+
+            if (_playerScript is Musashi) {
+                BasicAttackSprite.sprite = MusashiBasicAttackSprite;
+                SpecialAttack1Sprite.sprite = MusashiSpecialAttack1Sprite;
+                SpecialAttack2Sprite.sprite = MusashiSpecialAttack2Sprite;
+                UltimateSprite.sprite = MusashiUltimateSprite;
+            } else if (_playerScript is Namka) {
+                BasicAttackSprite.sprite = NamkaBasicAttackSprite;
+                SpecialAttack1Sprite.sprite = NamkaSpecialAttack1Sprite;
+                SpecialAttack2Sprite.sprite = NamkaSpecialAttack2Sprite;
+                UltimateSprite.sprite = NamkaUltimateSprite;
+            }
         }
 
         private void Update() {
