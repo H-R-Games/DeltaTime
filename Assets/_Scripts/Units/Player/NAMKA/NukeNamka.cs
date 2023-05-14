@@ -35,7 +35,7 @@ namespace rene_roid_player {
                 var enemies = Physics2D.OverlapCircleAll(transform.position, transform.localScale.x / 2f);
                 foreach (var enemy in enemies) {
                     var enemyBase = enemy.GetComponent<rene_roid_enemy.EnemyBase>();
-                    if (enemyBase != null) enemyBase.TakeDamage(parent.DealDamage(Damage, 2));
+                    if (enemyBase != null) enemyBase.TakeDamage(parent.DealDamage(Damage, .2f));
                 }
             }
         }

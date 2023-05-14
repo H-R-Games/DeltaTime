@@ -16,7 +16,13 @@ MonoBehaviour:
   Description: "+ da\xF1o cuanta menos vida (Menos del 15 % de vida) (M\xE1s 30%
     de da\xF1o)"
   Icon: {fileID: -593610868, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
-  Items: []
+  Items:
+  - rid: 8529697061673369600
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8529697061673369600
+      type: {class: BerserkBeer, ns: rene_roid_player, asm: Assembly-CSharp}
+      data:
+        Name: Berserk Beer
+        DamageBoost: 0.3

@@ -16,6 +16,12 @@ namespace rene_roid {
                 ActivateWalls.SetActive(true);
                 TriggerEnterArea.enabled = false;
             }
-        }   
+        }
+
+        private void Update() {
+            if (ActivateBoss == null) {
+                ActivateWalls.SetActive(false);
+            }
+        }
     }
 }

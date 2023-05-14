@@ -53,8 +53,12 @@ namespace rene_roid_player
 
         private void Update()
         {
+            if (_player == null) _player = GameObject.FindGameObjectWithTag("Player").transform;
+            if (_player != null && _playerBase == null) _playerBase = _player.GetComponent<PlayerBase>();
+
             if (Vector2.Distance(transform.position, _player.position) < 1.5f && !_isOpened)
             {
+
                 print("Press F to open chest");
                 if ( _playerBase.Money >= 100) {
                     _isOpened = true;
@@ -87,6 +91,8 @@ namespace rene_roid_player
                 var itemPickUp = Instantiate(Item, transform.position, Quaternion.identity).GetComponent<ItemPickUp>();
                 itemPickUp.Item = CommonItems[0];
             }
+
+            Destroy(gameObject, 0.5f);
         }
     }
 }

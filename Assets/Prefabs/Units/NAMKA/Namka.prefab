@@ -333,7 +333,7 @@ MonoBehaviour:
   _skill2Clone: {fileID: 7491478991542210934, guid: 16e50cbb372204342864c7e9711fb4b6, type: 3}
   _healPercentage: 0.5
   _ultimatePercentage: 1
-  _procCoUltimate: 1
+  _procCoUltimate: 0.2
   _ultimateRad: {fileID: 1324960377480317777}
   _ultimateChargeTime: 2
   _nuke: {fileID: 7686323592938109950, guid: 6145c283aaa5c684a88ccd66560ec07b, type: 3}
@@ -523,7 +523,7 @@ MonoBehaviour:
   _basicAttack1Time: 0.2
   _specialAttack1Time: 1
   _specialAttack2Time: 10
-  _ultimateAttackTime: 3.5
+  _ultimateAttackTime: 0.1
   _basicAttackClip: {fileID: 8300000, guid: 66e17d64fc5cd0846b055db2b5dd9ab1, type: 3}
   _specialAttack1Clip: {fileID: 0}
   _specialAttack2Clip: {fileID: 0}

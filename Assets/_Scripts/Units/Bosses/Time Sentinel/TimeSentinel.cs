@@ -28,7 +28,7 @@ namespace rene_roid_enemy {
         }
 
         private void Movement() {
-            if (_currentWaypointIndex < _waypoints.Length)
+            if (_currentWaypointIndex < _waypoints.Length - 1)
             {
                 transform.position = Vector2.MoveTowards(transform.position, _waypoints[_currentWaypointIndex], 5 * Time.deltaTime);
                 if (Vector2.Distance(transform.position, _waypoints[_currentWaypointIndex]) < 0.1f)

@@ -16,12 +16,22 @@ MonoBehaviour:
   Description: Incrementa la velocidad de movimiento del jugador
   Icon: {fileID: -1558146188, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
-  - rid: 5227128222747721731
+  - rid: 8529697061673369601
   references:
     version: 2
     RefIds:
-    - rid: 5227128222747721731
-      type: {class: MarcaShoes, ns: rene_roid_player, asm: Assembly-CSharp}
+    - rid: 8529697061673369601
+      type: {class: AddStats, ns: rene_roid_player, asm: Assembly-CSharp}
       data:
-        Name: Marca Shoes
-        MovementSpeedIncrease: 0.08
+        Name: Add Stats
+        Health: 0
+        HealthPercentage: 0
+        HealthRegen: 0
+        HealthRegenPercentage: 0
+        FlatDamageBonus: 0
+        SpecialDamageBonus: 0
+        DamageBonus: 0
+        Armor: 0
+        ArmorPercentage: 0
+        MovementSpeed: 0
+        MovementSpeedPercentage: 0.08
