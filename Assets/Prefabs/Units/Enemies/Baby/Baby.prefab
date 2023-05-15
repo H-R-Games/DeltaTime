@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bf4ae43b9ea79842b1c294bd218fc1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyBaseStats: {fileID: 11400000, guid: 8b55b99e437c4004a83b9d9e809aa472, type: 2}
+  _enemyBaseStats: {fileID: 11400000, guid: d8eb7985afc51ea409caf480be1c648b, type: 2}
   _enemyState: 0
   _enemyType: 0
   _boxCollider2D: {fileID: 9132322699310722071}

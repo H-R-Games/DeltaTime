@@ -211,7 +211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d86ce4badfd6264cbc41e6ea5d95687, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyBaseStats: {fileID: 11400000, guid: 8b55b99e437c4004a83b9d9e809aa472, type: 2}
+  _enemyBaseStats: {fileID: 11400000, guid: f247bb0f1cefc9d45a478a331a4f3fe1, type: 2}
   _enemyState: 0
   _enemyType: 0
   _boxCollider2D: {fileID: 7357723529756523282}
