@@ -18,14 +18,14 @@ MonoBehaviour:
   Weight: 1
   StageCondition: []
   Health: 80
-  Damage: 10
+  Damage: 15
   Armor: 0
   MovementSpeed: 8
   MoneyReward: 10
-  ExperienceReward: 10
-  HealthPerLevel: 7
+  ExperienceReward: 75
+  HealthPerLevel: 9
   DamagePerLevel: 3
   ArmorPerLevel: 0
   MovementSpeedPerLevel: 0
   MoneyRewardPerLevel: 2
-  ExperienceRewardPerLevel: 2
+  ExperienceRewardPerLevel: 25

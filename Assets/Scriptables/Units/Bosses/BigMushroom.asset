@@ -17,8 +17,8 @@ MonoBehaviour:
   Cost: 6
   Weight: 1
   StageCondition: []
-  Health: 800
-  Damage: 10
+  Health: 1000
+  Damage: 15
   Armor: 10
   MovementSpeed: 3
   MoneyReward: 10
