@@ -178,11 +178,16 @@ namespace rene_roid_player
             print(pos.x+" "+target);
             // Get floor layer
 
-            var ray = Physics2D.Linecast(pos, target, _wallLayerMask & _floorLayerMask);
+            // Linecast detecting _wallLayerMask and _floorLayerMask
+            var ray = Physics2D.Linecast(pos, target, _floorLayerMask);
             if (ray.collider != null)
             {
                 target = ray.point;
+            } else {
+                ray = Physics2D.Linecast(pos, target, _wallLayerMask);
+                if (ray.collider != null) target = ray.point;
             }
+            target.x += 0.1f;
 
             yield return Helpers.GetWait(t);
             var smoke = Instantiate(_smokePrefab, transform.position, Quaternion.identity);

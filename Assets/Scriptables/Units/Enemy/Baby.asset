@@ -28,4 +28,4 @@ MonoBehaviour:
   ArmorPerLevel: 0
   MovementSpeedPerLevel: 0
   MoneyRewardPerLevel: 2
-  ExperienceRewardPerLevel: 25
+  ExperienceRewardPerLevel: 15
