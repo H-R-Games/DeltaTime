@@ -28,9 +28,9 @@ MonoBehaviour:
         HealthPercentage: 0
         HealthRegen: 0
         HealthRegenPercentage: 0
-        FlatDamageBonus: 0
+        FlatDamageBonus: 7
         SpecialDamageBonus: 0
-        DamageBonus: 7
+        DamageBonus: 0
         Armor: 0
         ArmorPercentage: 0
         MovementSpeed: 0

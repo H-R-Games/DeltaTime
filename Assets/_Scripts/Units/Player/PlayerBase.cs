@@ -730,7 +730,7 @@ namespace rene_roid_player
             _itemManager.OnKill(damage, enemy);
 
             // ? Chance to get experience
-            AddMoney(enemy.EnemyBaseStats.MoneyReward * MoneyMultiplier);
+            AddMoney((enemy.EnemyBaseStats.MoneyReward + (enemy.EnemyBaseStats.MoneyRewardPerLevel * enemy.Level)) * MoneyMultiplier);
 
             // * Add experience
             AddExperience(enemy.EnemyBaseStats.ExperienceReward + (enemy.EnemyBaseStats.ExperienceRewardPerLevel * enemy.Level));
