@@ -692,7 +692,11 @@ namespace rene_roid_player
         public List<Item> Items = new List<Item>();
         [SerializeField] private GameObject _hitPrefab;
 
-        public void AddMoney(float amount) => Money += amount;
+        public void AddMoney(float amount) {
+            // Round ammount to integer
+            amount = Mathf.Round(amount);
+            Money += amount;
+        }
 
         public void RemoveMoney(float amount) => Money -= amount;
 

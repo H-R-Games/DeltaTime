@@ -23,7 +23,7 @@ MonoBehaviour:
   MovementSpeed: 5
   MoneyReward: 14
   ExperienceReward: 100
-  HealthPerLevel: 8
+  HealthPerLevel: 19
   DamagePerLevel: 2.7
   ArmorPerLevel: 0
   MovementSpeedPerLevel: 0

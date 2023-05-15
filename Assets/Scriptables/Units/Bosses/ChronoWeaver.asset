@@ -13,8 +13,12 @@ MonoBehaviour:
   m_Name: ChronoWeaver
   m_EditorClassIdentifier: 
   Name: ChronoWeaver
-  Health: 2000
-  Damage: 12
+  Description: Enemy Description
+  Cost: 6
+  Weight: 1
+  StageCondition: []
+  Health: 8600
+  Damage: 72
   Armor: 0
   MovementSpeed: 6
   MoneyReward: 10

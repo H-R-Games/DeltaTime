@@ -10,7 +10,7 @@ namespace rene_roid_player {
         [SerializeField] private Transform[] _chestSpawnPoints;
         //[SerializeField] private Transform[] _specialChestSpawnPoints;
         [SerializeField] private float _chestSpawnPercentage = 0.8f;
-
+        [SerializeField] private float _chestSceneCost = 100;
         private List<GameObject> _chestList = new List<GameObject>();
         #endregion
 
@@ -65,6 +65,10 @@ namespace rene_roid_player {
             for (int i = 0; i < chestSpawnPoints; i++) {
                 var chest = Instantiate(_chestPrefab, _chestSpawnPoints[indexArray[i]].position, Quaternion.identity);
                 chest.transform.SetParent(_chestSpawnPointParent.transform);
+                var c = chest.GetComponent<Chest>();
+                if (c != null) {
+                    c.SetMoneyCost = _chestSceneCost;
+                }
                 _chestList.Add(chest);
             }
 

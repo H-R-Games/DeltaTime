@@ -13,14 +13,18 @@ MonoBehaviour:
   m_Name: Dragon
   m_EditorClassIdentifier: 
   Name: Dragon
-  Health: 1200
-  Damage: 56
+  Description: Enemy Description
+  Cost: 6
+  Weight: 1
+  StageCondition: []
+  Health: 7500
+  Damage: 42
   Armor: 20
   MovementSpeed: 0
   MoneyReward: 573
   ExperienceReward: 300
   HealthPerLevel: 24
-  DamagePerLevel: 2.4
+  DamagePerLevel: 3
   ArmorPerLevel: 0
   MovementSpeedPerLevel: 0
   MoneyRewardPerLevel: 2

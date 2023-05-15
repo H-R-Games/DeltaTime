@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 namespace rene_roid_player
 {
@@ -12,6 +13,10 @@ namespace rene_roid_player
         private Transform _player;
         private PlayerBase _playerBase;
         private bool _isOpened = false;
+
+        [SerializeField] private TMP_Text _moneyCostText;
+        [SerializeField] private float _moneyCost = 100;
+        public float SetMoneyCost { set { _moneyCost = value; } }
         #endregion
 
         #region External
@@ -40,6 +45,8 @@ namespace rene_roid_player
         {
             _spriteRenderer.sprite = _closedChest;
 
+            _moneyCostText.text = _moneyCost.ToString() + " $";
+
             // Set the chance to 100% if the sum of all chances is less than 100%
             float sum = CommonChance + RareChance + MythicChance + LegendaryChance;
             if (sum < 100)
@@ -60,13 +67,13 @@ namespace rene_roid_player
             {
 
                 print("Press F to open chest");
-                if ( _playerBase.Money >= 100) {
+                if ( _playerBase.Money >= _moneyCost) {
                     _isOpened = true;
                     _spriteRenderer.sprite = _openedChest;
                     LuckChance = _playerBase.Luck;
                     OpenChest();
 
-                    _player.GetComponent<PlayerBase>().Money -= 100;
+                    _player.GetComponent<PlayerBase>().Money -= _moneyCost;
                 }
             }
         }

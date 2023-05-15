@@ -615,7 +615,7 @@ namespace rene_roid
 
         private float _exp = 0;
         private float _expToLevelUp = 100;
-        private float _expPerSecond = 0.3f;
+        private float _expPerSecond = 0.5f;
         private float _difficulty = 1;
         private void ConstantLvlUp() {
             // if (_directorsLevel == 0) return;
@@ -627,6 +627,9 @@ namespace rene_roid
                 _directorsLevel++;
 
                 _expToLevelUp = _expToLevelUp * 1.5f;
+
+                // Every 10 levels increase difficulty
+                if (_directorsLevel % 5 == 0) _difficulty += 0.1f;
             }
 
             void GetExp() {
