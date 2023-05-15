@@ -1,0 +1,31 @@
+Delta Time
+
+--- Director ---
+Fernando Solórzano
+
+--- Programmers ---
+Fernando Solórzano
+Alejandro Font
+
+--- Level Design ---
+Álex García
+
+--- Art ---
+Rubén Medina
+William Peña
+Álex García
+
+--- Voice Actors ---
+Lluis
+
+--- Music ---
+Pan
+
+--- Assets ---
+Fantasy Swamp Forest: The Flavare
+Pixel Slime: rvros
+Animated Character Pack: szadiart
+Smoke Effect 01: pimen
+FX071 (Hit): nyknck
+Pixel explosion: nyknck
+Pixel Fantasy Castle: Szadi Art
