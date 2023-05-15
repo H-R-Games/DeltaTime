@@ -1440,7 +1440,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 180986268}
   m_OnClick:
     m_PersistentCalls:
@@ -10569,6 +10569,71 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1231647474
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1231647475}
+  - component: {fileID: 1231647476}
+  m_Layer: 0
+  m_Name: Settings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1231647475
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1231647474}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1929373227}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1231647476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1231647474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b75ed4b0bc6a3ce4bab9b6f74d7fd900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _masterVolume: 1
+  _musicVolume: 1
+  _sfxVolume: 1
+  _isMuted: 0
+  _masterVolumeSlider: {fileID: 854221404}
+  _musicVolumeSlider: {fileID: 1301133082}
+  _sfxVolumeSlider: {fileID: 1582057806}
+  _muteButton: {fileID: 84434048}
+  _audioMixer: {fileID: 24100000, guid: a39248de705e714498ebff383efce26f, type: 2}
+  _resolutionIndex: 0
+  _qualityIndex: 0
+  _isFullscreen: 0
+  _resolutionDropdown: {fileID: 505500490}
+  _qualityDropdown: {fileID: 613928016}
+  _fullscreenToggle: {fileID: 497875722}
+  _languageDropdown: {fileID: 359939436}
+  _language: English
+  _languages:
+  - English
+  - Spanish
+  _languageManager: {fileID: 1365293717}
 --- !u!1001 &1233780897
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14686,7 +14751,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1761149498}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b75ed4b0bc6a3ce4bab9b6f74d7fd900, type: 3}
   m_Name: 
@@ -16197,6 +16262,7 @@ Transform:
   m_Children:
   - {fileID: 1222901905}
   - {fileID: 1365293716}
+  - {fileID: 1231647475}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -267,6 +267,11 @@ namespace rene_roid_enemy
         // If there is no player for 0.5 seconds destroy the enemy
         private float _timeToDestroy = 0.5f;
         private void AutoDestroy() {
+            // If gameobject is futher than 100 units from the player destroy it
+            if (Vector2.Distance(this.transform.position, _targetPlayer.transform.position) > 100) {
+                Destroy(this.gameObject);
+            }
+
             if (_targetPlayer == null || _targetPlayer.transform.position == null) {
                 _timeToDestroy -= Time.deltaTime;
                 if (_timeToDestroy <= 0) {

@@ -16,6 +16,20 @@ namespace rene_roid_enemy {
             _animator = GetComponentInChildren<Animator>();
         }
 
+        public Director Director;
+        private void OnEnable() {
+            Director = GameObject.Find("Director").GetComponent<Director>();
+            Director.NewPassiveDirectorState(Director.PassiveDirectorState.Innactive);
+        }
+
+        private void OnDisable() {
+            Director.NewPassiveDirectorState(Director.PassiveDirectorState.Gathering);
+        }
+
+        private void OnDestroy() {
+            Director.NewPassiveDirectorState(Director.PassiveDirectorState.Gathering);
+        }
+
         public override void Update() {
             base.Update();
             HandleAnimations();
@@ -153,6 +167,30 @@ namespace rene_roid_enemy {
 
             IEnumerator GroingStuffCoroutine() {
                 List<GameObject> stuffs = new List<GameObject>();
+                bool damage = Random.Range(0, 2) == 0;
+
+                if (damage) {
+                    var spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+                    // Flash red 3 times
+                    for (int i = 0; i < 3; i++) {
+                        var t = 0.1f;
+                        var color = Color.red;
+                        while (t > 0) {
+                            t -= Time.deltaTime;
+                            spriteRenderer.color = color;
+                            yield return null;
+                        }
+
+                        t = 0.1f;
+                        color = Color.white;
+                        while (t > 0) {
+                            t -= Time.deltaTime;
+                            spriteRenderer.color = color;
+                            yield return null;
+                        }
+                    }
+                }
+
                 for (int i = 0; i < _groingStuffQuantity; i++) {
                     var pos = transform.position;
                     pos.x += Random.Range(-1f, 1f);
@@ -160,9 +198,9 @@ namespace rene_roid_enemy {
                     var stuff = Instantiate(_groingStuff, pos, Quaternion.identity);
                     stuffs.Add(stuff);
                     
-                    if (Random.Range(0, 2) == 0) {
+                    if (damage) {
                         stuff.GetComponent<BoxCollider2D>().isTrigger = true;
-                        stuff.GetComponent<SpriteRenderer>().color = Color.blue;
+                        stuff.GetComponent<SpriteRenderer>().color = Color.red;
                     }
 
                     yield return new WaitForSeconds(0.1f);
@@ -228,7 +266,7 @@ namespace rene_roid_enemy {
         #region Dissable Skills
         [Header("Dissable Skills")]
         [SerializeField] private float _dissableSkillsCooldown = 30f;
-        private float _dissableSkillsCooldownTimer = 0f;
+        private float _dissableSkillsCooldownTimer = 30f;
 
         [SerializeField] private float _dissableSkillsDuration = 15f;
 
@@ -244,7 +282,7 @@ namespace rene_roid_enemy {
         #region Za Warudo
         [Header("Za Warudo")]
         [SerializeField] private float _zaWarudoCooldown = 60f;
-        private float _zaWarudoCooldownTimer = 0f;
+        private float _zaWarudoCooldownTimer = 60f;
 
         [SerializeField] private float _zaWarudoDuration = 10f;
         [SerializeField] private Shark _sharkPrefab;

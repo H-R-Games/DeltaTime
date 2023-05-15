@@ -14,6 +14,20 @@ namespace rene_roid_enemy
             _enemyState = EnemyStates.Attack;
         }
 
+        public Director Director;
+        private void OnEnable() {
+            Director = GameObject.Find("Director").GetComponent<Director>();
+            Director.NewPassiveDirectorState(Director.PassiveDirectorState.Innactive);
+        }
+
+        private void OnDisable() {
+            Director.NewPassiveDirectorState(Director.PassiveDirectorState.Gathering);
+        }
+
+        private void OnDestroy() {
+            Director.NewPassiveDirectorState(Director.PassiveDirectorState.Gathering);
+        }
+
         public override void Start()
         {
             _animator = GetComponentInChildren<Animator>();

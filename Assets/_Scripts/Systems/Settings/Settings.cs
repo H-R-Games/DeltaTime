@@ -144,6 +144,11 @@ namespace rene_roid
             PlayerPrefs.SetInt("ResolutionIndex", _resolutionIndex);
             PlayerPrefs.SetInt("QualityIndex", _qualityIndex);
             PlayerPrefs.SetInt("IsFullscreen", _isFullscreen ? 1 : 0);
+
+            // Set all settings
+            SetResolution(_resolutionIndex);
+            SetQuality(_qualityIndex);
+            SetFullscreen(_isFullscreen);
         }
 
         public void SetResolution(int resolutionIndex)
