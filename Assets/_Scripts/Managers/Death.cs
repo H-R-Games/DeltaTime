@@ -23,7 +23,7 @@ namespace rene_roid {
 
         public void LoadMainMenu()
         {
-            SceneManager.LoadScene(10);
+            SceneManager.LoadScene(1);
         }
     }
 }
