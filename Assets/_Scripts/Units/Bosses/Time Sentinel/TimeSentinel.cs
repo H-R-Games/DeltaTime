@@ -47,7 +47,7 @@ namespace rene_roid_enemy {
             transform.localScale = new Vector3(_direction.x > 0 ? 1 : -1, 1, 1);
         }
 
-        public override void TakeDamage(float damage)
+        public override void TakeDamage(float damage, bool item = false)
         {
             base.TakeDamage(damage);
 

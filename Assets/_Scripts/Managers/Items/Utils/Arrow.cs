@@ -32,7 +32,7 @@ public class Arrow : MonoBehaviour
         // Si la flecha colisiona con un enemigo, le hacemos daño
         if (other.CompareTag("Enemy"))
         {
-            other.GetComponent<EnemyBase>().TakeDamage(_damage);
+            other.GetComponent<EnemyBase>().TakeDamage(_damage, true);
         }
     }
 }

@@ -19,8 +19,8 @@ MonoBehaviour:
   StageCondition: []
   Health: 80
   Damage: 15
-  Armor: 0
-  MovementSpeed: 8
+  Armor: 8
+  MovementSpeed: 10
   MoneyReward: 11
   ExperienceReward: 75
   HealthPerLevel: 26

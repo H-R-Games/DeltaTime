@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Iron Shield
   Description: Aumenta la armadura
-  Icon: {fileID: 0}
+  Icon: {fileID: 1526632301, guid: 09ead5bd87938bb43a2bce4adebd0b71, type: 3}
   Items:
   - rid: 8529697108407877633
   references:

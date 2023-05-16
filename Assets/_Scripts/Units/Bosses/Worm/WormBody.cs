@@ -53,7 +53,7 @@ namespace rene_roid_enemy {
 
         }
 
-        public override void TakeDamage(float damage)
+        public override void TakeDamage(float damage, bool item = false)
         {
             Worm.TakeDamage(damage);
         }

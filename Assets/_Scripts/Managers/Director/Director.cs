@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using rene_roid_player;
+using TMPro;
 
 namespace rene_roid
 {
@@ -14,6 +15,7 @@ namespace rene_roid
         [Header("Internal")]
         [SerializeField] private int _directorsLevel = 1;
         [SerializeField] private float _currentStage = 1;
+        [SerializeField] private TMP_Text _difficultyText;
         private float _weightRange = .2f;
 
         private int _maxNumEnemiesInScene = 400;
@@ -33,7 +35,9 @@ namespace rene_roid
         {
             // Order Enemies by cost
             AllEnemies.Sort((x, y) => x.EnemyBaseStats.Cost.CompareTo(y.EnemyBaseStats.Cost));
-            GetCurrentStageEnemies();        
+            GetCurrentStageEnemies();
+
+            _difficultyText.text = "Difficulty: " + _directorsLevel.ToString();
 
             _playerBase = FindObjectOfType<PlayerBase>();
         }
@@ -604,8 +608,12 @@ namespace rene_roid
             if (_lastLevel == _directorsLevel) return;
             _lastLevel = _directorsLevel;
 
+            _difficultyText.text = "Difficulty: " + _directorsLevel.ToString();
+
+
             // Level up directors
             _creditsPerSecondPD = _creditsPerSecondPD + (_creditsPerSecondPerLevelPD * _directorsLevel);
+            _spawningDurationPD = _spawningDurationPD + (0.5f * _directorsLevel);
             
             _creditsOnActivateAC = _creditsOnActivateAC + (_creditsOnActivateAC * _directorsLevel);
 
@@ -615,7 +623,8 @@ namespace rene_roid
 
         private float _exp = 0;
         private float _expToLevelUp = 100;
-        private float _expPerSecond = 0.5f;
+        private float _expPerSecond = 0.7f;
+        private float _expPerSecondPerLevel = 0.1f;
         private float _difficulty = 1;
         private void ConstantLvlUp() {
             // if (_directorsLevel == 0) return;
@@ -623,21 +632,23 @@ namespace rene_roid
 
             // Level up
             if (_exp >= _expToLevelUp) {
-                _exp = 0;
                 _directorsLevel++;
 
-                _expToLevelUp = _expToLevelUp * 1.5f;
+                _expToLevelUp = _expToLevelUp * 1.15f;
+                _expPerSecond = _expPerSecond + (_expPerSecondPerLevel * _directorsLevel);
+                _exp = 0;
 
                 // Every 10 levels increase difficulty
                 if (_directorsLevel % 5 == 0) _difficulty += 0.1f;
+
             }
 
             void GetExp() {
                 _exp += _expPerSecond * Time.deltaTime * _difficulty;
-                if (_exp >= _expToLevelUp) {
-                    _exp = 0;
-                    _directorsLevel++;
-                }
+                // if (_exp >= _expToLevelUp) {
+                //     _exp = 0;
+                //     _directorsLevel++;
+                // }
             }
         }
 

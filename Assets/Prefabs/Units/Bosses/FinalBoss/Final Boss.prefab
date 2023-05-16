@@ -433,7 +433,7 @@ MonoBehaviour:
     m_Bits: 256
   _playerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 136
   _level: 1
   _health: 0
   _damage: 0
@@ -445,19 +445,24 @@ MonoBehaviour:
   _timeStun: 0
   _activateJump: 0
   _jumpForce: 5
+  _spriteRenderer: {fileID: 2316229608282903328}
+  Director: {fileID: 0}
   _speed: 5
   _dodgeDuration: 5
   _dodgeCooldown: 30
   _dodgeyDamage: 1
   _groingStuff: {fileID: 1687861492197497207, guid: 43ded21c212cd9c4ba7dad04c4f24042, type: 3}
+  _groingStuffDamage: 0.7
   _groingStuffCooldown: 17
   _groingStuffQuantity: 7
   _playerTimeTravelCooldown: 22
+  _playerTimeTravelDamage: 2
   _playerTimeTravelDuration: 5
   _stompPrefab: {fileID: 4331525143387382638, guid: b8515f9c8ca5e274aab2dd123afeaf3a, type: 3}
   _dissableSkillsCooldown: 60
   _dissableSkillsDuration: 15
   _zaWarudoCooldown: 40
+  _zaWarudoDamage: 1
   _zaWarudoDuration: 6
   _sharkPrefab: {fileID: 4270532320823045030, guid: 96aa8503d6800914e912ebea1dbb8d7d, type: 3}
   _sharkCount: 5
@@ -466,6 +471,7 @@ MonoBehaviour:
   _timeTravelDuration: 10
   _timeTravelPrefab: {fileID: 7268630321439798096, guid: af9542e659a84444d9b88c74a63ff9d1, type: 3}
   _knifesCooldown: 7
+  _knifesDamage: 0.8
   _knifesDuration: 5
   _knifePrefab: {fileID: 2938103333271408199, guid: cb643cc74db429c46a13e38f71e2a715, type: 3}
   _knifeCount: 5

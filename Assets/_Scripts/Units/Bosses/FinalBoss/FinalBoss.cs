@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using rene_roid;
 
 namespace rene_roid_enemy {
     public class FinalBoss : EnemyBase
     {
+        [SerializeField] private SpriteRenderer _spriteRenderer;
         private int _phase = 1;
         private Rigidbody2D _rb;
 
@@ -28,6 +30,7 @@ namespace rene_roid_enemy {
 
         private void OnDestroy() {
             Director.NewPassiveDirectorState(Director.PassiveDirectorState.Gathering);
+            SceneManager.LoadScene(3);
         }
 
         public override void Update() {
@@ -43,7 +46,7 @@ namespace rene_roid_enemy {
 
 
         private void FinalBossAI() {
-            if (_phase < 3 && _health <= EnemyBaseStats.Health * 0.05f) {
+            if (_phase < 3 && _health <= EnemyBaseStats.Health * 0.1f) {
                 _health = EnemyBaseStats.Health;
                 _phase++;
             }
@@ -128,12 +131,35 @@ namespace rene_roid_enemy {
                     _lastHP = _health;
                 }
             }
+
+            InDodge();
         }
 
         private float _lastHP = 0f;
         private void InDodge() {
             if (_dodgeActive) {
+                _spriteRenderer.color = Color.yellow;
                 if (_lastHP > _health) {
+                    var playerPos = _targetPlayer.transform.position;
+                    var dirToPlayer = (playerPos - transform.position).normalized;
+                    var distance = Vector3.Distance(playerPos, transform.position);
+
+                    for (int i = 0; i < 3 + _phase; i++)
+                    {
+                        // Set the range of random x and y coordinates behind the gameobject
+                        var xRange = 1f;
+                        var yRange = 3f;
+
+                        // Calculate a random position behind the gameobject
+                        var randomPos = transform.position - dirToPlayer * distance +
+                                        new Vector3(Random.Range(-xRange, xRange), Random.Range(-yRange, yRange), 0);
+
+                        var knife = Instantiate(_knifePrefab, randomPos, Quaternion.identity);
+                        knife.GetComponent<Knife>()._target = _targetPlayer.transform;
+                        knife.GetComponent<Knife>().Damage = _dodgeyDamage * _damage;
+                    }
+
+
                     // Get behind the player
                     var player = _targetPlayer.transform.position;
                     var dir = player - transform.position;
@@ -143,6 +169,10 @@ namespace rene_roid_enemy {
                     _lastHP = _health;
                     
                 }
+            } else {
+                if (_spriteRenderer.color == Color.yellow) {
+                    _spriteRenderer.color = Color.white;
+                }
             }
         }
         #endregion
@@ -150,7 +180,7 @@ namespace rene_roid_enemy {
         #region Growing Stuff
         [Header("Growing Stuff")]
         [SerializeField] private GameObject _groingStuff;
-        private float _groingStuffDamage = 1f;
+        [SerializeField] private float _groingStuffDamage = 1f;
 
         [SerializeField] private float _groingStuffCooldown = 5f;
         private float _groingStuffCooldownTimer = 0f;
@@ -208,6 +238,7 @@ namespace rene_roid_enemy {
 
                 foreach (var stuff in stuffs) {
                     stuff.GetComponent<GrowingStuff>()._target = _targetPlayer.transform;
+                    stuff.GetComponent<GrowingStuff>().Damage = _damage * _groingStuffDamage;
                     yield return new WaitForSeconds(0.1f);
                 }
             }
@@ -218,6 +249,7 @@ namespace rene_roid_enemy {
         [Header("Player Time Travel")]
         [SerializeField] private float _playerTimeTravelCooldown = 40f;
         private float _playerTimeTravelCooldownTimer = 0f;
+        [SerializeField] private float _playerTimeTravelDamage = 3f;
 
         [SerializeField] private float _playerTimeTravelDuration = 5f;
         [SerializeField] private GameObject _stompPrefab;
@@ -255,7 +287,7 @@ namespace rene_roid_enemy {
                 yield return new WaitForSeconds(_playerTimeTravelDuration * 0.5f);
                 var gameobj = Instantiate(_stompPrefab, playerPos + new Vector3(0, 5, 0), Quaternion.identity);
                 gameobj.GetComponent<StompWall>().Cd = _playerTimeTravelDuration;
-                gameobj.GetComponent<StompWall>().Damage = _damage;
+                gameobj.GetComponent<StompWall>().Damage = _damage * _playerTimeTravelDamage;
                 yield return new WaitForSeconds(_playerTimeTravelDuration * 0.5f);
 
                 _targetPlayer.transform.position = playerPos;
@@ -282,6 +314,7 @@ namespace rene_roid_enemy {
         #region Za Warudo
         [Header("Za Warudo")]
         [SerializeField] private float _zaWarudoCooldown = 60f;
+        [SerializeField] private float _zaWarudoDamage = 2f;
         private float _zaWarudoCooldownTimer = 60f;
 
         [SerializeField] private float _zaWarudoDuration = 10f;
@@ -312,7 +345,7 @@ namespace rene_roid_enemy {
                     pos.x += randx;
                     pos.y += randy;
                     Shark shark = Instantiate(_sharkPrefab, pos, Quaternion.identity);
-                    shark.Damage = _damage;
+                    shark.Damage = _damage * _zaWarudoDamage;
                     shark._boss = this;
                     shark._target = _targetPlayer.transform;
 
@@ -328,7 +361,7 @@ namespace rene_roid_enemy {
         #region Time Travel
         [Header("Time Travel")]
         [SerializeField] private float _timeTravelCooldown = 60f;
-        private float _timeTravelCooldownTimer = 0f;
+        private float _timeTravelCooldownTimer = 60f;
 
         [SerializeField] private float _timeTravelDuration = 10f;
         [SerializeField] private SpriteRenderer _timeTravelPrefab;
@@ -380,6 +413,7 @@ namespace rene_roid_enemy {
         [Header("Knifes")]
         [SerializeField] private float _knifesCooldown = 30f;
         private float _knifesCooldownTimer = 0f;
+        [SerializeField] private float _knifesDamage = 2f;
 
         [SerializeField] private float _knifesDuration = 5f;
         [SerializeField] private GameObject _knifePrefab;
@@ -399,10 +433,10 @@ namespace rene_roid_enemy {
                 var pos = transform.position + -dirPlayer * 10f;
 
                 // Spawn knifes
-                for (int i = 0; i < _knifeCount; i++)
+                for (int i = 0; i < _knifeCount * _phase; i++)
                 {                    
                     var knife = Instantiate(_knifePrefab, GetRandomPosition(), Quaternion.identity);
-                    knife.GetComponent<Knife>().Damage = _damage;
+                    knife.GetComponent<Knife>().Damage = _damage * _knifesDamage;
                     knife.GetComponent<Knife>()._target = _targetPlayer.transform;
 
                     Destroy(knife, _knifesDuration);
@@ -424,7 +458,7 @@ namespace rene_roid_enemy {
                 var pos = transform.position + -dirPlayer * 10f;
 
                 // Spawn knifes
-                for (int i = 0; i < _knifeCount; i++)
+                for (int i = 0; i < _knifeCount * _phase; i++)
                 {                    
                     var knife = Instantiate(_knifePrefab, GetRandomPosition(), Quaternion.identity);
                     knife.GetComponent<Knife>().Damage = _damage;

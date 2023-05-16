@@ -82,7 +82,7 @@ namespace rene_roid_enemy
         /// <summary>
         /// Function to take damage from the player
         /// </summary>
-        public virtual void TakeDamage(float damage)
+        public virtual void TakeDamage(float damage, bool item = false)
         {
             print("Enemy took damage: " + damage);
 
@@ -90,7 +90,7 @@ namespace rene_roid_enemy
             if (_armor < 0) damage *= 2 - 100 / (100 - _armor);
 
             _health -= damage;
-            _targetPlayer.OnEnemyHit(damage, this);
+            _targetPlayer.OnEnemyHit(damage, this, item);
 
             if (_health <= 0)
             {

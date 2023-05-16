@@ -715,12 +715,12 @@ namespace rene_roid_player
             item.Items.ForEach(i => i.OnRemove(this, _itemManager));
         }
 
-        public virtual void OnEnemyHit(float damage, EnemyBase enemy) 
+        public virtual void OnEnemyHit(float damage, EnemyBase enemy, bool item = false) 
         {
             var hit = Instantiate(_hitPrefab, enemy.transform.position, Quaternion.identity);
             Destroy(hit, 1f);
             print("Hit enemy for " + damage + " damage!");
-            _itemManager.OnHit(damage, enemy);
+            if (!item) _itemManager.OnHit(damage, enemy);
         }
 
         public float MoneyMultiplier = 1;

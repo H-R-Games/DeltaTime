@@ -7,6 +7,7 @@ namespace rene_roid_enemy {
     public class GrowingStuff : MonoBehaviour
     {
         public Transform _target;
+        public float Damage = 0;
         private bool _shot = false;
 
         void Start()
@@ -43,8 +44,8 @@ namespace rene_roid_enemy {
         }
 
         private void OnTriggerEnter2D(Collider2D other) {
-            if (other.CompareTag("Player")) {
-                other.GetComponent<PlayerBase>().TakeDamage(20);
+            if (other.CompareTag("Player") && _shot) {
+                other.GetComponent<PlayerBase>().TakeDamage(Damage);
             }
         }
     }

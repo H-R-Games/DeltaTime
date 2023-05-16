@@ -231,7 +231,7 @@ namespace rene_roid_enemy
             }
         }
 
-        public override void TakeDamage(float damage)
+        public override void TakeDamage(float damage, bool item = false)
         {
             if (_armor > 0) damage *= 100 / (100 + _armor);
             if (_armor < 0) damage *= 2 - 100 / (100 - _armor);

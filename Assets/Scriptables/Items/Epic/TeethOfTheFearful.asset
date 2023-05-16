@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TeethOfTheFearful
   m_EditorClassIdentifier: 
   Name: Teeth Of The Fearful
-  Description: 3 % en base al ataque
+  Description: Robo de vida
   Icon: {fileID: 805612411, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
   Items:
   - rid: 8529696829327802368

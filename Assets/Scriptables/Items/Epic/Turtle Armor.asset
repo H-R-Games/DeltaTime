@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Turtle Armor
   Description: El mejor escudo de todos, tortugas muertas.
-  Icon: {fileID: 0}
+  Icon: {fileID: 1452815809, guid: 09ead5bd87938bb43a2bce4adebd0b71, type: 3}
   Items:
   - rid: 8529697108407877635
   references:

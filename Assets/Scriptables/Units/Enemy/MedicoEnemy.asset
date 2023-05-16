@@ -18,8 +18,8 @@ MonoBehaviour:
   Weight: 1
   StageCondition: []
   Health: 90
-  Damage: 12
-  Armor: 0
+  Damage: 17
+  Armor: 10
   MovementSpeed: 5
   MoneyReward: 12
   ExperienceReward: 82

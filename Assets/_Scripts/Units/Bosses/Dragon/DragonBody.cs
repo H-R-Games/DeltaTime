@@ -6,7 +6,7 @@ namespace rene_roid_enemy {
         [SerializeField] private Dragon _dragon;
         [SerializeField] private float _dmgMultiplier = 1;
 
-        public override void TakeDamage(float damage)
+        public override void TakeDamage(float damage, bool item = false)
         {
             damage *= _dmgMultiplier;
             _dragon.TakeDamage(damage);

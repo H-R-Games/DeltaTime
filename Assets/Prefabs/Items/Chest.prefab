@@ -61,27 +61,27 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c6ab14c33c2a71a44b34453d93354d80, type: 2}
   - {fileID: 11400000, guid: 357beaec522cc0d41b97415433ffa3cc, type: 2}
   - {fileID: 11400000, guid: f77e0056a80abc34bac18fc93e575d95, type: 2}
-  - {fileID: 11400000, guid: 58dc96cda5d228c4a9fe655a4c5fca59, type: 2}
   - {fileID: 11400000, guid: 67c96c4fd20b8c248a4ab5de7e694278, type: 2}
   RareItems:
   - {fileID: 11400000, guid: bacc45d315e56e94db1fcfd1b320f680, type: 2}
   - {fileID: 11400000, guid: 8bde8feca16951e48a73bbc0b92143a8, type: 2}
-  - {fileID: 11400000, guid: 950ae52b3987612489bb7d76f04ba9aa, type: 2}
   - {fileID: 11400000, guid: e3cd667842319cd40bb87350fcdfb70e, type: 2}
   - {fileID: 11400000, guid: 61b960009718b914292b0567f1086922, type: 2}
   - {fileID: 11400000, guid: 3741a8d670c3b6f44860349560c04dfc, type: 2}
   - {fileID: 11400000, guid: 4a879dc25af6bec4b8e4bbbd39affb25, type: 2}
   - {fileID: 11400000, guid: 07d1c9ca67e8c004fa8d347593b6b5fc, type: 2}
-  - {fileID: 11400000, guid: 2c663841f13fb9c41a60c1d77f90f546, type: 2}
   - {fileID: 11400000, guid: c4c3cf662dc60c645918661877f78288, type: 2}
-  - {fileID: 11400000, guid: 8a89e4f9edd40e046b2fa3b8bc327313, type: 2}
+  - {fileID: 11400000, guid: 58dc96cda5d228c4a9fe655a4c5fca59, type: 2}
   - {fileID: 11400000, guid: ade0ba907f907704fab97bbb88cc007e, type: 2}
   MythicItems:
   - {fileID: 11400000, guid: 208cb8a33300991408a22710c5f0f24d, type: 2}
+  - {fileID: 11400000, guid: 950ae52b3987612489bb7d76f04ba9aa, type: 2}
+  - {fileID: 11400000, guid: 8a89e4f9edd40e046b2fa3b8bc327313, type: 2}
   - {fileID: 11400000, guid: edcc4ff975e93704a9f252f855a44548, type: 2}
   - {fileID: 11400000, guid: 6506093997490cf48a496f1bca156730, type: 2}
   LegendaryItems:
   - {fileID: 11400000, guid: 408f6ebc3de63494688f6ea9c89574d6, type: 2}
+  - {fileID: 11400000, guid: 2c663841f13fb9c41a60c1d77f90f546, type: 2}
   CommonChance: 65
   RareChance: 25
   MythicChance: 7
