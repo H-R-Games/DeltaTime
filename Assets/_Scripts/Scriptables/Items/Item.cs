@@ -18,6 +18,26 @@ namespace rene_roid_player {
         [ContextMenu(nameof(HealOnKill))] void HealOnKill() => Items.Add(new HealOnKill());
         [ContextMenu(nameof(MoveFastWhenLowHealth))] void MoveFastWhenLowHealth() => Items.Add(new MoveFastWhenLowHealth());
         [ContextMenu(nameof(ChanceToDealExtraHit))] void ChanceToDealExtraHit() => Items.Add(new ChanceToDealExtraHit());
+
+        // Game Items
+        [ContextMenu(nameof(LionEmblem))] void LionEmblem() => Items.Add(new LionEmblem());
+        [ContextMenu(nameof(Dopamine))] void Dopamine() => Items.Add(new Dopamine());
+        [ContextMenu(nameof(MarcaShoes))] void MarcaShoes() => Items.Add(new MarcaShoes());
+        [ContextMenu(nameof(Rock))] void Rock() => Items.Add(new Rock());
+        [ContextMenu(nameof(Aspirin))] void Aspirin() => Items.Add(new Aspirin());
+        [ContextMenu(nameof(SpringShoes))] void SpringShoes() => Items.Add(new SpringShoes());
+        [ContextMenu(nameof(ImmovableSword))] void ImmovableSword() => Items.Add(new ImmovableSword());
+        [ContextMenu(nameof(WingedShoes))] void WingedShoes() => Items.Add(new WingedShoes());
+        [ContextMenu(nameof(FashionEars))] void FashionEars() => Items.Add(new FashionEars());
+        [ContextMenu(nameof(MonsterWheights))] void MonsterWheights() => Items.Add(new MonsterWheights());
+        [ContextMenu(nameof(LaParca))] void LaParca() => Items.Add(new LaParca());
+        [ContextMenu(nameof(BookOfKnowledge))] void BookOfKnowledge() => Items.Add(new BookOfKnowledge());
+        [ContextMenu(nameof(LuckyGlasses))] void LuckyGlasses() => Items.Add(new LuckyGlasses());
+        [ContextMenu(nameof(TeethOfTheFearful))] void TeethOfTheFearful() => Items.Add(new TeethOfTheFearful());
+        [ContextMenu(nameof(DecisionArrow))] void DecisionArrow() => Items.Add(new DecisionArrow());
+        [ContextMenu(nameof(BerserkBeer))] void BerserkBeer() => Items.Add(new BerserkBeer());
+        [ContextMenu(nameof(CachinkGlasses))] void CachinkGlasses() => Items.Add(new CachinkGlasses());
+        [ContextMenu(nameof(GeniusComet))] void GeniusComet() => Items.Add(new GeniusComet());
         #endregion
     }
 
@@ -159,6 +179,408 @@ namespace rene_roid_player {
             base.OnRemove(player, itemManager);
             // Deactivate item manager item
             itemManager.ChanceToDealExtraHitAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class LionEmblem : ItemBase {
+        public string Name = "Lion Emblem";
+        public float DefenceIncrease = 5f;
+
+        public LionEmblem() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.LionEmblemAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.LionEmblemAmount -= 1;  
+        }
+
+    }
+
+    [System.Serializable]
+    public class Dopamine : ItemBase {
+        public string Name = "Dopamine";
+        public float AttackMoveSpeedIncrease = 0.045f;
+
+        public Dopamine() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.DopamineAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.DopamineAmount -= 1;  
+        }
+    }
+
+    
+    [System.Serializable]
+    public class MarcaShoes : ItemBase {
+        public string Name = "Marca Shoes";
+        public float MovementSpeedIncrease = 0.08f;
+
+        public MarcaShoes() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.MarcaShoesAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.MarcaShoesAmount -= 1;  
+        }
+    }
+
+    
+    [System.Serializable]
+    public class Rock : ItemBase {
+        public string Name = "Rock";
+        public float Armor = 5f;
+
+        public Rock() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.RockAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.RockAmount -= 1;  
+        }
+    }
+
+
+    [System.Serializable]
+    public class Aspirin : ItemBase {
+        public string Name = "Aspirin";
+        public float HealthRegen = 0.5f;
+
+        public Aspirin() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.AspirinAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.AspirinAmount -= 1;  
+        }
+    }
+
+    
+    [System.Serializable]
+    public class SpringShoes : ItemBase {
+        public string Name = "Spring Shoes";
+        public float JumpHeightIncrease = 0.1f;
+
+        public SpringShoes() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.SpringShoesAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.SpringShoesAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class ImmovableSword : ItemBase {
+        public string Name = "Immovable Sword";
+        public float DamagePorcen = 0.15f;
+        public float TimeToActive = 5f;
+        public float TimeToDesactive = 7f;
+
+        public ImmovableSword() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.ImmovableSwordAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.ImmovableSwordAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class MonsterWheights : ItemBase {
+        public string Name = "Monster Weights";
+        public float SpeedRedux = 0.1f;
+        
+        public MonsterWheights() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.MonsterWheightsAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.MonsterWheightsAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class WingedShoes : ItemBase {
+        public string Name = "Winged Shoes";
+
+        public WingedShoes() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.WingedShoesAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.WingedShoesAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class FashionEars : ItemBase {
+        public string Name = "Fashion Ears";
+        public float SpeedIncrease = 0.15f;
+        public float TimeToDesactive = 3f;
+
+        public FashionEars() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.FashionEarsAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.FashionEarsAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class LaParca : ItemBase {
+        public string Name = "La Parca";
+        public float EnemyMaxLife = 15f;
+        public float MaxPorcen = 0.30f;
+
+        public LaParca() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.LaParcaAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.LaParcaAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class BookOfKnowledge : ItemBase {
+        public string Name = "Book Of Knowledge";
+        public float ExpMultiplier = 1.5f;
+
+        public BookOfKnowledge() { }
+
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.BookOfKnowledgeAmount += 1;
+            itemManager.DecisionArrowAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.BookOfKnowledgeAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class DecisionArrow : ItemBase {
+        public string Name = "Decision Arrow";
+        public float Probability = 0.30f;
+        public float Damage = 10f;
+
+        public DecisionArrow() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.DecisionArrowAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.DecisionArrowAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class LuckyGlasses : ItemBase {
+        public string Name = "Lucky Glasses";
+        public float Luck = 0.05f;
+
+        public LuckyGlasses() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.LuckyGlassesAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.LuckyGlassesAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class TeethOfTheFearful : ItemBase {
+        public string Name = "Teeth Of The Fearful";
+        public float HealthSteal = 0.03f;
+
+        public TeethOfTheFearful() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            // Activate item manager item
+            itemManager.TeethOfTheFearfulAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            // Deactivate item manager item
+            itemManager.TeethOfTheFearfulAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class BerserkBeer : ItemBase {
+        public string Name = "Berserk Beer";
+        public float DamageBoost = 0.3f;
+
+        public BerserkBeer() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            itemManager.BerserkBeerAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            itemManager.BerserkBeerAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class GeniusComet : ItemBase {
+        public string Name = "Genius comet";
+        public float Probability = 0.30f;
+        public float Damage = 10f;
+
+        public GeniusComet() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            itemManager.GeniusCometAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            itemManager.GeniusCometAmount -= 1;  
+        }
+    }
+
+    [System.Serializable]
+    public class CachinkGlasses : ItemBase {
+        public string Name = "Cachink Glasses";
+        public float MoneyMultiplier = 0.05f;
+
+        public CachinkGlasses() { }
+
+        public override void OnGet(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnGet(player, itemManager);
+            itemManager.CachinkGlassesAmount += 1;
+        }
+
+        public override void OnRemove(PlayerBase player, ItemManager itemManager)
+        {
+            base.OnRemove(player, itemManager);
+            itemManager.CachinkGlassesAmount -= 1;  
         }
     }
 }

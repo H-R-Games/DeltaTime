@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 namespace rene_roid_player
 {
@@ -12,6 +13,10 @@ namespace rene_roid_player
         private Transform _player;
         private PlayerBase _playerBase;
         private bool _isOpened = false;
+
+        [SerializeField] private TMP_Text _moneyCostText;
+        [SerializeField] private float _moneyCost = 100;
+        public float SetMoneyCost { set { _moneyCost = value; } }
         #endregion
 
         #region External
@@ -26,6 +31,8 @@ namespace rene_roid_player
         public float RareChance;
         public float MythicChance;
         public float LegendaryChance;
+
+        public float LuckChance;
         #endregion
 
         private void Awake()
@@ -37,6 +44,8 @@ namespace rene_roid_player
         private void Start()
         {
             _spriteRenderer.sprite = _closedChest;
+
+            _moneyCostText.text = _moneyCost.ToString() + " $";
 
             // Set the chance to 100% if the sum of all chances is less than 100%
             float sum = CommonChance + RareChance + MythicChance + LegendaryChance;
@@ -51,15 +60,20 @@ namespace rene_roid_player
 
         private void Update()
         {
+            if (_player == null) _player = GameObject.FindGameObjectWithTag("Player").transform;
+            if (_player != null && _playerBase == null) _playerBase = _player.GetComponent<PlayerBase>();
+
             if (Vector2.Distance(transform.position, _player.position) < 1.5f && !_isOpened)
             {
+
                 print("Press F to open chest");
-                if ( _playerBase.Money >= 100) {
+                if ( _playerBase.Money >= _moneyCost) {
                     _isOpened = true;
                     _spriteRenderer.sprite = _openedChest;
+                    LuckChance = _playerBase.Luck;
                     OpenChest();
 
-                    _player.GetComponent<PlayerBase>().Money -= 100;
+                    _player.GetComponent<PlayerBase>().Money -= _moneyCost;
                 }
             }
         }
@@ -68,6 +82,8 @@ namespace rene_roid_player
         {
             float random = Random.Range(0, 100);
             var item = null as Item;
+
+            random += LuckChance;
 
             if (random < CommonChance) item = CommonItems[Random.Range(0, CommonItems.Length)];
             else if (random < CommonChance + RareChance) item = RareItems[Random.Range(0, RareItems.Length)];
@@ -82,6 +98,8 @@ namespace rene_roid_player
                 var itemPickUp = Instantiate(Item, transform.position, Quaternion.identity).GetComponent<ItemPickUp>();
                 itemPickUp.Item = CommonItems[0];
             }
+
+            Destroy(gameObject, 0.5f);
         }
     }
 }

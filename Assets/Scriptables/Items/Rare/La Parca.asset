@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0153aa0e63baa5499bb722b1317e95c, type: 3}
+  m_Name: La Parca
+  m_EditorClassIdentifier: 
+  Name: La Parca
+  Description: Ejecutar enemigos con poca vida (enemigos con menos del 15% de vida)
+  Icon: {fileID: 492410290, guid: cf226e2916dd0e245bfe3dfd927ce81f, type: 3}
+  Items:
+  - rid: 4406867372903235584
+  references:
+    version: 2
+    RefIds:
+    - rid: 4406867372903235584
+      type: {class: LaParca, ns: rene_roid_player, asm: Assembly-CSharp}
+      data:
+        Name: La Parca
+        EnemyMaxLife: 0.15
+        MaxPorcen: 0.3

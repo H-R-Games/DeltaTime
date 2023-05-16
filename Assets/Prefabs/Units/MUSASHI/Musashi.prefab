@@ -74,8 +74,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1879795371
+  m_SortingLayer: 5
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: d50c683b4ca1c734ea6f92ee1d07932e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -248,7 +248,7 @@ AudioSource:
   m_GameObject: {fileID: 6217724633966689331}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 3539940325137395516, guid: a39248de705e714498ebff383efce26f, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -349,7 +349,7 @@ GameObject:
   - component: {fileID: 6217724634034246107}
   - component: {fileID: 6217724634034246108}
   - component: {fileID: 6217724634034246087}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: Musashi
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -389,7 +389,7 @@ MonoBehaviour:
   _col: {fileID: 6217724634034246108}
   _playerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 136
   _level: 1
   _currentHealth: 0
   _currentHealthRegen: 0
@@ -409,6 +409,8 @@ MonoBehaviour:
   Money: 100
   _itemManager: {fileID: 0}
   Items: []
+  _hitPrefab: {fileID: 6406356131523818034, guid: a1faca963139fc84b8f61ff317782229, type: 3}
+  MoneyMultiplier: 1
   _wallLayerMask:
     serializedVersion: 2
     m_Bits: 256
@@ -436,6 +438,9 @@ MonoBehaviour:
   _smokePrefab: {fileID: 3114603624422194117, guid: 4ad024df4afa2594aaafc31823be1328, type: 3}
   _dashCollider: {fileID: 6217724634197588238}
   ESPIID: 250
+  _floorLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
   _ultimatePercentage: 5
   _procCoUltimate: 2
 --- !u!114 &6217724634034246105
@@ -502,6 +507,24 @@ MonoBehaviour:
   HealOnKillAmount: 0
   MoveFastWhenLowHealthAmount: 0
   ChanceToDealExtraHitAmount: 0
+  LionEmblemAmount: 0
+  DopamineAmount: 0
+  MarcaShoesAmount: 0
+  RockAmount: 0
+  AspirinAmount: 0
+  SpringShoesAmount: 0
+  ImmovableSwordAmount: 0
+  WingedShoesAmount: 0
+  FashionEarsAmount: 0
+  MonsterWheightsAmount: 0
+  LaParcaAmount: 0
+  BookOfKnowledgeAmount: 0
+  LuckyGlassesAmount: 0
+  TeethOfTheFearfulAmount: 0
+  DecisionArrowAmount: 0
+  BerserkBeerAmount: 0
+  GeniusCometAmount: 0
+  CachinkGlassesAmount: 0
 --- !u!1 &6217724634197588224
 GameObject:
   m_ObjectHideFlags: 0

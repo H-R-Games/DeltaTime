@@ -245,7 +245,7 @@ GameObject:
   - component: {fileID: 4764580286669513358}
   - component: {fileID: 4764580286669513362}
   - component: {fileID: 4764580286669513365}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: Namka
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -285,7 +285,7 @@ MonoBehaviour:
   _col: {fileID: 4764580286669513365}
   _playerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 136
   _level: 1
   _currentHealth: 0
   _currentHealthRegen: 0
@@ -302,9 +302,11 @@ MonoBehaviour:
   _skill1TimeLock: 0.5
   _skill2TimeLock: 0.5
   _ultimateTimeLock: 0.5
-  Money: 0
+  Money: 100
   _itemManager: {fileID: 0}
   Items: []
+  _hitPrefab: {fileID: 6406356131523818034, guid: a1faca963139fc84b8f61ff317782229, type: 3}
+  MoneyMultiplier: 1
   _wallLayerMask:
     serializedVersion: 2
     m_Bits: 256
@@ -320,9 +322,9 @@ MonoBehaviour:
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
-  _basicAttackPercentage: 0.7
+  _basicAttackPercentage: 2
   _procCoBasic: 1
-  _skill1Percentage: 3
+  _skill1Percentage: 3.5
   _procCoSkill1: 1
   _skill1Rad: {fileID: 4764580285460173337}
   _skill1Slash: {fileID: 5399627222900152123, guid: 7f461157002c52143839a0af2a61721b, type: 3}
@@ -331,9 +333,10 @@ MonoBehaviour:
   _skill2Clone: {fileID: 7491478991542210934, guid: 16e50cbb372204342864c7e9711fb4b6, type: 3}
   _healPercentage: 0.5
   _ultimatePercentage: 1
-  _procCoUltimate: 1
+  _procCoUltimate: 0.2
   _ultimateRad: {fileID: 1324960377480317777}
   _ultimateChargeTime: 2
+  _nuke: {fileID: 7686323592938109950, guid: 6145c283aaa5c684a88ccd66560ec07b, type: 3}
 --- !u!114 &4764580286669513360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,6 +364,24 @@ MonoBehaviour:
   HealOnKillAmount: 0
   MoveFastWhenLowHealthAmount: 0
   ChanceToDealExtraHitAmount: 0
+  LionEmblemAmount: 0
+  DopamineAmount: 0
+  MarcaShoesAmount: 0
+  RockAmount: 0
+  AspirinAmount: 0
+  SpringShoesAmount: 0
+  ImmovableSwordAmount: 0
+  WingedShoesAmount: 0
+  FashionEarsAmount: 0
+  MonsterWheightsAmount: 0
+  LaParcaAmount: 0
+  BookOfKnowledgeAmount: 0
+  LuckyGlassesAmount: 0
+  TeethOfTheFearfulAmount: 0
+  DecisionArrowAmount: 0
+  BerserkBeerAmount: 0
+  GeniusCometAmount: 0
+  CachinkGlassesAmount: 0
 --- !u!50 &4764580286669513362
 Rigidbody2D:
   serializedVersion: 4
@@ -473,8 +494,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1879795371
+  m_SortingLayer: 5
   m_SortingOrder: 1
   m_Sprite: {fileID: -1897674143, guid: 4a49941b9b2810a4b8650664b2c72729, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -502,8 +523,11 @@ MonoBehaviour:
   _basicAttack1Time: 0.2
   _specialAttack1Time: 1
   _specialAttack2Time: 10
-  _ultimateAttackTime: 3.5
+  _ultimateAttackTime: 0.1
   _basicAttackClip: {fileID: 8300000, guid: 66e17d64fc5cd0846b055db2b5dd9ab1, type: 3}
+  _specialAttack1Clip: {fileID: 0}
+  _specialAttack2Clip: {fileID: 0}
+  _ultimateAttackClip: {fileID: 0}
   _footstepClips:
   - {fileID: 8300000, guid: 4180aaef26463034ca6455997a38fa33, type: 3}
   - {fileID: 8300000, guid: 96daa61f9d2bb0948ad54869543592c3, type: 3}

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using rene_roid;
 using UnityEngine;
 using rene_roid_enemy;
@@ -21,6 +22,18 @@ namespace rene_roid_player
             base.Start();
             _renderer = GetComponentInChildren<SpriteRenderer>();
             _collider = GetComponent<CapsuleCollider2D>();
+        }
+
+        private void OnDisable() {
+            if (_isOniMode) {
+                RemoveFlatDamageBonus(_addedOniDamage);
+                RemoveMovementSpeedFlat(_addedOniSpeed);
+
+                UpdateMaxPlayerStats();
+
+                _renderer.color = Color.white;
+                _isOniMode = false;
+            }
         }
 
         public override void Update()
@@ -156,17 +169,25 @@ namespace rene_roid_player
         }
 
         public float ESPIID = 100f;
+        [SerializeField] private LayerMask _floorLayerMask;
         private IEnumerator SpeedDash(float dist, float t)
         {
             var dir = _renderer.flipX ? -1 : 1;
             var pos = transform.position;
             var target = new Vector2(pos.x + (dist *dir), pos.y);
             print(pos.x+" "+target);
-            var ray = Physics2D.Linecast(pos, target, _wallLayerMask);
+            // Get floor layer
+
+            // Linecast detecting _wallLayerMask and _floorLayerMask
+            var ray = Physics2D.Linecast(pos, target, _floorLayerMask);
             if (ray.collider != null)
             {
                 target = ray.point;
+            } else {
+                ray = Physics2D.Linecast(pos, target, _wallLayerMask);
+                if (ray.collider != null) target = ray.point;
             }
+            target.x += 0.1f;
 
             yield return Helpers.GetWait(t);
             var smoke = Instantiate(_smokePrefab, transform.position, Quaternion.identity);
@@ -300,13 +321,18 @@ namespace rene_roid_player
             StartCoroutine(OniMode());
         }
 
+        private float _addedOniDamage = 0;
+        private float _addedOniSpeed = 0;
         private IEnumerator OniMode()
         {
             _isOniMode = true;
             _renderer.color = Color.red;
 
             var dmg = _maxStats.Damage;
-            var spd = _maxStats.MovementSpeed;
+            var spd = _maxStats.MovementSpeed / 2;
+
+            _addedOniDamage = dmg;
+            _addedOniSpeed = spd;
 
             AddFlatDamageBonus(dmg);
             AddMovementSpeedFlat(spd);
@@ -317,6 +343,9 @@ namespace rene_roid_player
 
             RemoveFlatDamageBonus(dmg);
             RemoveMovementSpeedFlat(spd);
+
+            _addedOniDamage = 0;
+            _addedOniSpeed = 0;
 
             UpdateCurrentStats();
 

@@ -71,10 +71,10 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -190894121
+  m_SortingLayer: 6
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 8617b547fa4bbd444b3c96ad368213e5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -82,7 +82,7 @@ SpriteRenderer:
   m_Size: {x: 2, y: 1.5625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &3633027454898419012
@@ -116,6 +116,7 @@ GameObject:
   - component: {fileID: 3633027455234432498}
   - component: {fileID: 3633027455234432500}
   - component: {fileID: 3633027455234432501}
+  - component: {fileID: 345379415}
   m_Layer: 10
   m_Name: Slime
   m_TagString: Enemy
@@ -151,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6546e19832cb19f4dbb2cc79ae187e58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyBaseStats: {fileID: 11400000, guid: 8b55b99e437c4004a83b9d9e809aa472, type: 2}
+  _enemyBaseStats: {fileID: 11400000, guid: b33e63ad69e22cd4680474a08cbdf6da, type: 2}
   _enemyState: 0
   _enemyType: 0
   _boxCollider2D: {fileID: 3633027455234432501}
@@ -163,7 +164,7 @@ MonoBehaviour:
     m_Bits: 256
   _playerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 136
   _level: 1
   _health: 0
   _damage: 0
@@ -179,8 +180,9 @@ MonoBehaviour:
   _targetDistanceNotWatchin: 5
   _targetDistanceUnfollow: 50
   _targetTimeUnfollow: 3
-  _attackCooldown: 1
-  _attackAnimTime: 2
+  _attackStop: 2
+  _cooldownAttack: 1
+  _attackAnimTime: 0.5
 --- !u!61 &3633027455234432501
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -191,7 +193,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -207,3 +209,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 1}
   m_EdgeRadius: 0
+--- !u!50 &345379415
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3633027455234432497}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4

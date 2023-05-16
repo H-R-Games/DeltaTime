@@ -10,18 +10,18 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - 
-  - Player
+  - 
   - Wall
   - Ladder
   - Enemy
   - OneWayFloor
   - OneWayFloorNoCol
   - Boss
-  - 
+  - Block
   - 
   - 
   - 
@@ -42,4 +42,37 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BG1
+    uniqueID: 1988466281
+    locked: 0
+  - name: BG2
+    uniqueID: 1986672499
+    locked: 0
+  - name: Decos
+    uniqueID: 268053801
+    locked: 0
+  - name: Jails1
+    uniqueID: 979450295
+    locked: 0
+  - name: Player
+    uniqueID: 2415171925
+    locked: 0
+  - name: Enemy
+    uniqueID: 4104073175
+    locked: 0
+  - name: Jails2
+    uniqueID: 1692889299
+    locked: 0
+  - name: Floor
+    uniqueID: 160096423
+    locked: 0
+  - name: Webs
+    uniqueID: 3314216549
+    locked: 0
+  - name: Doors
+    uniqueID: 1380196151
+    locked: 0
+  - name: Particles
+    uniqueID: 206140821
     locked: 0

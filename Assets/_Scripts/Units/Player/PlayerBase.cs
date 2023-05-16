@@ -22,6 +22,9 @@ namespace rene_roid_player
         protected PlayerInput _input;
         protected FrameInput _frameInput;
         protected int _fixedFrame;
+        private Director _director;
+
+        private float _luck = 0;
         #endregion
 
         #region External Variables
@@ -44,6 +47,8 @@ namespace rene_roid_player
         public int WallDirection => _wallDir;
         public bool ClimbingLadder => _onLadder;
 
+
+        public float Luck { get; set; }
 
         public virtual void ApplyVelocity(Vector2 vel, PlayerForce forceType)
         {
@@ -111,6 +116,7 @@ namespace rene_roid_player
         #region Player Stats
         [Header("Player Stats")]
         [SerializeField] protected int _level = 1;
+        public int Level => _level;
 
         [SerializeField] protected float _currentHealth;
         [SerializeField] protected float _currentHealthRegen;
@@ -143,7 +149,7 @@ namespace rene_roid_player
             FallDamage();
         }
 
-        protected void SetPlayerStats()
+        public void SetPlayerStats()
         {
             _currentHealth = _maxStats.Health;
             _currentHealthRegen = _maxStats.HealthRegen;
@@ -194,17 +200,18 @@ namespace rene_roid_player
 
         protected void FallDamage()
         {
-            if (_speed.y < 0 && !_grounded)
+            if (_speed.y < 0 && !_grounded && !_onLadder && !_isOnWall)
             {
                 _fallTime += Time.deltaTime;
 
-                if (_fallTime > 0.5f)
+                if (_fallTime > 1f)
                 {
                     _fallDamage = Mathf.Clamp(_fallTime * _fallDamageMultiplier, 0, _maxFallDamagePercentage * _maxStats.Health);
                 }
             }
             else
             {
+                if (_onLadder) _fallDamage = 0;
                 if (_grounded && _fallDamage > 0)
                 {
                     print("Fall Damage: " + _fallDamage);
@@ -353,8 +360,18 @@ namespace rene_roid_player
         #endregion
 
         #region Health
+        private bool _inCombat = false;
+        public bool InCombat => _inCombat;
+        private float _lastDamageTaken = 0f;
+
         protected void ConstantHealing()
         {
+            // If has not taken damage in 5 seconds, _inCombat = false
+            if (_inCombat && Time.time - _lastDamageTaken > 5f)
+            {
+                _inCombat = false;
+            }
+
             // Heal the player every second
             if (_currentHealth >= _maxStats.Health) return;
             HealAmmount(_currentHealthRegen * Time.deltaTime);
@@ -388,6 +405,11 @@ namespace rene_roid_player
 
         public void TakeDamage(float damage)
         {
+            _inCombat = true;
+            _lastDamageTaken = Time.time;
+
+            _itemManager.OnDamageTaken(damage);
+
             if (_currentArmor > 0)
             {
                 damage *= 100 / (100 + _currentArmor);
@@ -397,10 +419,14 @@ namespace rene_roid_player
 
             if (_currentHealth <= 0)
             {
-                //Die();
+                Die();
+            }
+
+            void Die() {
+                var death = FindObjectOfType<Death>();
+                death.OnDeath();
             }
         }
-
 
         public float DealDamage(float percentage, float proc)
         {
@@ -431,12 +457,19 @@ namespace rene_roid_player
         #region Experience
         [Header("Experience")]
         private float _currentExperience = 0;
+        public  float CurrentExperience => _currentExperience;
         private float _experienceToNextLevel = 100;
+        public  float ExperienceToNextLevel => _experienceToNextLevel;
         private float _experienceMultiplier = 1.37f;
+        private float _extraExp = 1;
+        public void AddExperienceMultiplier(float multiplier)
+        {
+            _extraExp = multiplier;
+        }
 
         public void AddExperience(float experience)
         {
-            _currentExperience += experience;
+            _currentExperience += experience * _extraExp;
             if (_currentExperience >= _experienceToNextLevel)
             {
                 LevelUp();
@@ -536,6 +569,18 @@ namespace rene_roid_player
             }
 
             SkillCooldowns();
+        }
+
+        public void AddSkillsCooldown(float time) {
+            //_basicAttackTimer -= time;
+            _skill1Timer = Skill1Cooldown - time;
+            _skill2Timer = Skill2Cooldown - time;
+            _ultimateTimer = UltimateCooldown - time;
+
+            //_basicAttackReady = false;
+            _skill1Ready = false;
+            _skill2Ready = false;
+            _ultimateReady = false;
         }
 
         protected void SkillCooldowns()
@@ -645,8 +690,13 @@ namespace rene_roid_player
         public float Money = 0;
         public ItemManager _itemManager;
         public List<Item> Items = new List<Item>();
+        [SerializeField] private GameObject _hitPrefab;
 
-        public void AddMoney(float amount) => Money += amount;
+        public void AddMoney(float amount) {
+            // Round ammount to integer
+            amount = Mathf.Round(amount);
+            Money += amount;
+        }
 
         public void RemoveMoney(float amount) => Money -= amount;
 
@@ -654,6 +704,7 @@ namespace rene_roid_player
         {
             Items.Add(item);
             item.Items.ForEach(i => i.OnGet(this, _itemManager));
+            _itemManager.OnPickUp();
         }
 
         // private void UpdateItems() => _items.ForEach(i => i.Items.ForEach(i => i.OnUpdate(this)));
@@ -664,22 +715,38 @@ namespace rene_roid_player
             item.Items.ForEach(i => i.OnRemove(this, _itemManager));
         }
 
-        public virtual void OnEnemyHit(float damage, EnemyBase enemy) 
+        public virtual void OnEnemyHit(float damage, EnemyBase enemy, bool item = false) 
         {
+            var hit = Instantiate(_hitPrefab, enemy.transform.position, Quaternion.identity);
+            Destroy(hit, 1f);
             print("Hit enemy for " + damage + " damage!");
-            _itemManager.OnHit(damage, enemy);
+            if (!item) _itemManager.OnHit(damage, enemy);
         }
 
+        public float MoneyMultiplier = 1;
         public virtual void OnEnemyDeath(float damage, EnemyBase enemy)
         {
             print("Killed enemy  " + enemy.name + " for " + damage + " damage!");
             _itemManager.OnKill(damage, enemy);
 
             // ? Chance to get experience
-            AddMoney(enemy.EnemyBaseStats.MoneyReward);
+            AddMoney((enemy.EnemyBaseStats.MoneyReward + (enemy.EnemyBaseStats.MoneyRewardPerLevel * enemy.Level)) * MoneyMultiplier);
 
             // * Add experience
-            AddExperience(enemy.EnemyBaseStats.ExperienceReward);
+            AddExperience(enemy.EnemyBaseStats.ExperienceReward + (enemy.EnemyBaseStats.ExperienceRewardPerLevel * enemy.Level));
+
+            if (_director == null) {
+                _director = FindObjectOfType<Director>();
+
+                if (_director == null) {
+                    Debug.LogError("No director found in scene!");
+                    return;
+                } else {
+                    _director.AddExp(enemy.EnemyBaseStats.ExperienceReward * 0.5f);
+                }
+            } else {
+                _director.AddExp(enemy.EnemyBaseStats.ExperienceReward * 0.5f);
+            }
         }
         #endregion
 
@@ -983,6 +1050,7 @@ namespace rene_roid_player
             ResetAirJumps();
         }
 
+        public void AddAirJump() => _maxAirJumps++;
         protected virtual void ResetAirJumps() => _airJumpsRemaining = _maxAirJumps;
         #endregion
 
@@ -1067,8 +1135,10 @@ namespace rene_roid_player
 
 
         // Jump
-        protected int _maxAirJumps = 0; // Max amount of jumps the player can do in the air. 0 = No air jumps
+        protected int _maxAirJumps = 1; // Max amount of jumps the player can do in the air. 0 = No air jumps
         protected float _jumpForce = 36; // Inmediate force applied to the player when jumping
+        public float JumpForce => _jumpForce;
+        public void SetJumpForce(float jumpForce) => _jumpForce = jumpForce;
         protected float _maxFallSpeed = 40; // Max speed the player can fall at
         protected float _fallAcceleration = 100; // Acceleration applied to the player when falling
         protected float _jumpEndEarlyGravityModifier = 3; // Gravity modifier applied to the player when ending a jump early

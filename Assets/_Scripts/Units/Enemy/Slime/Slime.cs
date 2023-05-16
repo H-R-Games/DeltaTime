@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using rene_roid_player;
+using rene_roid;
 
 namespace rene_roid_enemy
 {
     public class Slime : EnemyBase
     {
-          public override void Start()
+        public override void Start()
         {
             base.Start();
             _enemyType = EnemyType.Horizontal;
@@ -20,6 +21,7 @@ namespace rene_roid_enemy
         #region State Machine
         public override void UpdateState()
         {
+            print(_onAttack);
             switch (_enemyState)
             {
                 case EnemyStates.Idle:
@@ -30,14 +32,8 @@ namespace rene_roid_enemy
                     break;
                 case EnemyStates.Attack:
                     GravityEnemy();
-
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 0.6f)
-                    {
-                        _inRangeAttack = false;
-                        ChangeState(EnemyStates.Move);
-                    }
-
-                    if (!_isStunned) AttackBox();
+                    if (!_isStunned && !_onAttack) AttackBox();
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 0.6f + _rand) ChangeState(EnemyStates.Move);
                     break;
                 case EnemyStates.Stun:
                     GravityEnemy();
@@ -45,16 +41,15 @@ namespace rene_roid_enemy
                     break;
                 case EnemyStates.Target:
                     GravityEnemy();
+                    if (_enterAttack) break;
                     if (!TargetPlayer()) UnTargetPlayer();
                     if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _targetDistanceUnfollow) ChangeState(EnemyStates.Move);
-                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= 0.6f) ChangeState(EnemyStates.Attack);
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= 0.6f + _rand) StartCoroutine(EnterAttack());
                     if (!_isStunned) FollowerPlayer();
-                    // if (!_isStunned) AttackBox();
                     break;
             }
 
             HandleAnimations();
-            ResetCooldown();
         }
 
         public override void ChangeState(EnemyStates newState)
@@ -104,7 +99,7 @@ namespace rene_roid_enemy
         /// </summary>
         private void Horizontal()
         {
-            Vector3 direction = new Vector3(_movementDirection.x, 0, 0);
+            Vector3 direction = new Vector3(_movementDirection.x + _rand, 0, 0);
 
             if (_isGround)
             {
@@ -167,7 +162,7 @@ namespace rene_roid_enemy
         {
             Vector3 directionX = (_targetPlayer.transform.position.x - this.transform.position.x) > 0 ? Vector3.right : Vector3.left;
             if (Vector3.Distance(-new Vector3(0, transform.position.y, 0), new Vector3(0, _targetPlayer.transform.position.y, 0)) > 3) Jump();
-            if (!_isGround && !_walled) transform.Translate(directionX * _movementSpeed * _movementSpeedMultiplier * Time.deltaTime);
+            if (!_isGround && !_walled) transform.Translate(directionX * _movementSpeed * (_movementSpeedMultiplier + _rand) * Time.deltaTime);
 
             if (_movementDirection.x > 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
             else if (_movementDirection.x < 0 && Vector3.Distance(new Vector3(_targetPlayer.transform.position.x, 0, 0), new Vector3(this.transform.position.x, 0, 0)) > 0.5f) this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
@@ -179,37 +174,46 @@ namespace rene_roid_enemy
 
         #region Attack
         [Header("Attack Settings")]
-        [SerializeField] private float _attackCooldown = 1f;
+        [SerializeField] private float _attackStop = 2f;
+        [SerializeField] private float _cooldownAttack = 1f;
         float _timeAttack = 0;
-        bool _onAttack, _inRangeAttack;
+        bool _onAttack;
+        bool _enterAttack;
 
         private void AttackBox()
         {   
-            _inRangeAttack = true;
-            if(_timeAttack >= _attackCooldown)
+            if (_enemyState == EnemyStates.Attack && !_onAttack && !_enterAttack)
             {
-                var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
-            
-                foreach (var player in players)
-                {
-                    _onAttack = true;
-                    var playerBase = player.GetComponent<PlayerBase>();
-                    if (playerBase != null) playerBase.TakeDamage(_damage);
-                }
-
-                _timeAttack = 0;
-            } 
-            else _timeAttack += Time.deltaTime * 0.5f;
-        }
-
-        private void ResetCooldown()
-        {
-            if (_enemyState != EnemyStates.Attack) 
-            {
-                if (_timeAttack < 0) _timeAttack = 0; 
-                _timeAttack -= Time.deltaTime * 0.5f;
+                _onAttack = true;
+                StartCoroutine(Attack());
             }
         }
+
+        IEnumerator EnterAttack()
+        {
+            _enterAttack = true;
+            ChangeState(EnemyStates.Idle);
+            yield return Helpers.GetWait(_cooldownAttack);
+            ChangeState(EnemyStates.Attack);
+            _enterAttack = false;
+        }
+
+        IEnumerator Attack()
+        {
+            _onAttack = true;
+            _onAttackAnim = true;
+            var players = Physics2D.OverlapBoxAll(_boxCollider2D.bounds.center, _boxCollider2D.bounds.size, 0, _playerLayer);
+
+            foreach (var player in players)
+            {
+                var playerBase = player.GetComponent<PlayerBase>();
+                if (playerBase != null) playerBase.TakeDamage(_damage);
+            }
+            _timeAttack = 0;
+            yield return Helpers.GetWait(_attackStop);
+            _onAttack = false;
+            ChangeState(EnemyStates.Target);
+        }      
         #endregion
 
         #region Animation
@@ -223,6 +227,7 @@ namespace rene_roid_enemy
             private static readonly int AttackAnim = Animator.StringToHash("Attack");
 
             [SerializeField] private float _attackAnimTime = 0.5f;
+            private bool _onAttackAnim = false;
 
             private void HandleAnimations()
             {
@@ -239,7 +244,7 @@ namespace rene_roid_enemy
 
                     // ANY SKILL PRESSED
                     // if (_isStunned) return LockState(UltimateAttackAnim, 5);
-                    if (_onAttack) return LockState(AttackAnim, _attackAnimTime);
+                    if (_onAttackAnim) return LockState(AttackAnim, _attackAnimTime);
 
                     // NO SKILL PRESSED
                     return Run;
@@ -253,7 +258,7 @@ namespace rene_roid_enemy
 
                 }
 
-                void ResetFlags() { _onAttack = false; }
+                void ResetFlags() { _onAttackAnim = false; }
             }
         #endregion
 

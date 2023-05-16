@@ -16,11 +16,11 @@ namespace rene_roid
     {
         private void Awake()
         {
-            AwakeAudioSettings();
         }
 
         void Start()
         {
+            AwakeAudioSettings();
             GraphicAndResulotionStart();
             LanguageStart();
         }
@@ -49,10 +49,22 @@ namespace rene_roid
 
         private void AwakeAudioSettings()
         {
+            _masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
+            _musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
+            _sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
+            _isMuted = PlayerPrefs.GetFloat("IsMuted", 0) == 1 ? true : false;
+
+
             _masterVolumeSlider.value = _masterVolume;
             _musicVolumeSlider.value = _musicVolume;
             _sfxVolumeSlider.value = _sfxVolume;
             _muteButton.isOn = _isMuted;
+
+            // Set the audio mixer
+            SetMasterVolume(_masterVolume);
+            SetMusicVolume(_musicVolume);
+            SetSFXVolume(_sfxVolume);
+            SetMute(_isMuted);
         }
 
         public void SetMasterVolume(float volume)
@@ -60,6 +72,8 @@ namespace rene_roid
             _masterVolume = volume;
             _audioMixer.SetFloat("MasterVolume", Helpers.FromPercentageToRange(volume, -80f, 0f, true));
             PlayerPrefs.SetFloat("MasterVolume", volume);
+
+            SaveSettings();
         }
 
         public void SetMusicVolume(float volume)
@@ -67,6 +81,8 @@ namespace rene_roid
             _musicVolume = volume;
             _audioMixer.SetFloat("MusicVolume", Helpers.FromPercentageToRange(volume, -80f, 0f, true));
             PlayerPrefs.SetFloat("MusicVolume", volume);
+
+            SaveSettings();
         }
 
         public void SetSFXVolume(float volume)
@@ -74,6 +90,8 @@ namespace rene_roid
             _sfxVolume = volume;
             _audioMixer.SetFloat("SFXVolume", Helpers.FromPercentageToRange(volume, -80f, 0f, true));
             PlayerPrefs.SetFloat("SFXVolume", volume);
+
+            SaveSettings();
         }
 
         public void SetMute(bool isMuted)
@@ -81,6 +99,8 @@ namespace rene_roid
             _isMuted = isMuted;
             _audioMixer.SetFloat("MasterVolume", _isMuted ? -80 : Helpers.FromPercentageToRange(_masterVolume, -80f, 0f, true));
             PlayerPrefs.SetInt("IsMuted", _isMuted ? 1 : 0);
+
+            SaveSettings();
         }
         #endregion
 
@@ -120,6 +140,7 @@ namespace rene_roid
             }
 
             _resolutionIndex = currentResolutionIndex;
+            _resolutionIndex = PlayerPrefs.GetInt("ResolutionIndex", _resolutionIndex);
 
             _resolutionDropdown.AddOptions(options);
             _resolutionDropdown.value = _resolutionIndex;
@@ -135,15 +156,19 @@ namespace rene_roid
             }
 
             _qualityIndex = QualitySettings.GetQualityLevel();
+            _qualityIndex = PlayerPrefs.GetInt("QualityIndex", _qualityIndex);
+
             _qualityDropdown.AddOptions(qualityOptions);
             _qualityDropdown.value = _qualityIndex;
             _qualityDropdown.RefreshShownValue();
 
+            _isFullscreen = PlayerPrefs.GetInt("IsFullscreen", _isFullscreen ? 1 : 0) == 1 ? true : false;
             _fullscreenToggle.isOn = _isFullscreen;
 
-            PlayerPrefs.SetInt("ResolutionIndex", _resolutionIndex);
-            PlayerPrefs.SetInt("QualityIndex", _qualityIndex);
-            PlayerPrefs.SetInt("IsFullscreen", _isFullscreen ? 1 : 0);
+            // Set all settings
+            SetResolution(_resolutionIndex);
+            SetQuality(_qualityIndex);
+            SetFullscreen(_isFullscreen);
         }
 
         public void SetResolution(int resolutionIndex)
@@ -153,6 +178,8 @@ namespace rene_roid
             Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
 
             PlayerPrefs.SetInt("ResolutionIndex", _resolutionIndex);
+
+            SaveSettings();
         }
 
         public void SetQuality(int qualityIndex)
@@ -161,6 +188,8 @@ namespace rene_roid
             QualitySettings.SetQualityLevel(qualityIndex);
 
             PlayerPrefs.SetInt("QualityIndex", _qualityIndex);
+
+            SaveSettings();
         }
 
         public void SetFullscreen(bool isFullscreen)
@@ -169,6 +198,8 @@ namespace rene_roid
             Screen.fullScreen = isFullscreen;
 
             PlayerPrefs.SetInt("IsFullscreen", _isFullscreen ? 1 : 0);
+
+            SaveSettings();
         }
         #endregion
 
@@ -185,6 +216,7 @@ namespace rene_roid
 
         private void LanguageStart()
         {
+            // Get Language Settings
             _languageDropdown.ClearOptions();
 
             List<string> languageOptions = new List<string>();
@@ -209,10 +241,12 @@ namespace rene_roid
                 _languageDropdown.value = Array.IndexOf(_languages, _language);
                 _languageDropdown.RefreshShownValue();
 
-                PlayerPrefs.SetString("Language", _language);
+                _language = PlayerPrefs.GetString("Language", _language);
+
             }
 
-            PlayerPrefs.SetString("Language", _language);
+            _language = PlayerPrefs.GetString("Language", _language);
+            _languageManager.SetLanguage(_language);
         }
 
         public void SetLanguage(int languageIndex)
@@ -220,6 +254,8 @@ namespace rene_roid
             _language = _languages[languageIndex];
             _languageManager.SetLanguage(_language);
             PlayerPrefs.SetString("Language", _language);
+
+            SaveSettings();
         }
 
         #endregion
