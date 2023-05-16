@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using rene_roid_player;
 
 namespace rene_roid {    
@@ -18,6 +19,11 @@ namespace rene_roid {
         public void OnDeath() {
             _deathCanvas.SetActive(true);
             Time.timeScale = 0;
+        }
+
+        public void LoadMainMenu()
+        {
+            SceneManager.LoadScene(10);
         }
     }
 }
